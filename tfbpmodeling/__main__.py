@@ -11,6 +11,7 @@ import numpy as np
 from sklearn.linear_model import LassoCV
 from sklearn.model_selection import StratifiedKFold
 
+from configure_logger import LogLevel, configure_logger
 from tfbpmodeling.lasso_modeling import (
     BootstrappedModelingInputData,
     ModelingInputData,
@@ -20,14 +21,12 @@ from tfbpmodeling.lasso_modeling import (
 )
 from tfbpmodeling.SigmoidModel import SigmoidModel
 
-from ..configure_logger import LogLevel, configure_logger
-
 logger = logging.getLogger("main")
 
 
 def configure_logging(
     log_level: int, handler_type: Literal["console", "file"] = "console"
-) -> tuple[logging.Logger, logging.Logger]:
+) -> logging.Logger:
     """
     Configure the logging for the application.
 
@@ -1184,7 +1183,7 @@ def main() -> None:
         parser.print_help()
         return
 
-    main_logger, shiny_logger = configure_logging(log_level)
+    _ = configure_logging(log_level)
 
     # Run the appropriate command
     if args.command is None:
