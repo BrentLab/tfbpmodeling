@@ -17,15 +17,45 @@ This repo has not yet been added to PyPI. See the developer installation below.
 
 1. If you plan on making pull requests, fork the repo to your own github account
 1. git clone the repo (possibly your fork)
-   * Add the BrentLab repo as your `upstream` remote
+   * If you cloned your fork, add the BrentLab repo as your `upstream` remote
 
       ```bash
       git remote add upstream https://github.com/BrentLab/tfbpmodeling.git
       ```
 
-1. `cd` into the local version of the repo
+1. `cd` into your local repo
 1. `poetry install` to install the dependencies. If you don't have poetry, see the
-   [poetry instructions][#poetry] below.
+   [poetry instructions](#poetry) below.
+1. Install pre-commit hooks. If you do not have pre-commit,
+  [install it](https://pre-commit.com/#install) first. Then run:
+
+   ```bash
+   pre-commit install
+   ```
+
+When adding/refactoring code, please make sure that you do so in a feature
+branch that is branched from `dev`. Please keep your `dev` up to date by
+rebasing it onto `main` after pulling from `upstream/main`. Similarly, keep
+your feature branch up to date with dev by rebasing your `dev` branch onto
+`upstream/dev`, and then rebasing your feature branch onto `dev`. This will
+help avoid merge conflicts when you make a pull request.
+
+When you are ready to make a pull request, please make sure that the pre-commit hooks
+all pass locally. You can run pre-commit manually (before committing) with:
+
+```bash
+pre-commit run --all-files
+```
+
+if you properly installed the pre-commit hooks, pre-commit will automatically run
+when you attempt to make a commit, also.
+
+#### tmp/
+
+There is a [tmp/] directory set up for exploratory data analysis and
+interactive development. See the [tmp/README.md](tmp/README.md)
+for more information. `ipykernel` is installed in the `dev` environment,
+so jupyter notebooks can be run from `tmp/` in the virtual environment.
 
 #### poetry
 
