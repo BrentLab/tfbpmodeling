@@ -1,7 +1,9 @@
 import logging
 from collections.abc import Sequence
+from typing import Any
 
 import numpy as np
+import pandas as pd
 from numpy.random import default_rng
 from scipy.optimize import minimize
 from scipy.special import expit
@@ -101,11 +103,11 @@ class SigmoidModel(BaseEstimator, RegressorMixin):
 
     def fit(
         self,
-        X,
-        y,
-        method="L-BFGS-B",
-        minimize_options=None,
-        sample_weight=None,
+        X: pd.DataFrame,
+        y: pd.DataFrame,
+        method: str = "L-BFGS-B",
+        minimize_options: dict[str, Any] | None = None,
+        sample_weight: np.ndarray | None = None,
     ):
         if minimize_options is None:
             minimize_options = {}
