@@ -1315,6 +1315,7 @@ def bootstrap_stratified_cv_modeling(
         if use_sample_weight_in_cv:
             # this should be over the entire data set, since we are using the weights
             # to perform the sampling
+            logger.info("Performing CV by sample weights")
             classes = stratification_classification(
                 perturbed_tf_series.loc[bootstrapped_data.response_df.index].squeeze(),
                 bootstrapped_data.response_df.squeeze(),
@@ -1332,6 +1333,7 @@ def bootstrap_stratified_cv_modeling(
             )
         else:
             # this is performed on the resampled data
+            logger.info("Performing CV by index partitioning")
             classes = stratification_classification(
                 perturbed_tf_series.loc[y_resampled.index].squeeze(),
                 y_resampled.squeeze(),
