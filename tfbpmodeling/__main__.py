@@ -13,6 +13,7 @@ from sklearn.model_selection import StratifiedKFold
 
 from configure_logger import LogLevel, configure_logger
 from tfbpmodeling.lasso_modeling import (
+    BootstrapModelResults,
     BootstrappedModelingInputData,
     ModelingInputData,
     bootstrap_stratified_cv_modeling,
@@ -486,16 +487,17 @@ def sigmoid_bootstrap_worker(
 
     # Determine formula
     if input_data.top_n_masked:
-        raise NotImplementedError("Top n masking is not implemented for sigmoid model.")
-        # create formula from the significant coefficients calculated from the
-        # database
-        # results = BootstrapModelResults.from_db(
-        #     args.db_path, bootstrap_results_table_name
-        # )
-        # topn_sig_coefs = results.extract_significant_coefficients(
-        #     ci_level=args.ci_level
-        # )
-        # formula = " + ".join(topn_sig_coefs.keys())
+        res = BootstrapModelResults.from_jsonl(
+            args.db_path, bootstrap_results_table_name, mse_table_name
+        )
+        topn_sig_coefs = res.extract_significant_coefficients(ci_level=args.ci_level)
+        logger.info("Top N Sig Coefs:" + str(topn_sig_coefs.keys()))
+        formula = " + ".join(topn_sig_coefs.keys())
+
+        # check is the formula is empty / there are no significant coefficients
+        if formula == "":
+            logger.info("No significant coefficients found for Top N Modeling...")
+            return
     else:
         predictor_variables = input_data.predictors_df.columns.drop(args.perturbed_tf)
         predictor_variables = [
@@ -564,9 +566,17 @@ def sigmoid_bootstrap_worker(
         **dict(zip(bootstrap_data.model_df.columns, estimator.coef_)),
     }
 
+    # this output dir will store results from all_data step separate from top_n step
+    if input_data.top_n_masked:
+        output_root = os.path.join(args.db_path, f"_top_{args.top_n}")
+        # create directory if it doesn't already exist
+        os.makedirs(output_root, exist_ok=True)
+    else:
+        output_root = args.db_path
+
     insert_result(
         i,
-        os.path.join(args.db_path, f"{bootstrap_results_table_name}.jsonl"),
+        os.path.join(output_root, f"{bootstrap_results_table_name}.jsonl"),
         result_row,
     )
 
@@ -582,7 +592,7 @@ def sigmoid_bootstrap_worker(
                     "mse": estimator.mse_path_[a_idx, f_idx],
                 }
                 insert_result(
-                    i, os.path.join(args.db_path, f"{mse_table_name}.jsonl"), mse_row
+                    i, os.path.join(output_root, f"{mse_table_name}.jsonl"), mse_row
                 )
 
     logger.info(f"Completed bootstrap {i}")
