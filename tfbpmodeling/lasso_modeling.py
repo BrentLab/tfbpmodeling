@@ -930,6 +930,18 @@ class BootstrapModelResults:
             if bounds[0] > threshold or bounds[1] < -threshold
         }
 
+        # remove the following terms from ci_dict:
+        keys_to_remove = [
+            "bootstrap_idx",
+            "final_training_score",
+            "alpha",
+            "left_asymptote",
+            "right_asymptote",
+            "Intercept",
+        ]
+        for key in keys_to_remove:
+            significant_coefs_dict.pop(key, None)
+
         return significant_coefs_dict
 
     def visualize_significant_coefficients(
