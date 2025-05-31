@@ -470,6 +470,8 @@ def sigmoid_bootstrap_worker(
     mse_table_name: str = "mse_path",
 ) -> None:
 
+    test_interactor_variables = args.test_interactor_variables
+
     # create input data similar to perturbed_binding_modeling(). There needs to be a
     # setting to decide whether to do "all data" or "top n" modeling
 
@@ -490,9 +492,11 @@ def sigmoid_bootstrap_worker(
         res = BootstrapModelResults.from_jsonl(
             args.db_path, bootstrap_results_table_name, mse_table_name
         )
-        topn_sig_coefs = res.extract_significant_coefficients(ci_level=args.ci_level)
-        logger.info("Top N Sig Coefs:" + str(topn_sig_coefs.keys()))
-        formula = " + ".join(topn_sig_coefs.keys())
+        all_data_sig_coefs = res.extract_significant_coefficients(
+            ci_level=args.ci_level
+        )
+        logger.info("Top N Sig Coefs:" + str(all_data_sig_coefs.keys()))
+        formula = " + ".join(all_data_sig_coefs.keys())
 
         # check is the formula is empty / there are no significant coefficients
         if formula == "":
@@ -596,6 +600,46 @@ def sigmoid_bootstrap_worker(
                 )
 
     logger.info(f"Completed bootstrap {i}")
+
+    # check that test_interactor_variables is true
+    if test_interactor_variables is False:
+        logger.info("Step 3 not specified, ending script...")
+        return
+
+    logger.info("Starting step 3: testing surviving interactions terms")
+    path = os.path.join(args.db_path, f"_top_{args.top_n}")
+
+    # check that the topn modeling output dir exists
+    if not (os.path.isdir(path)):
+        logger.error("ERROR: no results from the top N step stored")
+        return
+
+    # parse results from the previous step
+    res = BootstrapModelResults.from_jsonl(
+        path, bootstrap_results_table_name, mse_table_name
+    )
+    # TODO: I think we would need to add an extra arg and change the ci level below to
+    # be the top n ci level, as opposed to the all data ci level
+    topn_sig_coefs = res.extract_significant_coefficients(ci_level=args.ci_level)
+    logger.info("Top N Significant Coefs:" + str(topn_sig_coefs.keys()))
+
+    model_vars = topn_sig_coefs.keys()
+
+    results = evaluate_interactor_significance(
+        input_data,
+        classes,
+        list(model_vars),
+        SigmoidModel(),
+    )
+
+    output_significance_file = os.path.join(
+        args.db_path, "interactor_vs_main_result.json"
+    )
+    logger.info(
+        "Writing the final interactor significance "
+        "results to {output_significance_file}"
+    )
+    results.serialize(output_significance_file)
 
 
 class CustomHelpFormatter(argparse.HelpFormatter):
@@ -1138,6 +1182,14 @@ def main() -> None:
         action="store_true",
         help=(
             "Set this to normalize the sample weights to sum to 1. " "Default is False."
+        ),
+    )
+
+    sigmoid_parameters_group.add_argument(
+        "--test_interactor_variables",
+        action="store_true",
+        help=(
+            "If set, run last step to evaluate interactor terms against main effects."
         ),
     )
 

@@ -12,7 +12,7 @@ import seaborn as sns
 from patsy import PatsyError, dmatrix
 from scipy.stats import rankdata
 from sklearn.base import BaseEstimator, clone
-from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LassoCV, LinearRegression
 from sklearn.model_selection import StratifiedKFold
 from sklearn.utils import resample
 
@@ -1478,6 +1478,7 @@ def evaluate_interactor_significance(
     input_data: ModelingInputData,
     stratification_classes: np.ndarray,
     model_variables: list[str],
+    estimator: BaseEstimator | None = None,
 ) -> "InteractorSignificanceResults":
     """
     Compare predictive performance of interaction terms vs. their main effects.
@@ -1518,6 +1519,9 @@ def evaluate_interactor_significance(
         response_df,
         input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True),
         stratification_classes,
+        estimator=(
+            estimator if estimator is not None else LinearRegression(fit_intercept=True)
+        ),
     )
 
     for interactor in interactors:
@@ -1545,6 +1549,11 @@ def evaluate_interactor_significance(
                 " + ".join(predictors_with_main_effect), add_row_max=True
             ),
             stratification_classes,
+            estimator=(
+                estimator
+                if estimator is not None
+                else LinearRegression(fit_intercept=True)
+            ),
         )
 
         # Store results
