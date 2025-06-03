@@ -1478,7 +1478,7 @@ def evaluate_interactor_significance(
     input_data: ModelingInputData,
     stratification_classes: np.ndarray,
     model_variables: list[str],
-    estimator: BaseEstimator | None = None,
+    estimator: BaseEstimator = LinearRegression(fit_intercept=True),
 ) -> "InteractorSignificanceResults":
     """
     Compare predictive performance of interaction terms vs. their main effects.
@@ -1495,6 +1495,8 @@ def evaluate_interactor_significance(
         and response.
     :param stratification_classes: Array of stratification labels for CV.
     :param model_variables: List of model terms, including interaction terms.
+    :param estimator: A scikit-learn estimator to use for modeling. Default is
+        `LinearRegression(fit_intercept=True)`.
 
     :return: An `InteractorSignificanceResults` instance with evaluation results.
 
@@ -1519,9 +1521,7 @@ def evaluate_interactor_significance(
         response_df,
         input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True),
         stratification_classes,
-        estimator=(
-            estimator if estimator is not None else LinearRegression(fit_intercept=True)
-        ),
+        estimator=estimator,
     )
 
     for interactor in interactors:
@@ -1549,11 +1549,7 @@ def evaluate_interactor_significance(
                 " + ".join(predictors_with_main_effect), add_row_max=True
             ),
             stratification_classes,
-            estimator=(
-                estimator
-                if estimator is not None
-                else LinearRegression(fit_intercept=True)
-            ),
+            estimator=estimator,
         )
 
         # Store results

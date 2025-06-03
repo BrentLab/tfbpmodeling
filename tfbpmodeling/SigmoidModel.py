@@ -171,9 +171,13 @@ class SigmoidModel(BaseEstimator, RegressorMixin):
             elif self.alphas is not None and self.cv is not None:
                 self.alphas_ = np.asarray(self.alphas, dtype=float)
             else:
+                # if no alpha or alphas are specified, default to 0.0, which turns off
+                # the L1 penalty
                 logger.warning("No alpha or alphas specified; defaulting alpha to 0.0.")
                 self.alpha_ = 0.0
 
+            # If alphas and cv are specified, perform cross-validation
+            # to select the best alpha
             if hasattr(self, "alphas_") and self.cv is not None:
 
                 mse_path = np.zeros((len(self.alphas_), len(self.cv)))
