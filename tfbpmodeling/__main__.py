@@ -202,7 +202,7 @@ def linear_perturbation_binding_modeling(args):
             all_data_formula,
             add_row_max=args.row_max,
             drop_intercept=True,
-            standardize=True,
+            standardize=args.center_scale,
         ),
         n_bootstraps=all_data_n_bootstraps,
         bootstrap_indices=all_data_bootstrap_indicies,
@@ -303,7 +303,7 @@ def linear_perturbation_binding_modeling(args):
             topn_formula,
             add_row_max=args.row_max,
             drop_intercept=True,
-            standardize=True,
+            standardize=args.center_scale,
         ),
         n_bootstraps=topn_data_n_bootstraps,
         bootstrap_indices=topn_data_bootstrap_indicies,
@@ -553,7 +553,7 @@ def sigmoid_bootstrap_worker(
         formula,
         add_row_max=args.row_max,
         drop_intercept=args.drop_intercept,
-        standardize=True,
+        standardize=args.center_scale,
     )
 
     bootstrap_indices = BootstrappedModelingInputData.load_indices(
@@ -875,6 +875,11 @@ def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
             "E.g., red_median,green_median would be added as ... + red_median + "
             "green_median"
         ),
+    )
+    parser.add_argument(
+        "--scale_center",
+        action="store_true",
+        help=("Scale and center the model matrix by the mean and standard deviation. "),
     )
 
 
