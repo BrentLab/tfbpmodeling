@@ -199,13 +199,10 @@ def linear_perturbation_binding_modeling(args):
     bootstrapped_data_all = BootstrappedModelingInputData(
         response_df=input_data.response_df,
         model_df=input_data.get_modeling_data(
-<<<<<<< Updated upstream
             all_data_formula,
             add_row_max=args.row_max,
-            drop_intercept=args.drop_intercept,
-=======
-            all_data_formula, add_row_max=args.row_max, drop_intercept=True, standardize=True
->>>>>>> Stashed changes
+            drop_intercept=True,
+            standardize=True,
         ),
         n_bootstraps=all_data_n_bootstraps,
         bootstrap_indices=all_data_bootstrap_indicies,
@@ -303,11 +300,10 @@ def linear_perturbation_binding_modeling(args):
     bootstrapped_data_top_n = BootstrappedModelingInputData(
         response_df=input_data.response_df,
         model_df=input_data.get_modeling_data(
-<<<<<<< Updated upstream
-            topn_formula, add_row_max=args.row_max, drop_intercept=args.drop_intercept
-=======
-            topn_formula, add_row_max=args.row_max, drop_intercept=True, standardize=True
->>>>>>> Stashed changes
+            topn_formula,
+            add_row_max=args.row_max,
+            drop_intercept=True,
+            standardize=True,
         ),
         n_bootstraps=topn_data_n_bootstraps,
         bootstrap_indices=topn_data_bootstrap_indicies,
@@ -554,7 +550,10 @@ def sigmoid_bootstrap_worker(
 
     logger.info(f"Model formula: {formula}")
     model_df = input_data.get_modeling_data(
-        formula, add_row_max=args.row_max, drop_intercept=args.drop_intercept, standardize=True
+        formula,
+        add_row_max=args.row_max,
+        drop_intercept=args.drop_intercept,
+        standardize=True,
     )
 
     bootstrap_indices = BootstrappedModelingInputData.load_indices(
@@ -851,6 +850,14 @@ def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
         ),
     )
     parser.add_argument(
+        "--cubic_pTF",
+        action="store_true",
+        help=(
+            "Include the cubic pTF as an additional predictor in the model matrix "
+            "in the first round (all data) model."
+        ),
+    )
+    parser.add_argument(
         "--exclude_interactor_variables",
         type=parse_comma_separated_list,
         default=[],
@@ -1032,70 +1039,11 @@ def main() -> None:
         help="Enable iterative variable dropout based on confidence intervals.",
     )
 
-<<<<<<< Updated upstream
     linear_parameters_group.add_argument(
         "--stabilization_ci_start",
         type=float,
         default=50.0,
         help="Starting confidence interval for iterative dropout stabilization",
-=======
-    parameters_group.add_argument(
-        "--squared_pTF",
-        action="store_true",
-        help=(
-            "Include the squared pTF as an additional predictor in the model matrix "
-            "in the first round (all data) model."
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--cubic_pTF",
-        action="store_true",
-        help=(
-            "Include the cubic pTF as an additional predictor in the model matrix "
-            "in the first round (all data) model."
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--bin_by_binding_only",
-        action="store_true",
-        help=(
-            "When creating stratification classes, use binding data only instead of "
-            "both binding and perturbation data. The default is to use both."
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--bins",
-        type=parse_bins,
-        default="0,8,64,512,np.inf",
-        help=(
-            "Comma-separated list of bin edges (integers or 'np.inf'). "
-            "Default is --bins 0,8,12,np.inf"
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--exclude_interactor_variables",
-        type=parse_comma_separated_list,
-        default=[],
-        help=(
-            "Comma-separated list of variables to exclude from the interactor terms. "
-            "E.g. red_median,green_median"
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--add_model_variables",
-        type=parse_comma_separated_list,
-        default=[],
-        help=(
-            "Comma-separated list of variables to add to the all_data model. "
-            "E.g., red_median,green_median would be added as ... + red_median + "
-            "green_median"
-        ),
->>>>>>> Stashed changes
     )
 
     # Output arguments
