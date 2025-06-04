@@ -10,7 +10,12 @@ from scipy.special import expit
 from sklearn.base import BaseEstimator, RegressorMixin
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+from sklearn.utils.validation import (
+    check_array,
+    check_is_fitted,
+    check_X_y,
+    column_or_1d,
+)
 
 logger = logging.getLogger("main")
 
@@ -120,6 +125,8 @@ class SigmoidModel(BaseEstimator, RegressorMixin):
                 raise ValueError("sample_weight must be the same length as y.")
 
         X, y = check_X_y(X, y)
+        y = column_or_1d(y, warn=True)
+
         self.n_features_in_ = X.shape[1]
         self.feature_names_in_ = getattr(X, "columns", None)
 
@@ -128,7 +135,7 @@ class SigmoidModel(BaseEstimator, RegressorMixin):
             lms = LinearModelSampler(X, y, sample_weight=sample_weight)
 
         # Validate cv
-        if self.cv is None or not (
+        if self.cv is not None and not (
             isinstance(self.cv, list)
             and all(isinstance(fold, tuple) and len(fold) == 2 for fold in self.cv)
         ):
@@ -159,48 +166,62 @@ class SigmoidModel(BaseEstimator, RegressorMixin):
         # Either use fixed alpha, set above, or use cross validation to select and set
         # an alpha_
         if not hasattr(self, "alpha_"):
-            # If either alpha or alphas is present in the instance, raise an
-            # AttributeError
-            if not hasattr(self, "alphas_"):
-                raise AttributeError("Either `alpha` or `alphas` must be provided.")
+            if self.alpha is not None:
+                self.alpha_ = float(self.alpha)
+            elif self.alphas is not None and self.cv is not None:
+                self.alphas_ = np.asarray(self.alphas, dtype=float)
+            else:
+                # if no alpha or alphas are specified, default to 0.0, which turns off
+                # the L1 penalty
+                logger.warning("No alpha or alphas specified; defaulting alpha to 0.0.")
+                self.alpha_ = 0.0
 
-            mse_path = np.zeros((len(self.alphas_), len(self.cv)))
-            for a_idx, alpha in enumerate(self.alphas_):
-                for f_idx, (train_idx, test_idx) in enumerate(self.cv):
-                    X_train, y_train = X[train_idx], y[train_idx]
-                    X_test, y_test = X[test_idx], y[test_idx]
-                    weights_train = (
-                        sample_weight[train_idx] if sample_weight is not None else None
-                    )
+            # If alphas and cv are specified, perform cross-validation
+            # to select the best alpha
+            if hasattr(self, "alphas_") and self.cv is not None:
 
-                    fold_result = minimize(
-                        objective,
-                        self.init_params_.copy(),
-                        args=(X_train, y_train, alpha, weights_train),
-                        method=method,
-                        options=minimize_options,
-                    )
-
-                    # calculate test prediction
-                    left_asymptote = fold_result.x[0]
-                    right_asymptote = fold_result.x[1]
-                    linear_combination = X_test @ fold_result.x[2:]
-                    pred = sigmoid(left_asymptote, right_asymptote, linear_combination)
-
-                    # calculate test residuals
-                    residual = y_test - pred
-
-                    # based on wether sample_weight is None or not, calculate the mse
-                    if sample_weight is not None:
-                        mse_path[a_idx, f_idx] = np.average(
-                            residual**2, weights=sample_weight[test_idx]
+                mse_path = np.zeros((len(self.alphas_), len(self.cv)))
+                for a_idx, alpha in enumerate(self.alphas_):
+                    for f_idx, (train_idx, test_idx) in enumerate(self.cv):
+                        X_train, y_train = X[train_idx], y[train_idx]
+                        X_test, y_test = X[test_idx], y[test_idx]
+                        weights_train = (
+                            sample_weight[train_idx]
+                            if sample_weight is not None
+                            else None
                         )
-                    else:
-                        mse_path[a_idx, f_idx] = np.mean(residual**2)
 
-            self.mse_path_ = mse_path
-            best_alpha_idx = np.argmin(np.mean(self.mse_path_, axis=1))
-            self.alpha_ = self.alphas_[best_alpha_idx]
+                        fold_result = minimize(
+                            objective,
+                            self.init_params_.copy(),
+                            args=(X_train, y_train, alpha, weights_train),
+                            method=method,
+                            options=minimize_options,
+                        )
+
+                        # calculate test prediction
+                        left_asymptote = fold_result.x[0]
+                        right_asymptote = fold_result.x[1]
+                        linear_combination = X_test @ fold_result.x[2:]
+                        pred = sigmoid(
+                            left_asymptote, right_asymptote, linear_combination
+                        )
+
+                        # calculate test residuals
+                        residual = y_test - pred
+
+                        # based on wether sample_weight is None or not,
+                        # calculate the mse
+                        if sample_weight is not None:
+                            mse_path[a_idx, f_idx] = np.average(
+                                residual**2, weights=sample_weight[test_idx]
+                            )
+                        else:
+                            mse_path[a_idx, f_idx] = np.mean(residual**2)
+
+                self.mse_path_ = mse_path
+                best_alpha_idx = np.argmin(np.mean(self.mse_path_, axis=1))
+                self.alpha_ = self.alphas_[best_alpha_idx]
 
         # Final fit on all data
         final_result = minimize(

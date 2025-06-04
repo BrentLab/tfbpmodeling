@@ -55,7 +55,7 @@ def configure_logging(
 #     print(f"Running another command with parameter: {args.param}")
 
 
-def perturbation_binding_modeling(args):
+def linear_perturbation_binding_modeling(args):
     """
     :param args: Command-line arguments containing input file paths and parameters.
     """
@@ -193,7 +193,9 @@ def perturbation_binding_modeling(args):
     bootstrapped_data_all = BootstrappedModelingInputData(
         response_df=input_data.response_df,
         model_df=input_data.get_modeling_data(
-            all_data_formula, add_row_max=args.row_max, drop_intercept=True
+            all_data_formula,
+            add_row_max=args.row_max,
+            drop_intercept=args.drop_intercept,
         ),
         n_bootstraps=all_data_n_bootstraps,
         bootstrap_indices=all_data_bootstrap_indicies,
@@ -291,7 +293,7 @@ def perturbation_binding_modeling(args):
     bootstrapped_data_top_n = BootstrappedModelingInputData(
         response_df=input_data.response_df,
         model_df=input_data.get_modeling_data(
-            topn_formula, add_row_max=args.row_max, drop_intercept=True
+            topn_formula, add_row_max=args.row_max, drop_intercept=args.drop_intercept
         ),
         n_bootstraps=topn_data_n_bootstraps,
         bootstrap_indices=topn_data_bootstrap_indicies,
@@ -505,9 +507,11 @@ def sigmoid_bootstrap_worker(
         res = BootstrapModelResults.from_jsonl(
             args.db_path, bootstrap_results_table_name, mse_table_name
         )
-        topn_sig_coefs = res.extract_significant_coefficients(ci_level=args.ci_level)
-        logger.info("Top N Sig Coefs:" + str(topn_sig_coefs.keys()))
-        formula = " + ".join(topn_sig_coefs.keys())
+        all_data_sig_coefs = res.extract_significant_coefficients(
+            ci_level=args.ci_level
+        )
+        logger.info("Top N Sig Coefs:" + str(all_data_sig_coefs.keys()))
+        formula = " + ".join(all_data_sig_coefs.keys())
 
         # check is the formula is empty / there are no significant coefficients
         if formula == "":
@@ -613,6 +617,71 @@ def sigmoid_bootstrap_worker(
     logger.info(f"Completed bootstrap {i}")
 
 
+def test_sigmoid_interactor_significance(
+    args: argparse.Namespace,
+    bootstrap_results_table_name: str = "bootstrap_results",
+    mse_table_name: str = "mse_path",
+) -> None:
+    """
+    Test the significance of interactor terms against the main effect.
+
+    :param args: Command-line arguments containing input file paths and parameters.
+    :param bootstrap_results_table_name: File name for bootstrap results.
+    :param mse_table_name: File name for MSE results.
+
+    """
+    # check that the topn modeling output dir exists
+    if not os.path.isdir(args.db_path):
+        raise FileNotFoundError(
+            f"Directory {args.db_path} does not exist. "
+            "Please run the linear_perturbation_binding_modeling command first."
+        )
+
+    logger.info("Testing interactor significance...")
+
+    # Load input data
+    input_data = ModelingInputData.from_files(
+        response_path=args.response_file,
+        predictors_path=args.predictors_file,
+        perturbed_tf=args.perturbed_tf,
+        feature_blacklist_path=args.blacklist_file,
+        top_n=args.top_n,
+    )
+
+    classes = stratification_classification(
+        input_data.predictors_df[input_data.perturbed_tf].squeeze(),
+        input_data.response_df.squeeze(),
+        bin_by_binding_only=args.bin_by_binding_only,
+        bins=args.bins,
+    )
+
+    # parse results from the previous step
+    res = BootstrapModelResults.from_jsonl(
+        args.db_path, bootstrap_results_table_name, mse_table_name
+    )
+
+    topn_sig_coefs = res.extract_significant_coefficients(ci_level=args.ci_level)
+    logger.info("Top N Significant Coefs:" + str(topn_sig_coefs.keys()))
+
+    model_vars = topn_sig_coefs.keys()
+
+    results = evaluate_interactor_significance(
+        input_data,
+        classes,
+        list(model_vars),
+        SigmoidModel(),
+    )
+
+    output_significance_file = os.path.join(
+        args.db_path, "interactor_vs_main_result.json"
+    )
+    logger.info(
+        "Writing the final interactor significance "
+        "results to {output_significance_file}"
+    )
+    results.serialize(output_significance_file)
+
+
 class CustomHelpFormatter(argparse.HelpFormatter):
     """
     This could be used to customize the help message formatting for the argparse parser.
@@ -679,6 +748,113 @@ def add_general_arguments_to_subparsers(subparsers, general_arguments):
             subparser._add_action(arg)
 
 
+def common_modeling_binning_arguments(parser: argparse._ArgumentGroup) -> None:
+    parser.add_argument(
+        "--bins",
+        type=parse_bins,
+        default="0,8,64,512,np.inf",
+        help=(
+            "Comma-separated list of bin edges (integers or 'np.inf'). "
+            "Default is --bins 0,8,12,np.inf"
+        ),
+    )
+    parser.add_argument(
+        "--bin_by_binding_only",
+        action="store_true",
+        help=(
+            "When creating stratification classes, use binding data only instead of "
+            "both binding and perturbation data. The default is to use both."
+        ),
+    )
+
+
+def common_modeling_input_arguments(parser: argparse._ArgumentGroup) -> None:
+    """Add common input arguments for modeling commands."""
+    parser.add_argument(
+        "--response_file",
+        type=str,
+        required=True,
+        help=(
+            "Path to the response CSV file. The first column must contain "
+            "feature names or locus tags (e.g., gene symbols), matching the index "
+            "format in both response and predictor files. The perturbed gene will "
+            "be removed from the model data only if its column names match the "
+            "index format."
+        ),
+    )
+    parser.add_argument(
+        "--predictors_file",
+        type=str,
+        required=True,
+        help=(
+            "Path to the predictors CSV file. The first column must contain "
+            "feature names or locus tags (e.g., gene symbols), ensuring consistency "
+            "between response and predictor files."
+        ),
+    )
+    parser.add_argument(
+        "--perturbed_tf",
+        type=str,
+        required=True,
+        help=(
+            "Name of the perturbed transcription factor (TF) used as the "
+            "response variable. It must match a column in the response file."
+        ),
+    )
+    parser.add_argument(
+        "--blacklist_file",
+        type=str,
+        default="",
+        help=(
+            "Optional file containing a list of features (one per line) to be excluded "
+            "from the analysis."
+        ),
+    )
+
+
+def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
+    parser.add_argument(
+        "--drop_intercept",
+        action="store_true",
+        help="Drop the intercept from the model. Default is False",
+    )
+    parser.add_argument(
+        "--row_max",
+        action="store_true",
+        help=(
+            "Include the row max as an additional predictor in the model matrix "
+            "in the first round (all data) model."
+        ),
+    )
+    parser.add_argument(
+        "--squared_pTF",
+        action="store_true",
+        help=(
+            "Include the squared pTF as an additional predictor in the model matrix "
+            "in the first round (all data) model."
+        ),
+    )
+    parser.add_argument(
+        "--exclude_interactor_variables",
+        type=parse_comma_separated_list,
+        default=[],
+        help=(
+            "Comma-separated list of variables to exclude from the interactor terms. "
+            "E.g. red_median,green_median"
+        ),
+    )
+    parser.add_argument(
+        "--add_model_variables",
+        type=parse_comma_separated_list,
+        default=[],
+        help=(
+            "Comma-separated list of variables to add to the all_data model. "
+            "E.g., red_median,green_median would be added as ... + red_median + "
+            "green_median"
+        ),
+    )
+
+
 def main() -> None:
     """Main entry point for the tfbpmodeling application."""
     parser = argparse.ArgumentParser(
@@ -723,8 +899,8 @@ def main() -> None:
     # another_parser.set_defaults(func=run_another_command)
 
     # Lasso Bootstrap command
-    lasso_parser = subparsers.add_parser(
-        "perturbation_binding_modeling",
+    linear_lasso_parser = subparsers.add_parser(
+        "linear_perturbation_binding_modeling",
         help="Run LassoCV or GeneralizedLogisticModel with bootstrap resampling",
         description=(
             "This executes the sequential workflow which models first  "
@@ -737,56 +913,11 @@ def main() -> None:
     )
 
     # Input arguments
-    input_group = lasso_parser.add_argument_group("Input")
-    # Input arguments
-    input_group.add_argument(
-        "--response_file",
-        type=str,
-        required=True,
-        help=(
-            "Path to the response CSV file. The first column must contain "
-            "feature names or locus tags (e.g., gene symbols), matching the index "
-            "format in both response and predictor files. The perturbed gene will "
-            "be removed from the model data only if its column names match the "
-            "index format."
-        ),
-    )
+    linear_input_group = linear_lasso_parser.add_argument_group("Input")
 
-    input_group.add_argument(
-        "--predictors_file",
-        type=str,
-        required=True,
-        help=(
-            "Path to the predictors CSV file. The first column must contain "
-            "feature names or locus tags (e.g., gene symbols), ensuring consistency "
-            "between response and predictor files. The perturbed gene will be "
-            "removed from the model if predictor column names match the index format."
-        ),
-    )
+    common_modeling_input_arguments(linear_input_group)
 
-    input_group.add_argument(
-        "--perturbed_tf",
-        type=str,
-        required=True,
-        help=(
-            "Name of the perturbed transcription factor (TF) used as the "
-            "response variable. It must match a column in the response file. The "
-            "format should be consistent with the feature index (e.g., gene symbol "
-            "or locus tag)."
-        ),
-    )
-
-    input_group.add_argument(
-        "--blacklist_file",
-        type=str,
-        default="",
-        help=(
-            "Optional file containing a list of features (one per line) to be excluded "
-            "from the analysis. If omitted, no features will be blacklisted."
-        ),
-    )
-
-    input_group.add_argument(
+    linear_input_group.add_argument(
         "--all_data_bootstrap_indicies",
         type=str,
         default=None,
@@ -798,7 +929,7 @@ def main() -> None:
         ),
     )
 
-    input_group.add_argument(
+    linear_input_group.add_argument(
         "--topn_data_bootstrap_indicies",
         type=str,
         default=None,
@@ -810,9 +941,20 @@ def main() -> None:
         ),
     )
 
-    parameters_group = lasso_parser.add_argument_group("Parameters")
+    linear_model_feature_options_group = linear_lasso_parser.add_argument_group(
+        "Feature Options"
+    )
 
-    parameters_group.add_argument(
+    common_modeling_feature_options(linear_model_feature_options_group)
+
+    linear_model_binning_group = linear_lasso_parser.add_argument_group(
+        "Binning Options"
+    )
+    common_modeling_binning_arguments(linear_model_binning_group)
+
+    linear_parameters_group = linear_lasso_parser.add_argument_group("Parameters")
+
+    linear_parameters_group.add_argument(
         "--top_n",
         type=int,
         default=600,
@@ -822,14 +964,14 @@ def main() -> None:
         ),
     )
 
-    parameters_group.add_argument(
+    linear_parameters_group.add_argument(
         "--n_bootstraps",
         type=int,
         default=1000,
         help="Number of bootstrap samples to generate for resampling. Default is 1000",
     )
 
-    parameters_group.add_argument(
+    linear_parameters_group.add_argument(
         "--all_data_ci_level",
         type=float,
         default=98.0,
@@ -839,7 +981,7 @@ def main() -> None:
         ),
     )
 
-    parameters_group.add_argument(
+    linear_parameters_group.add_argument(
         "--topn_ci_level",
         type=float,
         default=90.0,
@@ -849,7 +991,7 @@ def main() -> None:
         ),
     )
 
-    parameters_group.add_argument(
+    linear_parameters_group.add_argument(
         "--max_iter",
         type=int,
         default=10000,
@@ -859,7 +1001,7 @@ def main() -> None:
         ),
     )
 
-    parameters_group.add_argument(
+    linear_parameters_group.add_argument(
         "--use_weights_in_cv",
         action="store_true",
         help=(
@@ -868,71 +1010,13 @@ def main() -> None:
         ),
     )
 
-    parameters_group.add_argument(
-        "--row_max",
-        action="store_true",
-        help=(
-            "Include the row max as an additional predictor in the model matrix "
-            "in the first round (all data) model."
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--squared_pTF",
-        action="store_true",
-        help=(
-            "Include the squared pTF as an additional predictor in the model matrix "
-            "in the first round (all data) model."
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--bin_by_binding_only",
-        action="store_true",
-        help=(
-            "When creating stratification classes, use binding data only instead of "
-            "both binding and perturbation data. The default is to use both."
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--bins",
-        type=parse_bins,
-        default="0,8,64,512,np.inf",
-        help=(
-            "Comma-separated list of bin edges (integers or 'np.inf'). "
-            "Default is --bins 0,8,12,np.inf"
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--exclude_interactor_variables",
-        type=parse_comma_separated_list,
-        default=[],
-        help=(
-            "Comma-separated list of variables to exclude from the interactor terms. "
-            "E.g. red_median,green_median"
-        ),
-    )
-
-    parameters_group.add_argument(
-        "--add_model_variables",
-        type=parse_comma_separated_list,
-        default=[],
-        help=(
-            "Comma-separated list of variables to add to the all_data model. "
-            "E.g., red_median,green_median would be added as ... + red_median + "
-            "green_median"
-        ),
-    )
-
-    parameters_group.add_argument(
+    linear_parameters_group.add_argument(
         "--iterative_dropout",
         action="store_true",
         help="Enable iterative variable dropout based on confidence intervals.",
     )
 
-    parameters_group.add_argument(
+    linear_parameters_group.add_argument(
         "--stabilization_ci_start",
         type=float,
         default=50.0,
@@ -940,19 +1024,19 @@ def main() -> None:
     )
 
     # Output arguments
-    output_group = lasso_parser.add_argument_group("Output")
+    linear_output_group = linear_lasso_parser.add_argument_group("Output")
 
-    output_group.add_argument(
+    linear_output_group.add_argument(
         "--output_dir",
         type=str,
-        default="./perturbation_binding_modeling_results",
+        default="./linear_perturbation_binding_modeling_results",
         help=(
             "Directory where model results will be saved. A new subdirectory "
             "is created per run."
         ),
     )
 
-    output_group.add_argument(
+    linear_output_group.add_argument(
         "--output_suffix",
         type=str,
         default="",
@@ -962,9 +1046,9 @@ def main() -> None:
         ),
     )
 
-    system_group = lasso_parser.add_argument_group("System")
+    linear_system_group = linear_lasso_parser.add_argument_group("System")
 
-    system_group.add_argument(
+    linear_system_group.add_argument(
         "--n_cpus",
         type=int,
         default=4,
@@ -974,7 +1058,7 @@ def main() -> None:
         ),
     )
 
-    lasso_parser.set_defaults(func=perturbation_binding_modeling)
+    linear_lasso_parser.set_defaults(func=linear_perturbation_binding_modeling)
 
     # Sigmoid worker cmds
     sigmoid_parser = subparsers.add_parser(
@@ -988,50 +1072,8 @@ def main() -> None:
 
     sigmoid_input_group = sigmoid_parser.add_argument_group("Input")
 
-    sigmoid_input_group.add_argument(
-        "--response_file",
-        type=str,
-        required=True,
-        help=(
-            "Path to the response CSV file. The first column must contain "
-            "feature names or locus tags (e.g., gene symbols), matching the index "
-            "format in both response and predictor files. The perturbed gene will "
-            "be removed from the model data only if its column names match the "
-            "index format."
-        ),
-    )
+    common_modeling_input_arguments(sigmoid_input_group)
 
-    sigmoid_input_group.add_argument(
-        "--predictors_file",
-        type=str,
-        required=True,
-        help=(
-            "Path to the predictors CSV file. The first column must contain "
-            "feature names or locus tags (e.g., gene symbols), ensuring consistency "
-            "between response and predictor files. The perturbed gene will be "
-            "removed from the model if predictor column names match the index format."
-        ),
-    )
-    sigmoid_input_group.add_argument(
-        "--perturbed_tf",
-        type=str,
-        required=True,
-        help=(
-            "Name of the perturbed transcription factor (TF) used as the "
-            "response variable. It must match a column in the response file. The "
-            "format should be consistent with the feature index (e.g., gene symbol "
-            "or locus tag)."
-        ),
-    )
-    sigmoid_input_group.add_argument(
-        "--blacklist_file",
-        type=str,
-        default="",
-        help=(
-            "Optional file containing a list of features (one per line) to be excluded "
-            "from the analysis. If omitted, no features will be blacklisted."
-        ),
-    )
     sigmoid_input_group.add_argument(
         "--bootstrap_indices_file",
         type=str,
@@ -1074,11 +1116,6 @@ def main() -> None:
         ),
     )
     sigmoid_parameters_group.add_argument(
-        "--drop_intercept",
-        action="store_true",
-        help=("Drop the intercept from the model. Default is False"),
-    )
-    sigmoid_parameters_group.add_argument(
         "--warm_start",
         action="store_true",
         help=("Enable warm start for the model. Default is False"),
@@ -1092,63 +1129,7 @@ def main() -> None:
             "List of alpha values to use for the model. " "Default is [0.1, 1.0, 10.0]"
         ),
     )
-    sigmoid_parameters_group.add_argument(
-        "--bin_by_binding_only",
-        action="store_true",
-        help=(
-            "When creating stratification classes, use binding data only instead of "
-            "both binding and perturbation data. The default is to use both."
-        ),
-    )
 
-    sigmoid_parameters_group.add_argument(
-        "--bins",
-        type=parse_bins,
-        default="0,8,64,512,np.inf",
-        help=(
-            "Comma-separated list of bin edges (integers or 'np.inf'). "
-            "Default is --bins 0,8,12,np.inf"
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--row_max",
-        action="store_true",
-        help=(
-            "Include the row max as an additional predictor in the model matrix "
-            "in the first round (all data) model."
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--squared_pTF",
-        action="store_true",
-        help=(
-            "Include the squared pTF as an additional predictor in the model matrix "
-            "in the first round (all data) model."
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--exclude_interactor_variables",
-        type=parse_comma_separated_list,
-        default=[],
-        help=(
-            "Comma-separated list of variables to exclude from the interactor terms. "
-            "E.g. red_median,green_median"
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--add_model_variables",
-        type=parse_comma_separated_list,
-        default=[],
-        help=(
-            "Comma-separated list of variables to add to the all_data model. "
-            "E.g., red_median,green_median would be added as ... + red_median + "
-            "green_median"
-        ),
-    )
     sigmoid_parameters_group.add_argument(
         "--minimize_options",
         type=parse_lbfgsb_options,
@@ -1169,6 +1150,24 @@ def main() -> None:
         ),
     )
 
+    sigmoid_parameters_group.add_argument(
+        "--test_interactor_variables",
+        action="store_true",
+        help=(
+            "If set, run last step to evaluate interactor terms against main effects."
+        ),
+    )
+
+    sigmoid_model_feature_options_group = sigmoid_parser.add_argument_group(
+        "Feature Options"
+    )
+
+    common_modeling_feature_options(sigmoid_model_feature_options_group)
+
+    sigmoid_model_binning_group = sigmoid_parser.add_argument_group("Binning Options")
+
+    common_modeling_binning_arguments(sigmoid_model_binning_group)
+
     sigmoid_output_group = sigmoid_parser.add_argument_group("Output")
 
     sigmoid_output_group.add_argument(
@@ -1179,6 +1178,52 @@ def main() -> None:
     )
 
     sigmoid_parser.set_defaults(func=sigmoid_bootstrap_worker)
+
+    # Sigmoid worker cmds
+    sigmoid_step3_parser = subparsers.add_parser(
+        "sigmoid_interactor_significance",
+        help="Run the interactor significance evaluation step on a sigmoid model",
+        description=(
+            "This executes the interactor significance evaluation step "
+            "on a sigmoid model. It evaluates the interactor terms against "
+            "the corresponding main effect."
+        ),
+        formatter_class=CustomHelpFormatter,
+    )
+
+    sigmoid_step3_input_group = sigmoid_step3_parser.add_argument_group("Input")
+
+    common_modeling_input_arguments(sigmoid_step3_input_group)
+
+    sigmoid_step3_input_group.add_argument(
+        "--db_path",
+        type=str,
+        required=True,
+        help=(
+            "Path to the database file where the results from the previous "
+            "steps are stored. This should point to the directory containing "
+            "the bootstrap results."
+        ),
+    )
+    sigmoid_step3_parameters_group = sigmoid_step3_parser.add_argument_group(
+        "Parameters"
+    )
+    sigmoid_step3_parameters_group.add_argument(
+        "--top_n",
+        type=int,
+        default=600,
+        help=(
+            "Number of features to retain in the second round of modeling. "
+            "Default is 600"
+        ),
+    )
+
+    sigmoid_step3_model_binning_group = sigmoid_step3_parser.add_argument_group(
+        "Binning Options"
+    )
+    common_modeling_binning_arguments(sigmoid_step3_model_binning_group)
+
+    sigmoid_step3_parser.set_defaults(func=test_sigmoid_interactor_significance)
 
     # add create_database command
     create_db_parser = subparsers.add_parser(
