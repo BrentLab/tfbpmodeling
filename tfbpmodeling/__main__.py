@@ -20,8 +20,8 @@ from tfbpmodeling.lasso_modeling import (
     evaluate_interactor_significance,
     stratification_classification,
 )
-from tfbpmodeling.SigmoidModel import SigmoidModel
 from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
+from tfbpmodeling.SigmoidModel import SigmoidModel
 
 logger = logging.getLogger("main")
 
@@ -228,7 +228,7 @@ def perturbation_binding_modeling(args):
             use_sample_weight_in_cv=args.use_weights_in_cv,
             bin_by_binding_only=args.bin_by_binding_only,
             bins=args.bins,
-            output_dir=output_subdir
+            output_dir=output_subdir,
         )
     else:
         logger.info("Using standard bootstrap modeling for all data results.")
@@ -936,9 +936,8 @@ def main() -> None:
         "--stabilization_ci_start",
         type=float,
         default=50.0,
-        help="Starting confidence interval for iterative dropout stabilization (default: 50.0).",
+        help="Starting confidence interval for iterative dropout stabilization",
     )
-
 
     # Output arguments
     output_group = lasso_parser.add_argument_group("Output")
