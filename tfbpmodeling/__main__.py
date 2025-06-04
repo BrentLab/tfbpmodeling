@@ -20,6 +20,7 @@ from tfbpmodeling.lasso_modeling import (
     evaluate_interactor_significance,
     stratification_classification,
 )
+from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
 from tfbpmodeling.SigmoidModel import SigmoidModel
 
 logger = logging.getLogger("main")
@@ -216,16 +217,30 @@ def perturbation_binding_modeling(args):
     logger.info(
         f"Running bootstrap LassoCV on all data with {args.n_bootstraps} bootstraps"
     )
-    all_data_results = bootstrap_stratified_cv_modeling(
-        bootstrapped_data_all,
-        input_data.predictors_df[input_data.perturbed_tf],
-        estimator=estimator,
-        use_sample_weight_in_cv=args.use_weights_in_cv,
-        ci_percentiles=[float(args.all_data_ci_level)],
-        bin_by_binding_only=args.bin_by_binding_only,
-        bins=args.bins,
-    )
-
+    if args.iterative_dropout:
+        logger.info("Using iterative dropout modeling for all data results.")
+        all_data_results = bootstrap_stratified_cv_loop(
+            bootstrapped_data=bootstrapped_data_all,
+            perturbed_tf_series=input_data.predictors_df[input_data.perturbed_tf],
+            estimator=estimator,
+            ci_percentile=float(args.all_data_ci_level),
+            stabilization_ci_start=args.stabilization_ci_start,
+            use_sample_weight_in_cv=args.use_weights_in_cv,
+            bin_by_binding_only=args.bin_by_binding_only,
+            bins=args.bins,
+            output_dir=output_subdir,
+        )
+    else:
+        logger.info("Using standard bootstrap modeling for all data results.")
+        all_data_results = bootstrap_stratified_cv_modeling(
+            bootstrapped_data=bootstrapped_data_all,
+            perturbed_tf_series=input_data.predictors_df[input_data.perturbed_tf],
+            estimator=estimator,
+            use_sample_weight_in_cv=args.use_weights_in_cv,
+            ci_percentiles=[float(args.all_data_ci_level)],
+            bin_by_binding_only=args.bin_by_binding_only,
+            bins=args.bins,
+        )
     # create the all data object output subdir
     all_data_output = os.path.join(output_subdir, "all_data_result_object")
     os.makedirs(all_data_output, exist_ok=True)
@@ -909,6 +924,19 @@ def main() -> None:
             "E.g., red_median,green_median would be added as ... + red_median + "
             "green_median"
         ),
+    )
+
+    parameters_group.add_argument(
+        "--iterative_dropout",
+        action="store_true",
+        help="Enable iterative variable dropout based on confidence intervals.",
+    )
+
+    parameters_group.add_argument(
+        "--stabilization_ci_start",
+        type=float,
+        default=50.0,
+        help="Starting confidence interval for iterative dropout stabilization",
     )
 
     # Output arguments
