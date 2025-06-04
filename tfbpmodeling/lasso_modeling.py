@@ -12,7 +12,7 @@ import seaborn as sns
 from patsy import PatsyError, dmatrix
 from scipy.stats import rankdata
 from sklearn.base import BaseEstimator, clone
-from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LassoCV, LinearRegression
 from sklearn.model_selection import StratifiedKFold
 from sklearn.utils import resample
 
@@ -930,6 +930,18 @@ class BootstrapModelResults:
             if bounds[0] > threshold or bounds[1] < -threshold
         }
 
+        # remove the following terms from ci_dict:
+        keys_to_remove = [
+            "bootstrap_idx",
+            "final_training_score",
+            "alpha",
+            "left_asymptote",
+            "right_asymptote",
+            "Intercept",
+        ]
+        for key in keys_to_remove:
+            significant_coefs_dict.pop(key, None)
+
         return significant_coefs_dict
 
     def visualize_significant_coefficients(
@@ -1315,6 +1327,7 @@ def bootstrap_stratified_cv_modeling(
         if use_sample_weight_in_cv:
             # this should be over the entire data set, since we are using the weights
             # to perform the sampling
+            logger.info("Performing CV by sample weights")
             classes = stratification_classification(
                 perturbed_tf_series.loc[bootstrapped_data.response_df.index].squeeze(),
                 bootstrapped_data.response_df.squeeze(),
@@ -1332,6 +1345,7 @@ def bootstrap_stratified_cv_modeling(
             )
         else:
             # this is performed on the resampled data
+            logger.info("Performing CV by index partitioning")
             classes = stratification_classification(
                 perturbed_tf_series.loc[y_resampled.index].squeeze(),
                 y_resampled.squeeze(),
@@ -1464,6 +1478,7 @@ def evaluate_interactor_significance(
     input_data: ModelingInputData,
     stratification_classes: np.ndarray,
     model_variables: list[str],
+    estimator: BaseEstimator = LinearRegression(fit_intercept=True),
 ) -> "InteractorSignificanceResults":
     """
     Compare predictive performance of interaction terms vs. their main effects.
@@ -1480,6 +1495,8 @@ def evaluate_interactor_significance(
         and response.
     :param stratification_classes: Array of stratification labels for CV.
     :param model_variables: List of model terms, including interaction terms.
+    :param estimator: A scikit-learn estimator to use for modeling. Default is
+        `LinearRegression(fit_intercept=True)`.
 
     :return: An `InteractorSignificanceResults` instance with evaluation results.
 
@@ -1504,6 +1521,7 @@ def evaluate_interactor_significance(
         response_df,
         input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True),
         stratification_classes,
+        estimator=estimator,
     )
 
     for interactor in interactors:
@@ -1531,6 +1549,7 @@ def evaluate_interactor_significance(
                 " + ".join(predictors_with_main_effect), add_row_max=True
             ),
             stratification_classes,
+            estimator=estimator,
         )
 
         # Store results
