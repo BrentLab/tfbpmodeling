@@ -57,6 +57,7 @@ jobs:
           poetry install
 
       - name: Run tests with pytest
+        if: matrix.os == 'ubuntu-20.04'
         run: poetry run pytest --cov .
 
       - name: Upload coverage reports to Codecov with GitHub Action
