@@ -57,11 +57,11 @@ jobs:
           poetry install
 
       - name: Run tests with pytest
-        if: matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-22.04'
         run: pytest --cov --junitxml=junit.xml -o junit_family=legacy
 
       - name: Upload test results to Codecov
-        if: ${{ !cancelled() }} & matrix.os == 'ubuntu-20.04'
+        if: ${{ !cancelled() && matrix.os == 'ubuntu-22.04' }}
         uses: codecov/test-results-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
