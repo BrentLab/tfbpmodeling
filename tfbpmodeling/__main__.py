@@ -176,7 +176,7 @@ def linear_perturbation_binding_modeling(args):
     if args.cubic_pTF:
         # if --cubic_pTF is passed, then add the cubic perturbed TF to the formula
         cubic_term = f"I({input_data.perturbed_tf} ** 3)"
-        logger.info(f"Adding cubic term to model formula: {cubic_term}")
+        logger.info(f"Add cubic term to model formula: {cubic_term}")
         all_data_formula += f" + {cubic_term}"
 
     # if --row_max is passed, then add "row_max" to the formula
