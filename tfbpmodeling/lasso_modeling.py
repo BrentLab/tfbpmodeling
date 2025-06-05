@@ -392,7 +392,7 @@ class ModelingInputData:
         formula: str,
         add_row_max: bool = False,
         drop_intercept: bool = False,
-        standardize: bool = False,
+        center_scale: bool = False,
     ) -> pd.DataFrame:
         """
         Get the predictors for modeling, optionally adding a row-wise max feature.
@@ -402,7 +402,7 @@ class ModelingInputData:
         :param drop_intercept: If `drop_intercept` is True, "-1" will be appended to
             the formula string. This will drop the intercept (constant) term from
             the model matrix output by patsy.dmatrix. Default is `False`.
-        :param standardize: If True, apply sklearn StandardScaler after design matrix
+        :param center_scale: If True, apply sklearn StandardScaler after design matrix
             creation.
         :return: The design matrix for modeling. self.response_df can be used for the
             response variable.
@@ -437,7 +437,7 @@ class ModelingInputData:
             )
             raise
 
-        if standardize:
+        if center_scale:
             logger.info(f"Standardizing predictors (drop_intercept={drop_intercept})")
             scaler = StandardScaler(with_mean=drop_intercept)
             scaled_values = scaler.fit_transform(design_matrix)

@@ -271,6 +271,30 @@ def test_get_model_data_no_masking(modeling_input_instance):
     ), "Predictor columns are not as expected."
 
 
+def test_center_and_scale(modeling_input_instance):
+    """Test whether get_modeling_data correctly standardizes (centers and scales)
+    predictors."""
+    formula = "TF1 + TF1:TF2 + TF1:TF3 - 1"
+
+    # Get standardized data
+    data = modeling_input_instance.get_modeling_data(
+        formula=formula, center_scale=True, drop_intercept=True
+    )
+
+    assert isinstance(data, pd.DataFrame), "Returned object is not a DataFrame"
+    assert data.shape[1] == 3, f"Expected 3 columns, got {data.shape[1]}"
+    assert all(
+        col in data.columns for col in ["TF1", "TF1:TF2", "TF1:TF3"]
+    ), "Predictor columns are not as expected"
+
+    # Check that mean is approximately 0 and std is approximately 1 for each column
+    means = data.mean(axis=0)
+    stds = data.std(axis=0, ddof=0)  # match sklearn default
+
+    assert np.allclose(means, 0, atol=1e-6), f"Columns not centered: means = {means}"
+    assert np.allclose(stds, 1, atol=1e-6), f"Columns not scaled: stds = {stds}"
+
+
 def test_get_model_data_with_top_n_masking(sample_data):
     """Ensure get_model_data applies top_n masking correctly."""
     response_df, predictors_df = sample_data
