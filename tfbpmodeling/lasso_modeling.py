@@ -442,7 +442,7 @@ class ModelingInputData:
             raise
 
         if center_scale:
-            logger.info(f"Center matrix = `{drop_intercept}`). Scale matrix = `True`")
+            logger.info(f"Center matrix = `{drop_intercept}`. Scale matrix = `True`")
             scaler = StandardScaler(with_mean=drop_intercept)
             scaled_values = scaler.fit_transform(design_matrix)
             design_matrix = pd.DataFrame(
