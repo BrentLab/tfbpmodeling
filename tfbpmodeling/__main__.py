@@ -163,8 +163,7 @@ def linear_perturbation_binding_modeling(args):
         )
         all_data_formula += " + " + " + ".join(args.add_model_variables)
 
-    # log the formula
-    logger.info(f"All data formula for the full interactor model: {all_data_formula}")
+    logger.debug(f"All data formula: {all_data_formula}")
 
     # create the bootstrapped data.
     bootstrapped_data_all = BootstrappedModelingInputData(
@@ -246,7 +245,7 @@ def linear_perturbation_binding_modeling(args):
     # Create the formula for the topn modeling from the significant coefficients
     # NOTE: to remove the intercept, we need to add " -1 "
     topn_formula = f"{' + '.join(all_data_sig_coefs.keys())}"
-    logger.info(f"Topn formula: {topn_formula}")
+    logger.debug(f"Topn formula: {topn_formula}")
 
     # apply the top_n masking
     input_data.top_n_masked = True
