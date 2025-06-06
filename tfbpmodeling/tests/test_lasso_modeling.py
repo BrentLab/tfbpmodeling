@@ -280,7 +280,7 @@ def test_center_and_scale(modeling_input_instance):
     data = modeling_input_instance.get_modeling_data(
         formula=formula, center_scale=True, drop_intercept=True
     )
-    
+
     # create another dataset that isn't centered and scaled to show that
     # the centering and scaling is actually doing something
     data_not_center_scale = modeling_input_instance.get_modeling_data(
@@ -296,21 +296,24 @@ def test_center_and_scale(modeling_input_instance):
     # Check that mean is approximately 0 and std is approximately 1 for each column
     means = data.mean(axis=0)
     stds = data.std(axis=0, ddof=0)  # match sklearn default
-    
+
     # Ideally, these would not pass the same assertion as the centered/scaled data
     means_not_center_scale = data_not_center_scale.mean(axis=0)
-    stds_not_center_scale = data_not_center_scale.std(axis=0, ddof=0)  # match sklearn default
+    stds_not_center_scale = data_not_center_scale.std(
+        axis=0, ddof=0
+    )  # match sklearn default
 
     assert np.allclose(means, 0, atol=1e-6), f"Columns not centered: means = {means}"
     assert np.allclose(stds, 1, atol=1e-6), f"Columns not scaled: stds = {stds}"
-    
+
     # These assertions pass only if all columns are NOT close to 0 and 1 respectively
-    assert not np.allclose(means_not_center_scale, 0, atol=0.5), \
-        f"Expected uncentered data, but means were unexpectedly close to 0: {means_not_center_scale}"
+    assert not np.allclose(
+        means_not_center_scale, 0, atol=0.5
+    ), f"Expected uncentered data, but means close to 0: {means_not_center_scale}"
 
-    assert not np.allclose(stds_not_center_scale, 1, atol=0.1), \
-        f"Expected unscaled data, but stds were unexpectedly close to 1: {stds_not_center_scale}"
-
+    assert not np.allclose(
+        stds_not_center_scale, 1, atol=0.1
+    ), f"Expected unscaled data, but stds close to 1: {stds_not_center_scale}"
 
 
 def test_get_model_data_with_top_n_masking(sample_data):
