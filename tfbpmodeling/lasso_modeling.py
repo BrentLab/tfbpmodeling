@@ -449,9 +449,7 @@ class ModelingInputData:
                 scaled_values, index=design_matrix.index, columns=design_matrix.columns
             )
 
-        logger.info(
-            f"Design matrix columns: {design_matrix.columns}",
-        )
+        logger.info("Design matrix columns: %s", list(design_matrix.columns))
 
         return design_matrix
 
