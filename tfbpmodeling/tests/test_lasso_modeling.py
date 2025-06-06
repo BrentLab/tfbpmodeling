@@ -280,6 +280,12 @@ def test_center_and_scale(modeling_input_instance):
     data = modeling_input_instance.get_modeling_data(
         formula=formula, center_scale=True, drop_intercept=True
     )
+    
+    # create another dataset that isn't centered and scaled to show that
+    # the centering and scaling is actually doing something
+    data_not_center_scale = modeling_input_instance.get_modeling_data(
+        formula=formula, drop_intercept=True
+    )
 
     assert isinstance(data, pd.DataFrame), "Returned object is not a DataFrame"
     assert data.shape[1] == 3, f"Expected 3 columns, got {data.shape[1]}"
