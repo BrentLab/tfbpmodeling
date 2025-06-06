@@ -449,7 +449,7 @@ class ModelingInputData:
                 scaled_values, index=design_matrix.index, columns=design_matrix.columns
             )
 
-        logger.info("Design matrix columns: %s", list(design_matrix.columns))
+        logger.info(f"Design matrix columns: {list(design_matrix.columns)}")
 
         return design_matrix
 
@@ -556,6 +556,11 @@ class BootstrappedModelingInputData:
         # set the random number generator attribute
         self.random_state = random_state
         self._rng = check_random_state(self.random_state)
+        logger.info(
+            f"Using random state: {self.random_state}"
+            if self.random_state is not None
+            else "No explicit random state set."
+        )
 
         # Initialize attributes
         self._bootstrap_indices: list[np.ndarray] = []
