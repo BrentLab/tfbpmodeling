@@ -296,6 +296,10 @@ def test_center_and_scale(modeling_input_instance):
     # Check that mean is approximately 0 and std is approximately 1 for each column
     means = data.mean(axis=0)
     stds = data.std(axis=0, ddof=0)  # match sklearn default
+    
+    # Ideally, these would not pass the same assertion as the centered/scaled data
+    means_not_center_scale = data_not_center_scale.mean(axis=0)
+    stds_not_center_scale = data_not_center_scale.std(axis=0, ddof=0)  # match sklearn default
 
     assert np.allclose(means, 0, atol=1e-6), f"Columns not centered: means = {means}"
     assert np.allclose(stds, 1, atol=1e-6), f"Columns not scaled: stds = {stds}"
