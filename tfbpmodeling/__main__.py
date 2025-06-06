@@ -96,7 +96,7 @@ def linear_perturbation_binding_modeling(args):
     # NOTE: fit_intercept is set to `true`. This means the intercept WILL BE fit
     # DO NOT add a constant vector to the predictors.
     estimator = LassoCV(
-        fit_intercept=True,
+        fit_intercept=not args.center_scale,
         selection="random",
         n_alphas=100,
         random_state=42,
@@ -490,7 +490,7 @@ def sigmoid_bootstrap_worker(
     model_df = input_data.get_modeling_data(
         formula,
         add_row_max=args.row_max,
-        drop_intercept=True,
+        drop_intercept=args.drop_intercept,
         center_scale=args.center_scale,
     )
 
@@ -788,10 +788,9 @@ def common_modeling_input_arguments(
         "--center_scale",
         action="store_true",
         help=(
-            "Set this to center and scale the model matrix. Note that "
-            "omitting `drop_intercept` will mean that the model matrix will be scaled "
-            "only, not centered. Set `--drop_intercept` and `--center_scale` to both "
-            "center and scale the model matrix. Default is False."
+            "Set this to center and scale the model matrix. Note that setting this "
+            "will set the `fit_intercept` parameter of the LassoCV estimator to "
+            "False."
         ),
     )
     parser.add_argument(
@@ -806,11 +805,6 @@ def common_modeling_input_arguments(
 
 
 def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
-    parser.add_argument(
-        "--drop_intercept",
-        action="store_true",
-        help="Drop the intercept from the model. Default is False",
-    )
     parser.add_argument(
         "--row_max",
         action="store_true",
@@ -1041,6 +1035,15 @@ def main() -> None:
     )
 
     sigmoid_parameters_group = sigmoid_parser.add_argument_group("Parameters")
+
+    sigmoid_parameters_group.add_argument(
+        "--drop_intercept",
+        action="store_true",
+        help=(
+            "If set, the model matrix will not include an intercept term. "
+            "Default is False, which means the model will include an intercept."
+        ),
+    )
 
     sigmoid_parameters_group.add_argument(
         "--ci_level",
