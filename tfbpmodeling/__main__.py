@@ -490,7 +490,7 @@ def sigmoid_bootstrap_worker(
     model_df = input_data.get_modeling_data(
         formula,
         add_row_max=args.row_max,
-        drop_intercept=args.drop_intercept,
+        drop_intercept=True,
         center_scale=args.center_scale,
     )
 
