@@ -303,6 +303,14 @@ def test_center_and_scale(modeling_input_instance):
 
     assert np.allclose(means, 0, atol=1e-6), f"Columns not centered: means = {means}"
     assert np.allclose(stds, 1, atol=1e-6), f"Columns not scaled: stds = {stds}"
+    
+    # These assertions pass only if all columns are NOT close to 0 and 1 respectively
+    assert not np.allclose(means_not_center_scale, 0, atol=0.5), \
+        f"Expected uncentered data, but means were unexpectedly close to 0: {means_not_center_scale}"
+
+    assert not np.allclose(stds_not_center_scale, 1, atol=0.1), \
+        f"Expected unscaled data, but stds were unexpectedly close to 1: {stds_not_center_scale}"
+
 
 
 def test_get_model_data_with_top_n_masking(sample_data):
