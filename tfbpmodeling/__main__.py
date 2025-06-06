@@ -93,8 +93,10 @@ def linear_perturbation_binding_modeling(args):
         logger.info(f"Output subdirectory created at {output_subdir}")
 
     # instantiate a estimator
-    # NOTE: fit_intercept is set to `true`. This means the intercept WILL BE fit
-    # DO NOT add a constant vector to the predictors.
+    # `fit_intercept` is set opposite of `center_scale`. If `center_scale` is `False`,
+    # the default, then `fit_intercept` is set to True and the estimator will fit the
+    # intercept. If `center_scale` is True, then the estimator will not fit the
+    # intercept, meaning it assumes the data is centered.
     estimator = LassoCV(
         fit_intercept=not args.center_scale,
         selection="random",

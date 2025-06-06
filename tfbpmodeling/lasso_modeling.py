@@ -418,6 +418,7 @@ class ModelingInputData:
             raise ValueError("Formula must be provided for modeling.")
 
         if drop_intercept:
+            logger.info("Dropping intercept from the patsy model matrix")
             formula += " - 1"
 
         predictors_df = self.predictors_df  # Apply top-n feature mask
