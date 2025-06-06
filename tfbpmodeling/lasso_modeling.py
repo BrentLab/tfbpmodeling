@@ -1391,7 +1391,6 @@ def bootstrap_stratified_cv_modeling(
             logger.warning("Estimator does not have a random_state attribute.")
             pass
 
-        logger.info("Performing CV by sample weights")
         classes = stratification_classification(
             perturbed_tf_series.loc[bootstrapped_data.response_df.index].squeeze(),
             bootstrapped_data.response_df.squeeze(),
