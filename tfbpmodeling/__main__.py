@@ -92,42 +92,13 @@ def linear_perturbation_binding_modeling(args):
         os.makedirs(output_subdir, exist_ok=True)
         logger.info(f"Output subdirectory created at {output_subdir}")
 
-    try:
-        all_data_bootstrap_indicies = (
-            BootstrappedModelingInputData.load_indices(args.all_data_bootstrap_indicies)
-            if args.all_data_bootstrap_indicies
-            else None
-        )
-    except FileNotFoundError:
-        logger.error(
-            f"Bootstrap indices file {args.all_data_bootstrap_indicies} not found."
-        )
-        raise
-
-    try:
-        topn_data_bootstrap_indicies = (
-            BootstrappedModelingInputData.load_indices(
-                args.topn_data_bootstrap_indicies
-            )
-            if args.topn_data_bootstrap_indicies
-            else None
-        )
-    except FileNotFoundError:
-        logger.error(
-            f"Bootstrap indices file {args.topn_data_bootstrap_indicies} not found."
-        )
-        raise
-
-    # if the bootstrap indicies are not provided, then set the number of bootstraps
-    # to the value passed in via the command line
-    all_data_n_bootstraps = None if all_data_bootstrap_indicies else args.n_bootstraps
-    topn_data_n_bootstraps = None if topn_data_bootstrap_indicies else args.n_bootstraps
-
     # instantiate a estimator
-    # NOTE: fit_intercept is set to `true`. This means the intercept WILL BE fit
-    # DO NOT add a constant vector to the predictors.
+    # `fit_intercept` is set opposite of `center_scale`. If `center_scale` is `False`,
+    # the default, then `fit_intercept` is set to True and the estimator will fit the
+    # intercept. If `center_scale` is True, then the estimator will not fit the
+    # intercept, meaning it assumes the data is centered.
     estimator = LassoCV(
-        fit_intercept=True,
+        fit_intercept=not args.center_scale,
         selection="random",
         n_alphas=100,
         random_state=42,
@@ -192,8 +163,7 @@ def linear_perturbation_binding_modeling(args):
         )
         all_data_formula += " + " + " + ".join(args.add_model_variables)
 
-    # log the formula
-    logger.info(f"All data formula for the full interactor model: {all_data_formula}")
+    logger.debug(f"All data formula: {all_data_formula}")
 
     # create the bootstrapped data.
     bootstrapped_data_all = BootstrappedModelingInputData(
@@ -204,24 +174,10 @@ def linear_perturbation_binding_modeling(args):
             drop_intercept=True,
             center_scale=args.center_scale,
         ),
-        n_bootstraps=all_data_n_bootstraps,
-        bootstrap_indices=all_data_bootstrap_indicies,
+        n_bootstraps=args.n_bootstraps,
+        normalize_sample_weights=args.normalize_sample_weights,
+        random_state=args.random_state,
     )
-
-    if not all_data_bootstrap_indicies:
-        all_data_indicies_output_file = os.path.join(
-            output_subdir, "all_data_bootstrap_indices.json"
-        )
-        logger.info(
-            "Saving the bootstrap indices for the all "
-            f"data model to {all_data_indicies_output_file}"
-        )
-        bootstrapped_data_all.save_indices(all_data_indicies_output_file)
-    else:
-        logger.info(
-            "Using the provided bootstrap indices for the all data model from "
-            f"{args.all_data_bootstrap_indicies}"
-        )
 
     logger.info(
         f"Running bootstrap LassoCV on all data with {args.n_bootstraps} bootstraps"
@@ -234,7 +190,6 @@ def linear_perturbation_binding_modeling(args):
             estimator=estimator,
             ci_percentile=float(args.all_data_ci_level),
             stabilization_ci_start=args.stabilization_ci_start,
-            use_sample_weight_in_cv=args.use_weights_in_cv,
             bin_by_binding_only=args.bin_by_binding_only,
             bins=args.bins,
             output_dir=output_subdir,
@@ -245,7 +200,6 @@ def linear_perturbation_binding_modeling(args):
             bootstrapped_data=bootstrapped_data_all,
             perturbed_tf_series=input_data.predictors_df[input_data.perturbed_tf],
             estimator=estimator,
-            use_sample_weight_in_cv=args.use_weights_in_cv,
             ci_percentiles=[float(args.all_data_ci_level)],
             bin_by_binding_only=args.bin_by_binding_only,
             bins=args.bins,
@@ -291,7 +245,7 @@ def linear_perturbation_binding_modeling(args):
     # Create the formula for the topn modeling from the significant coefficients
     # NOTE: to remove the intercept, we need to add " -1 "
     topn_formula = f"{' + '.join(all_data_sig_coefs.keys())}"
-    logger.info(f"Topn formula: {topn_formula}")
+    logger.debug(f"Topn formula: {topn_formula}")
 
     # apply the top_n masking
     input_data.top_n_masked = True
@@ -305,26 +259,12 @@ def linear_perturbation_binding_modeling(args):
             drop_intercept=True,
             center_scale=args.center_scale,
         ),
-        n_bootstraps=topn_data_n_bootstraps,
-        bootstrap_indices=topn_data_bootstrap_indicies,
+        n_bootstraps=args.n_bootstraps,
+        normalize_sample_weights=args.normalize_sample_weights,
+        random_state=(
+            args.random_state + 10 if args.random_state else args.random_state
+        ),
     )
-
-    # If the bootstrap indicies are generated from the data, save them to a json file
-    # so that they can be reused in subsequent runs
-    if not topn_data_bootstrap_indicies:
-        topn_indicies_output_file = os.path.join(
-            output_subdir, "topn_bootstrap_indices.json"
-        )
-        logger.info(
-            "Saving the bootstrap indices for the topn data "
-            f"to {topn_indicies_output_file}"
-        )
-        bootstrapped_data_top_n.save_indices(topn_indicies_output_file)
-    else:
-        logger.info(
-            "Using the provided bootstrap indices for the topn data from "
-            f"{args.topn_data_bootstrap_indicies}"
-        )
 
     logger.debug(
         f"Running bootstrap LassoCV on topn data with {args.n_bootstraps} bootstraps"
@@ -333,7 +273,6 @@ def linear_perturbation_binding_modeling(args):
         bootstrapped_data_top_n,
         input_data.predictors_df[input_data.perturbed_tf],
         estimator=estimator,
-        use_sample_weight_in_cv=args.use_weights_in_cv,
         ci_percentiles=[float(args.topn_ci_level)],
     )
 
@@ -556,18 +495,15 @@ def sigmoid_bootstrap_worker(
         center_scale=args.center_scale,
     )
 
-    bootstrap_indices = BootstrappedModelingInputData.load_indices(
-        args.bootstrap_indices_file
-    )
     bootstrap_data = BootstrappedModelingInputData(
         response_df=input_data.response_df,
         model_df=model_df,
-        n_bootstraps=None,
-        bootstrap_indices=bootstrap_indices,
+        n_bootstraps=args.n_bootstraps,
         normalize_sample_weights=args.normalize_sample_weights,
+        random_state=args.random_state,
     )
 
-    _, _, sample_weights = bootstrap_data.get_bootstrap_sample(i)
+    _, sample_weights = bootstrap_data.get_bootstrap_sample(i)
 
     classes = stratification_classification(
         input_data.predictors_df[input_data.perturbed_tf].squeeze(),
@@ -783,7 +719,9 @@ def common_modeling_binning_arguments(parser: argparse._ArgumentGroup) -> None:
     )
 
 
-def common_modeling_input_arguments(parser: argparse._ArgumentGroup) -> None:
+def common_modeling_input_arguments(
+    parser: argparse._ArgumentGroup, top_n_default: int | None = 600
+) -> None:
     """Add common input arguments for modeling commands."""
     parser.add_argument(
         "--response_file",
@@ -825,14 +763,49 @@ def common_modeling_input_arguments(parser: argparse._ArgumentGroup) -> None:
             "from the analysis."
         ),
     )
+    parser.add_argument(
+        "--n_bootstraps",
+        type=int,
+        default=1000,
+        help="Number of bootstrap samples to generate for resampling. Default is 1000",
+    )
+    parser.add_argument(
+        "--random_state",
+        type=int,
+        default=None,
+        help="Set this to an integer to make the bootstrap sampling reproducible. "
+        "Default is None (no fixed seed) and each call will produce different "
+        "bootstrap indices. Note that if this is set, the `top_n` random_state will "
+        "be +10 in order to make the top_n indices different from the `all_data` step",
+    )
+    parser.add_argument(
+        "--normalize_sample_weights",
+        action="store_true",
+        help=(
+            "Set this to normalize the sample weights to sum to 1. " "Default is False."
+        ),
+    )
+    parser.add_argument(
+        "--center_scale",
+        action="store_true",
+        help=(
+            "Set this to center and scale the model matrix. Note that setting this "
+            "will set the `fit_intercept` parameter of the LassoCV estimator to "
+            "False."
+        ),
+    )
+    parser.add_argument(
+        "--top_n",
+        type=int,
+        default=top_n_default,
+        help=(
+            "Number of features to retain in the second round of modeling. "
+            f"Default is {top_n_default}"
+        ),
+    )
 
 
 def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
-    parser.add_argument(
-        "--drop_intercept",
-        action="store_true",
-        help="Drop the intercept from the model. Default is False",
-    )
     parser.add_argument(
         "--row_max",
         action="store_true",
@@ -943,31 +916,7 @@ def main() -> None:
     # Input arguments
     linear_input_group = linear_lasso_parser.add_argument_group("Input")
 
-    common_modeling_input_arguments(linear_input_group)
-
-    linear_input_group.add_argument(
-        "--all_data_bootstrap_indicies",
-        type=str,
-        default=None,
-        help=(
-            "Path to a JSON file containing the bootstrap indices for the all data "
-            "model. If provided, these indices will be used instead of generating "
-            "new ones. If not provided, new bootstrap indices will be generated "
-            "and saved."
-        ),
-    )
-
-    linear_input_group.add_argument(
-        "--topn_data_bootstrap_indicies",
-        type=str,
-        default=None,
-        help=(
-            "Path to a JSON file containing the bootstrap indices for the topn data "
-            "model. If provided, these indices will be used instead of generating "
-            "new ones. If not provided, new bootstrap indices will be generated "
-            "and saved."
-        ),
-    )
+    common_modeling_input_arguments(linear_input_group, top_n_default=600)
 
     linear_model_feature_options_group = linear_lasso_parser.add_argument_group(
         "Feature Options"
@@ -981,23 +930,6 @@ def main() -> None:
     common_modeling_binning_arguments(linear_model_binning_group)
 
     linear_parameters_group = linear_lasso_parser.add_argument_group("Parameters")
-
-    linear_parameters_group.add_argument(
-        "--top_n",
-        type=int,
-        default=600,
-        help=(
-            "Number of features to retain in the second round of modeling. "
-            "Default is 600"
-        ),
-    )
-
-    linear_parameters_group.add_argument(
-        "--n_bootstraps",
-        type=int,
-        default=1000,
-        help="Number of bootstrap samples to generate for resampling. Default is 1000",
-    )
 
     linear_parameters_group.add_argument(
         "--all_data_ci_level",
@@ -1026,15 +958,6 @@ def main() -> None:
         help=(
             "This controls the maximum number of iterations LassoCV may "
             "use in order to fit"
-        ),
-    )
-
-    linear_parameters_group.add_argument(
-        "--use_weights_in_cv",
-        action="store_true",
-        help=(
-            "Enable sample weighting in cross-validation based on bootstrap "
-            "sample proportions."
         ),
     )
 
@@ -1100,17 +1023,7 @@ def main() -> None:
 
     sigmoid_input_group = sigmoid_parser.add_argument_group("Input")
 
-    common_modeling_input_arguments(sigmoid_input_group)
-
-    sigmoid_input_group.add_argument(
-        "--bootstrap_indices_file",
-        type=str,
-        required=True,
-        help=(
-            "Path to a JSON file containing the bootstrap indices for the model. "
-            "These indices will be used for resampling."
-        ),
-    )
+    common_modeling_input_arguments(sigmoid_input_group, top_n_default=None)
 
     sigmoid_input_group.add_argument(
         "--bootstrap_idx",
@@ -1125,15 +1038,14 @@ def main() -> None:
     sigmoid_parameters_group = sigmoid_parser.add_argument_group("Parameters")
 
     sigmoid_parameters_group.add_argument(
-        "--top_n",
-        type=int,
-        default=None,
+        "--drop_intercept",
+        action="store_true",
         help=(
-            "This is the number of features to use for second round modeling. "
-            "Defaults to `Non`, for the 'all_data' model. Set to eg 600 for top_n "
-            "modeling"
+            "If set, the model matrix will not include an intercept term. "
+            "Default is False, which means the model will include an intercept."
         ),
     )
+
     sigmoid_parameters_group.add_argument(
         "--ci_level",
         type=float,
@@ -1167,14 +1079,6 @@ def main() -> None:
             "maxcor=10, ftol=2.22e-9, gtol=1e-5, eps=1e-8, maxfun=15000, "
             "maxiter=15000, maxls=20, finite_diff_rel_step=None. "
             'Example: \'{"maxiter": 1000, "gtol": 1e-6}\''
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--normalize_sample_weights",
-        action="store_true",
-        help=(
-            "Set this to normalize the sample weights to sum to 1. " "Default is False."
         ),
     )
 
@@ -1231,18 +1135,6 @@ def main() -> None:
             "Path to the database file where the results from the previous "
             "steps are stored. This should point to the directory containing "
             "the bootstrap results."
-        ),
-    )
-    sigmoid_step3_parameters_group = sigmoid_step3_parser.add_argument_group(
-        "Parameters"
-    )
-    sigmoid_step3_parameters_group.add_argument(
-        "--top_n",
-        type=int,
-        default=600,
-        help=(
-            "Number of features to retain in the second round of modeling. "
-            "Default is 600"
         ),
     )
 
