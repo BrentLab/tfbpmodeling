@@ -33,7 +33,6 @@ def bootstrap_stratified_cv_loop(
         n_jobs=4,
     ),
     ci_percentile: float = 98.0,  # Final confidence interval
-    use_sample_weight_in_cv: bool = False,
     stabilization_ci_start: float = 50.0,  # Starting CI for stabilization
     num_samples_for_stabilization: int = 500,
     output_dir: str = "",
@@ -47,7 +46,6 @@ def bootstrap_stratified_cv_loop(
     :param perturbed_tf_series: Series of TF binding values for stratification.
     :param estimator: scikit-learn estimator. Default is LassoCV.
     :param ci_percentile: Final confidence interval for results (e.g., 99.0).
-    :param use_sample_weight_in_cv: Whether to use sample weights in CV.
     :param stabilization_ci_start: Starting confidence interval for stabilization (e.g.,
         50.0).
     :param stabilization_ci_step: Step size for increasing CI during stabilization.
@@ -142,7 +140,6 @@ def bootstrap_stratified_cv_loop(
         perturbed_tf_series=perturbed_tf_series,
         estimator=estimator,
         ci_percentiles=[ci_percentile],
-        use_sample_weight_in_cv=use_sample_weight_in_cv,
         **kwargs,
     )
 
