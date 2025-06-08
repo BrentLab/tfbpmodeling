@@ -126,7 +126,7 @@ def linear_perturbation_binding_modeling(args):
 
     # drop any variables which are in args.exclude_interactor_variables
     predictor_variables = exclude_predictor_variables(
-        predictor_variables, args.exclude_interactor_variables
+        list(predictor_variables), args.exclude_interactor_variables
     )
 
     # create a list of interactor terms with the perturbed_tf as the first term
@@ -468,7 +468,7 @@ def sigmoid_bootstrap_worker(
     else:
         predictor_variables = input_data.predictors_df.columns.drop(args.perturbed_tf)
         predictor_variables = exclude_predictor_variables(
-            predictor_variables, args.exclude_interactor_variables
+            list(predictor_variables), args.exclude_interactor_variables
         )
         interaction_terms = [
             f"{args.perturbed_tf}:{var}" for var in predictor_variables
