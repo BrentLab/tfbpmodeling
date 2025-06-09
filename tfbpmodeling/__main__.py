@@ -22,6 +22,7 @@ from tfbpmodeling.lasso_modeling import (
 )
 from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
 from tfbpmodeling.SigmoidModel import SigmoidModel
+from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_variables
 
 logger = logging.getLogger("main")
 
@@ -124,11 +125,9 @@ def linear_perturbation_binding_modeling(args):
     predictor_variables = input_data.predictors_df.columns.drop(input_data.perturbed_tf)
 
     # drop any variables which are in args.exclude_interactor_variables
-    predictor_variables = [
-        var
-        for var in predictor_variables
-        if var not in args.exclude_interactor_variables
-    ]
+    predictor_variables = exclude_predictor_variables(
+        list(predictor_variables), args.exclude_interactor_variables
+    )
 
     # create a list of interactor terms with the perturbed_tf as the first term
     interaction_terms = [
@@ -468,11 +467,9 @@ def sigmoid_bootstrap_worker(
             return
     else:
         predictor_variables = input_data.predictors_df.columns.drop(args.perturbed_tf)
-        predictor_variables = [
-            var
-            for var in predictor_variables
-            if var not in args.exclude_interactor_variables
-        ]
+        predictor_variables = exclude_predictor_variables(
+            list(predictor_variables), args.exclude_interactor_variables
+        )
         interaction_terms = [
             f"{args.perturbed_tf}:{var}" for var in predictor_variables
         ]
@@ -836,7 +833,7 @@ def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
         default=[],
         help=(
             "Comma-separated list of variables to exclude from the interactor terms. "
-            "E.g. red_median,green_median"
+            "E.g. red_median,green_median. To exclude all variables, use 'exclude_all'"
         ),
     )
     parser.add_argument(
