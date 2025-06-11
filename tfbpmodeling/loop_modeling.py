@@ -109,13 +109,15 @@ def bootstrap_stratified_cv_loop(
 
         # Compute confidence intervals
         ci_dict = {
-            colname: (
-                np.percentile(bootstrap_coefs_df[colname], (100 - current_ci) / 2),
-                np.percentile(
-                    bootstrap_coefs_df[colname], 100 - (100 - current_ci) / 2
-                ),
-            )
-            for colname in bootstrap_coefs_df.columns
+            f"{current_ci}": {
+                colname: (
+                    np.percentile(bootstrap_coefs_df[colname], (100 - current_ci) / 2),
+                    np.percentile(
+                        bootstrap_coefs_df[colname], 100 - (100 - current_ci) / 2
+                    ),
+                )
+                for colname in bootstrap_coefs_df.columns
+            }
         }
 
         # Select variables within the confidence interval
@@ -135,7 +137,7 @@ def bootstrap_stratified_cv_loop(
                 bootstrap_coefs_df=bootstrap_coefs_df,
                 alpha_list=alpha_list,
             )
-        
+
         logger.info(f"CI={current_ci}: Selected {len(selected_variables)} variables")
         output_path = os.path.join(output_dir, f"selected_variables_ci_{i}.txt")
         with open(output_path, "w") as f:

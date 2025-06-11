@@ -200,7 +200,8 @@ def bootstrapped_random_sample_data_no_signal(random_sample_data_no_signal):
         for var in predictor_variables
     ]
 
-    formula = f"{random_sample_data_no_signal.perturbed_tf} + {' + '.join(interaction_terms)} - 1"
+    formula = f"{random_sample_data_no_signal.perturbed_tf} + \
+        {' + '.join(interaction_terms)} - 1"
 
     return BootstrappedModelingInputData(
         random_sample_data_no_signal.response_df,
