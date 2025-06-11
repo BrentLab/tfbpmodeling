@@ -392,7 +392,7 @@ class ModelingInputData:
         formula: str,
         add_row_max: bool = False,
         drop_intercept: bool = False,
-        center_scale: bool = False,
+        scale_by_std: bool = False,
     ) -> pd.DataFrame:
         """
         Get the predictors for modeling, optionally adding a row-wise max feature.
@@ -402,10 +402,10 @@ class ModelingInputData:
         :param drop_intercept: If `drop_intercept` is True, "-1" will be appended to
             the formula string. This will drop the intercept (constant) term from
             the model matrix output by patsy.dmatrix. Default is `False`. Note
-            that if this is `False`, but `center_scale` is `True`, then the
+            that if this is `False`, but `scale_by_std` is `True`, then the
             StandardScaler `with_mean = False` and the data is only scaled,
             not centered.
-        :param center_scale: If True, apply sklearn StandardScaler after design matrix
+        :param scale_by_std: If True, apply sklearn StandardScaler after design matrix
             creation.
         :return: The design matrix for modeling. self.response_df can be used for the
             response variable.
@@ -441,9 +441,9 @@ class ModelingInputData:
             )
             raise
 
-        if center_scale:
-            logger.info(f"Center matrix = `{drop_intercept}`. Scale matrix = `True`")
-            scaler = StandardScaler(with_mean=drop_intercept)
+        if scale_by_std:
+            logger.info("Center matrix = `False`. Scale matrix = `True`")
+            scaler = StandardScaler(with_mean=False, with_std=True)
             scaled_values = scaler.fit_transform(design_matrix)
             design_matrix = pd.DataFrame(
                 scaled_values, index=design_matrix.index, columns=design_matrix.columns

@@ -94,12 +94,12 @@ def linear_perturbation_binding_modeling(args):
         logger.info(f"Output subdirectory created at {output_subdir}")
 
     # instantiate a estimator
-    # `fit_intercept` is set opposite of `center_scale`. If `center_scale` is `False`,
+    # `fit_intercept` is set opposite of `scale_by_std`. If `scale_by_std` is `False`,
     # the default, then `fit_intercept` is set to True and the estimator will fit the
-    # intercept. If `center_scale` is True, then the estimator will not fit the
+    # intercept. If `scale_by_std` is True, then the estimator will not fit the
     # intercept, meaning it assumes the data is centered.
     estimator = LassoCV(
-        fit_intercept=not args.center_scale,
+        fit_intercept=True,
         selection="random",
         n_alphas=100,
         random_state=42,
@@ -171,7 +171,7 @@ def linear_perturbation_binding_modeling(args):
             all_data_formula,
             add_row_max=args.row_max,
             drop_intercept=True,
-            center_scale=args.center_scale,
+            scale_by_std=args.scale_by_std,
         ),
         n_bootstraps=args.n_bootstraps,
         normalize_sample_weights=args.normalize_sample_weights,
@@ -256,7 +256,7 @@ def linear_perturbation_binding_modeling(args):
             topn_formula,
             add_row_max=args.row_max,
             drop_intercept=True,
-            center_scale=args.center_scale,
+            scale_by_std=args.scale_by_std,
         ),
         n_bootstraps=args.n_bootstraps,
         normalize_sample_weights=args.normalize_sample_weights,
@@ -489,7 +489,7 @@ def sigmoid_bootstrap_worker(
         formula,
         add_row_max=args.row_max,
         drop_intercept=args.drop_intercept,
-        center_scale=args.center_scale,
+        scale_by_std=args.scale_by_std,
     )
 
     bootstrap_data = BootstrappedModelingInputData(
@@ -783,7 +783,7 @@ def common_modeling_input_arguments(
         ),
     )
     parser.add_argument(
-        "--center_scale",
+        "--scale_by_std",
         action="store_true",
         help=(
             "Set this to center and scale the model matrix. Note that setting this "
