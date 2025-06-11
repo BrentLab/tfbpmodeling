@@ -123,7 +123,7 @@ def bootstrap_stratified_cv_loop(
         # Select variables within the confidence interval
         selected_variables = [
             colname
-            for colname, (lower, upper) in ci_dict.items()
+            for colname, (lower, upper) in ci_dict[f"{current_ci}"].items()
             if lower > 0 or upper < 0
         ]
 
