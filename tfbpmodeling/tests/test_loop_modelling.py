@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.linear_model import LassoCV
 
 from tfbpmodeling.lasso_modeling import (
@@ -39,3 +40,32 @@ def test_bootstrap_stratified_cv_loop(
     with saved_files[-1].open("r") as f:
         contents = f.read().strip()
         assert len(contents) > 0
+
+def test_bootstrap_stratified_cv_loop_no_variables_selected(
+    random_sample_data_no_signal,
+    bootstrapped_random_sample_data_no_signal,
+    tmp_path,
+):
+    """Ensure that when predictors have no signal, no variables are selected at high CI."""
+    perturbed_tf_series = random_sample_data_no_signal.predictors_df[
+        random_sample_data_no_signal.perturbed_tf
+    ]
+    estimator = LassoCV()
+    results = bootstrap_stratified_cv_loop(
+        bootstrapped_data=bootstrapped_random_sample_data_no_signal,
+        perturbed_tf_series=perturbed_tf_series,
+        estimator=estimator,
+        ci_percentile=98,
+        stabilization_ci_start=50,
+        num_samples_for_stabilization=10,
+        output_dir=str(tmp_path),
+        bins=[0, 8, 64, 512, np.inf],
+    )
+
+    assert isinstance(results, BootstrapModelResults)
+
+    selected_variables = [
+        var for var, (low, high) in results.ci_dict.items()
+        if low > 0 or high < 0
+    ]
+    assert len(selected_variables) == 0, f"Variables incorrectly selected: {selected_variables}"

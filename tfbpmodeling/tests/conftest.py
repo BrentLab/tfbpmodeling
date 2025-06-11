@@ -153,3 +153,58 @@ def sample_evaluations() -> list[dict[str, Any]]:
             "delta_r2": 0.00,
         },
     ]
+
+
+@pytest.fixture
+def random_sample_data_no_signal():
+    """Generates random predictors and completely random response (no signal)."""
+    np.random.seed(42)
+    total_features = 20
+    n_samples = 100
+
+    feature_col = [f"gene{i+1}" for i in range(total_features)]
+
+    predictors_df = pd.DataFrame(
+        np.random.randn(n_samples, total_features),
+        columns=feature_col,
+        index=[f"gene{i+1}" for i in range(n_samples)],
+    ).reset_index(names="target_symbol")
+
+    # Response is just noise
+    response_values = np.random.randn(n_samples)
+
+    response_df = pd.DataFrame(
+        {"response": response_values, "target_symbol": predictors_df.target_symbol}
+    )
+
+    return ModelingInputData(
+        response_df=response_df,
+        predictors_df=predictors_df,
+        perturbed_tf="gene1",
+        feature_col="target_symbol",
+        feature_blacklist=[],
+        top_n=10,
+    )
+
+
+@pytest.fixture
+def bootstrapped_random_sample_data_no_signal(random_sample_data_no_signal):
+    """Bootstrapped version of the no-signal data."""
+    random_sample_data_no_signal.top_n_masked = False
+    predictor_variables = random_sample_data_no_signal.predictors_df.columns.drop(
+        random_sample_data_no_signal.perturbed_tf
+    )
+
+    interaction_terms = [
+        f"{random_sample_data_no_signal.perturbed_tf}:{var}"
+        for var in predictor_variables
+    ]
+
+    formula = f"{random_sample_data_no_signal.perturbed_tf} + {' + '.join(interaction_terms)} - 1"
+
+    return BootstrappedModelingInputData(
+        random_sample_data_no_signal.response_df,
+        random_sample_data_no_signal.get_modeling_data(formula=formula),
+        n_bootstraps=50,
+        random_state=42,
+    )

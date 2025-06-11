@@ -18,7 +18,7 @@ from tfbpmodeling.stratification_classification import (
     stratification_classification,
 )
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("main")
 
 
 def bootstrap_stratified_cv_loop(
@@ -125,6 +125,17 @@ def bootstrap_stratified_cv_loop(
             if lower > 0 or upper < 0
         ]
 
+        if not selected_variables:
+            logger.warning(
+                f"No variables selected at CI={current_ci}. "
+                "Consider adjusting the confidence interval."
+            )
+            return BootstrapModelResults(
+                ci_dict=ci_dict,
+                bootstrap_coefs_df=bootstrap_coefs_df,
+                alpha_list=alpha_list,
+            )
+        
         logger.info(f"CI={current_ci}: Selected {len(selected_variables)} variables")
         output_path = os.path.join(output_dir, f"selected_variables_ci_{i}.txt")
         with open(output_path, "w") as f:
