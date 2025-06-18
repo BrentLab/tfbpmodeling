@@ -326,7 +326,9 @@ def linear_perturbation_binding_modeling(args):
         input_data,
         stratification_classes=alldata_classes,
         model_variables=list(
-            topn_results.extract_significant_coefficients(ci_level="90.0").keys()
+            topn_results.extract_significant_coefficients(
+                ci_level=args.topn_ci_level
+            ).keys()
         ),
     )
 
