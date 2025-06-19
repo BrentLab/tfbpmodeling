@@ -17,7 +17,8 @@ from tfbpmodeling.lasso_modeling import (
     BootstrappedModelingInputData,
     ModelingInputData,
     bootstrap_stratified_cv_modeling,
-    evaluate_interactor_significance,
+    evaluate_interactor_significance_lassocv,
+    evaluate_interactor_significance_linear,
     stratification_classification,
 )
 from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
@@ -321,7 +322,13 @@ def linear_perturbation_binding_modeling(args):
         bins=args.bins,
     )
 
-    # test the significance of the interactor against the main effect
+    # Test the significance of the interactor terms
+    evaluate_interactor_significance = (
+        evaluate_interactor_significance_lassocv
+        if args.stage4_lasso
+        else evaluate_interactor_significance_linear
+    )
+
     results = evaluate_interactor_significance(
         input_data,
         stratification_classes=alldata_classes,
@@ -330,6 +337,7 @@ def linear_perturbation_binding_modeling(args):
                 ci_level=args.topn_ci_level
             ).keys()
         ),
+        estimator=estimator,
     )
 
     output_significance_file = os.path.join(
@@ -615,7 +623,7 @@ def test_sigmoid_interactor_significance(
 
     model_vars = topn_sig_coefs.keys()
 
-    results = evaluate_interactor_significance(
+    results = evaluate_interactor_significance_linear(
         input_data,
         classes,
         list(model_vars),
@@ -971,6 +979,12 @@ def main() -> None:
         type=float,
         default=50.0,
         help="Starting confidence interval for iterative dropout stabilization",
+    )
+
+    linear_parameters_group.add_argument(
+        "--stage4_lasso",
+        action="store_true",
+        help="Use LassoCV-based interactor significance testing in Stage 4",
     )
 
     # Output arguments
