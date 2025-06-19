@@ -12,17 +12,16 @@ import seaborn as sns
 from patsy import PatsyError, dmatrix
 from scipy.stats import rankdata
 from sklearn.base import BaseEstimator, clone
-from sklearn.linear_model import LassoCV, LinearRegression
+from sklearn.linear_model import LassoCV
+from sklearn.metrics import r2_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import check_random_state, resample
 from sklearn.utils import resample
-from sklearn.metrics import r2_score
 
 from tfbpmodeling.stratification_classification import (
     stratification_classification,
 )
-from tfbpmodeling.stratified_cv_r2 import stratified_cv_r2
 
 logger = logging.getLogger("main")
 
@@ -1543,12 +1542,15 @@ def evaluate_interactor_significance(
         - List of retained interaction terms
         - pd.Series of all model coefficients (indexed by term name)
         - Selected alpha value from LassoCV
+
     """
     interactors = [v for v in model_variables if ":" in v]
-    modifier_main_effects = set(i.split(":")[1] for i in interactors)
-    
+    modifier_main_effects = {i.split(":")[1] for i in interactors}
+
     augmented_vars = list(set(model_variables + list(modifier_main_effects)))
-    logger.info(f"Model includes interaction terms and their main effects: {augmented_vars}")
+    logger.info(
+        f"Model includes interaction terms and their main effects: {augmented_vars}"
+    )
 
     X = input_data.get_modeling_data(
         " + ".join(augmented_vars),
@@ -1578,12 +1580,14 @@ def evaluate_interactor_significance(
     output = []
     for interactor in interactors:
         main_effect = interactor.split(":")[1]
-        output.append({
-            "interactor": interactor,
-            "variant": main_effect,
-            "r2_lasso_model": r2_full_model,
-            "coef_interactor": coefs.get(interactor, 0.0),
-            "coef_main_effect": coefs.get(main_effect, 0.0),
-        })
+        output.append(
+            {
+                "interactor": interactor,
+                "variant": main_effect,
+                "r2_lasso_model": r2_full_model,
+                "coef_interactor": coefs.get(interactor, 0.0),
+                "coef_main_effect": coefs.get(main_effect, 0.0),
+            }
+        )
 
     return InteractorSignificanceResults(output)
