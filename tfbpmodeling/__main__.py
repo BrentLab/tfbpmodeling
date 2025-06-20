@@ -347,7 +347,7 @@ def linear_perturbation_binding_modeling(args):
     )
     logger.info(
         "Writing the final interactor significance "
-        "results to {output_significance_file}"
+        f"results to {output_significance_file}"
     )
     results.serialize(output_significance_file)
 
