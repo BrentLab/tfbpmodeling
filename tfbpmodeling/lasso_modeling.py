@@ -1550,7 +1550,7 @@ def evaluate_interactor_significance_linear(
     :raises KeyError: If a main effect is missing from the input data.
 
     """
-    logger.info("Stage 4 significance evaluation method: Linear")
+    logger.info("Interactor significance evaluation method: Linear")
 
     output = []
 
@@ -1636,7 +1636,7 @@ def evaluate_interactor_significance_lassocv(
         - Selected alpha value from LassoCV
 
     """
-    logger.info("Stage 4 significance evaluation method: LassoCV")
+    logger.info("Interactor significance evaluation method: LassoCV")
 
     interactors = [v for v in model_variables if ":" in v]
     modifier_main_effects = {i.split(":")[1] for i in interactors}

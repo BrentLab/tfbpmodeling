@@ -68,8 +68,6 @@ def linear_perturbation_binding_modeling(args):
 
     logger.info(f"estimator max_iter: {max_iter}.")
 
-    logger.info(f"Stage 4 method: {'LassoCV' if args.stage4_lasso else 'Linear'}")
-
     logger.info("Step 1: Preprocessing")
 
     # validate input files/dirs
