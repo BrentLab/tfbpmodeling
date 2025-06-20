@@ -12,16 +12,14 @@ import seaborn as sns
 from patsy import PatsyError, dmatrix
 from scipy.stats import rankdata
 from sklearn.base import BaseEstimator, clone
-from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LassoCV, LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import check_random_state, resample
-from sklearn.utils import resample
 
-from tfbpmodeling.stratification_classification import (
-    stratification_classification,
-)
+from tfbpmodeling.stratification_classification import stratification_classification
+from tfbpmodeling.stratified_cv_r2 import stratified_cv_r2
 
 logger = logging.getLogger("main")
 
@@ -1527,66 +1525,88 @@ def evaluate_interactor_significance_linear(
     input_data: ModelingInputData,
     stratification_classes: np.ndarray,
     model_variables: list[str],
-    estimator: BaseEstimator = LassoCV(
-        fit_intercept=True,
-        max_iter=10000,
-        selection="random",
-        random_state=42,
-        n_jobs=4,
-    ),
+    estimator: BaseEstimator = LinearRegression(fit_intercept=True),
 ) -> "InteractorSignificanceResults":
     """
-    Evaluate which interaction terms survive LassoCV when main effects are included.
+    Compare predictive performance of interaction terms vs. their main effects.
 
-    :return:
-        - List of retained interaction terms
-        - pd.Series of all model coefficients (indexed by term name)
-        - Selected alpha value from LassoCV
+    This function performs a stratified cross-validation comparison between:
+    - The original model containing interaction terms (e.g., TF1:TF2)
+    - A reduced model where each interactor is replaced by its corresponding
+      main effect (e.g., TF2)
+
+    R² scores are computed for both models using stratified CV. The delta in R²
+    informs whether the interaction term adds predictive value.
+
+    :param input_data: A `ModelingInputData` instance containing predictors
+        and response.
+    :param stratification_classes: Array of stratification labels for CV.
+    :param model_variables: List of model terms, including interaction terms.
+    :param estimator: A scikit-learn estimator to use for modeling. Default is
+        `LinearRegression(fit_intercept=True)`.
+
+    :return: An `InteractorSignificanceResults` instance with evaluation results.
+
+    :raises KeyError: If a main effect is missing from the input data.
 
     """
-    interactors = [v for v in model_variables if ":" in v]
-    modifier_main_effects = {i.split(":")[1] for i in interactors}
-
-    augmented_vars = list(set(model_variables + list(modifier_main_effects)))
-    logger.info(
-        f"Model includes interaction terms and their main effects: {augmented_vars}"
-    )
-
-    X = input_data.get_modeling_data(
-        " + ".join(augmented_vars),
-        add_row_max=True,
-        drop_intercept=True,
-    )
-    y = input_data.response_df
-
-    skf = StratifiedKFold(n_splits=4, shuffle=True, random_state=42)
-
-    model_i = stratified_cv_modeling(
-        y,
-        X,
-        classes=stratification_classes,
-        estimator=estimator,
-        skf=skf,
-    )
-
-    coefs = pd.Series(model_i.coef_, index=X.columns)
-    retained_vars = coefs[coefs != 0].index.tolist()
-    retained_interactors = [v for v in retained_vars if ":" in v]
-
-    logger.info(f"Retained interaction terms: {retained_interactors}")
-    y_pred = model_i.predict(X)
-    r2_full_model = r2_score(y, y_pred)
-
     output = []
+
+    response_df = input_data.response_df
+
+    # Identify interaction terms (those with ":")
+    interactors = [var for var in model_variables if ":" in var]
+
+    logger.info(f"Testing the following interaction variables: {interactors}")
+
+    # NOTE: add_row_max is set to True such that IF the formula includes row_max,
+    # the column is present. However, if the formula doesn't not include row_max,
+    # then that column will not be present in the model matrix.
+
+    # Get the average R² of the original model
+    avg_r2_original_model = stratified_cv_r2(
+        response_df,
+        input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True),
+        stratification_classes,
+        estimator=estimator,
+    )
+
     for interactor in interactors:
+        # Extract main effect from interactor
         main_effect = interactor.split(":")[1]
+
+        logger.debug(f"Testing interactor '{interactor}' with variant '{main_effect}'.")
+
+        # Ensure main effect exists in predictors
+        if main_effect not in input_data.predictors_df.columns:
+            raise KeyError(f"Main effect '{main_effect}' not found in predictors.")
+
+        # Define predictor sets for comparison
+        predictors_with_main_effect = [
+            var for var in model_variables if var != interactor
+        ] + [
+            main_effect
+        ]  # Replace interactor with main effect
+
+        # Get the average R² of the model with the main effect replacing one of the
+        # interaction terms
+        avg_r2_main_effect = stratified_cv_r2(
+            response_df,
+            input_data.get_modeling_data(
+                " + ".join(predictors_with_main_effect), add_row_max=True
+            ),
+            stratification_classes,
+            estimator=estimator,
+        )
+
+        # Store results
         output.append(
             {
                 "interactor": interactor,
                 "variant": main_effect,
-                "r2_lasso_model": r2_full_model,
-                "coef_interactor": coefs.get(interactor, 0.0),
-                "coef_main_effect": coefs.get(main_effect, 0.0),
+                "avg_r2_interactor": avg_r2_original_model,
+                "avg_r2_main_effect": avg_r2_main_effect,
+                "delta_r2": avg_r2_main_effect - avg_r2_original_model,
             }
         )
 
@@ -1608,10 +1628,10 @@ def evaluate_interactor_significance_lassocv(
     """
     Evaluate which interaction terms survive LassoCV when main effects are included.
 
-    The returned info includes R² for the Lasso model and coefficients for interactor
-    and main effect.
-
-    :return: InteractorSignificanceResults with Lasso model coefficients and R².
+    :return:
+        - List of retained interaction terms
+        - pd.Series of all model coefficients (indexed by term name)
+        - Selected alpha value from LassoCV
 
     """
     interactors = [v for v in model_variables if ":" in v]
