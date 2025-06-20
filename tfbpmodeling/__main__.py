@@ -621,6 +621,8 @@ def test_sigmoid_interactor_significance(
     topn_sig_coefs = res.extract_significant_coefficients(ci_level=args.ci_level)
     logger.info("Top N Significant Coefs:" + str(topn_sig_coefs.keys()))
 
+    logger.info(f"Stage 4 method: {'LassoCV' if args.stage4_lasso else 'Linear'}")
+
     model_vars = topn_sig_coefs.keys()
 
     results = evaluate_interactor_significance_linear(
