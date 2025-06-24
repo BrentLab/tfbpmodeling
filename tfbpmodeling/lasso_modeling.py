@@ -1572,7 +1572,9 @@ def evaluate_interactor_significance_linear(
     avg_r2_original_model = stratified_cv_r2(
         y,
         X,
-        stratification_classes,
+        pd.Series(stratification_classes, index=input_data.response_df.index).loc[
+            X.index
+        ],
         estimator=estimator,
     )
 
@@ -1600,7 +1602,9 @@ def evaluate_interactor_significance_linear(
         avg_r2_main_effect = stratified_cv_r2(
             y_main,
             X_main,
-            stratification_classes,
+            pd.Series(stratification_classes, index=input_data.response_df.index).loc[
+                X_main.index
+            ],
             estimator=estimator,
         )
 
@@ -1664,7 +1668,9 @@ def evaluate_interactor_significance_lassocv(
     model_i = stratified_cv_modeling(
         y,
         X,
-        classes=stratification_classes,
+        pd.Series(stratification_classes, index=input_data.response_df.index).loc[
+            X.index
+        ],
         estimator=estimator,
         skf=skf,
     )
