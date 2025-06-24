@@ -993,7 +993,7 @@ def main() -> None:
         help="Use LassoCV-based interactor significance testing in Stage 4",
     )
 
-    parser.add_argument(
+    linear_parameters_group.add_argument(
         "--stage4_topn",
         action="store_true",
         help="If set, perform Stage 4 evaluation on top-n data instead of all data.",
