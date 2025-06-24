@@ -1554,21 +1554,24 @@ def evaluate_interactor_significance_linear(
 
     output = []
 
-    response_df = input_data.response_df
-
     # Identify interaction terms (those with ":")
     interactors = [var for var in model_variables if ":" in var]
 
     logger.info(f"Testing the following interaction variables: {interactors}")
 
-    # NOTE: add_row_max is set to True such that IF the formula includes row_max,
-    # the column is present. However, if the formula doesn't not include row_max,
-    # then that column will not be present in the model matrix.
+    # Get original model X and y (masked if top_n_masked is True)
+    X = input_data.get_modeling_data(
+        " + ".join(model_variables),
+        add_row_max=True,
+    )
+
+    # Get response y aligned to X
+    y = input_data.response_df.loc[X.index, input_data.perturbed_tf]
 
     # Get the average R² of the original model
     avg_r2_original_model = stratified_cv_r2(
-        response_df,
-        input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True),
+        y,
+        X,
         stratification_classes,
         estimator=estimator,
     )
@@ -1586,17 +1589,17 @@ def evaluate_interactor_significance_linear(
         # Define predictor sets for comparison
         predictors_with_main_effect = [
             var for var in model_variables if var != interactor
-        ] + [
-            main_effect
-        ]  # Replace interactor with main effect
+        ] + [main_effect]
 
-        # Get the average R² of the model with the main effect replacing one of the
-        # interaction terms
+        # Get reduced model X and y
+        X_main, y_main = input_data.get_modeling_data(
+            " + ".join(predictors_with_main_effect),
+            add_row_max=True,
+        )
+
         avg_r2_main_effect = stratified_cv_r2(
-            response_df,
-            input_data.get_modeling_data(
-                " + ".join(predictors_with_main_effect), add_row_max=True
-            ),
+            y_main,
+            X_main,
             stratification_classes,
             estimator=estimator,
         )
@@ -1646,12 +1649,15 @@ def evaluate_interactor_significance_lassocv(
         f"Model includes interaction terms and their main effects: {augmented_vars}"
     )
 
+    # Use top_n_masked-aware modeling data
     X = input_data.get_modeling_data(
         " + ".join(augmented_vars),
         add_row_max=True,
         drop_intercept=True,
     )
-    y = input_data.response_df
+
+    # Get response y aligned to X
+    y = input_data.response_df.loc[X.index, input_data.perturbed_tf]
 
     skf = StratifiedKFold(n_splits=4, shuffle=True, random_state=42)
 
