@@ -329,6 +329,12 @@ def linear_perturbation_binding_modeling(args):
         else evaluate_interactor_significance_linear
     )
 
+    if args.stage4_topn:
+        logger.info("Stage 4 will use top-n masked input data.")
+        input_data.top_n_masked = True
+    else:
+        logger.info("Stage 4 will use full input data.")
+
     results = evaluate_interactor_significance(
         input_data,
         stratification_classes=alldata_classes,
@@ -985,6 +991,12 @@ def main() -> None:
         "--stage4_lasso",
         action="store_true",
         help="Use LassoCV-based interactor significance testing in Stage 4",
+    )
+
+    parser.add_argument(
+        "--stage4_topn",
+        action="store_true",
+        help="If set, perform Stage 4 evaluation on top-n data instead of all data.",
     )
 
     # Output arguments
