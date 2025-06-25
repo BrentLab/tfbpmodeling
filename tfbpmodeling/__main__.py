@@ -1,19 +1,15 @@
 import argparse
-import fcntl
 import json
 import logging
 import os
-import shutil
 import time
 from typing import Literal
 
 import numpy as np
 from sklearn.linear_model import LassoCV
-from sklearn.model_selection import StratifiedKFold
 
 from configure_logger import LogLevel, configure_logger
 from tfbpmodeling.lasso_modeling import (
-    BootstrapModelResults,
     BootstrappedModelingInputData,
     ModelingInputData,
     bootstrap_stratified_cv_modeling,
@@ -22,7 +18,6 @@ from tfbpmodeling.lasso_modeling import (
     stratification_classification,
 )
 from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
-from tfbpmodeling.SigmoidModel import SigmoidModel
 from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_variables
 
 logger = logging.getLogger("main")
@@ -134,9 +129,17 @@ def linear_perturbation_binding_modeling(args):
     interaction_terms = [
         f"{input_data.perturbed_tf}:{var}" for var in predictor_variables
     ]
+
     # Construct the full interaction formula, ie perturbed_tf + perturbed_tf:other_tf1 +
-    # perturbed_tf:other_tf2 + ... .
-    all_data_formula = f"{input_data.perturbed_tf} + {' + '.join(interaction_terms)}"
+    # perturbed_tf:other_tf2 + ... . perturbed_tf main effect only added if
+    # --ptf_main_effect is passed.
+    if args.ptf_main_effect:
+        logger.info("adding pTF main effect to `all_data_formula`")
+        all_data_formula = (
+            f"{input_data.perturbed_tf} + {' + '.join(interaction_terms)}"
+        )
+    else:
+        all_data_formula = " + ".join(interaction_terms)
 
     if args.squared_pTF:
         # if --squared_pTF is passed, then add the squared perturbed TF to the formula
@@ -349,296 +352,6 @@ def linear_perturbation_binding_modeling(args):
     logger.info(
         "Writing the final interactor significance "
         f"results to {output_significance_file}"
-    )
-    results.serialize(output_significance_file)
-
-
-def create_database(
-    args: argparse.Namespace,
-    bootstrap_results_table_name: str = "bootstrap_results",
-    mse_table_name: str = "mse_path",
-):
-    """
-    Prepare a JSONL output directory and optionally clear an existing one.
-
-    If `overwrite` is True, the existing directory at `args.db_path` is deleted.
-
-    :param args: Argument namespace with 'db_path' and 'overwrite' attributes.
-    :param bootstrap_results_table_name: File name for bootstrap results.
-    :param mse_table_name: File name for MSE results.
-
-    """
-    if os.path.exists(args.db_path):
-        if args.overwrite:
-            shutil.rmtree(args.db_path)
-            logger.info(f"Existing directory at {args.db_path} removed.")
-        else:
-            logger.info(
-                f"Directory already exists at {args.db_path}. Skipping creation."
-            )
-
-    # Always recreate the directory if it was removed or didn't exist
-    os.makedirs(args.db_path, exist_ok=True)
-    logger.info(f"Directory {args.db_path} is ready for JSONL output.")
-
-    # Touch the .jsonl files
-    bootstrap_jsonl_path = os.path.join(
-        args.db_path, f"{bootstrap_results_table_name}.jsonl"
-    )
-    mse_jsonl_path = os.path.join(args.db_path, f"{mse_table_name}.jsonl")
-
-    for path in [bootstrap_jsonl_path, mse_jsonl_path]:
-        open(path, "a").close()  # touch: create if doesn't exist
-        logger.info(f"Initialized empty file: {path}")
-
-    logger.info(
-        f"JSONL files initialized:\n"
-        f"- {bootstrap_jsonl_path}\n"
-        f"- {mse_jsonl_path}"
-    )
-
-
-def insert_result(
-    i: int,
-    db_path: str,
-    result_row: dict,
-    max_retries: int = 50,
-    retry_wait: int = 5,
-):
-    """
-    Append a single result row to a JSONL (newline-delimited JSON) file using fcntl for
-    concurrency control.
-
-    :param i: Bootstrap index (used for jitter and logging).
-    :param db_path: Path to the output JSONL file.
-    :param result_row: Dictionary of results to write.
-    :param max_retries: Max retries if file is locked or busy.
-    :param retry_wait: Base wait time between retries.
-
-    """
-    rng = np.random.default_rng(seed=i)
-
-    for attempt in range(max_retries):
-        logger.debug(
-            f"Attempting to write bootstrap {i} to {db_path} "
-            f"(attempt {attempt + 1}/{max_retries})"
-        )
-        try:
-            with open(db_path, "a") as f:
-                fcntl.flock(f, fcntl.LOCK_EX)
-                f.write(json.dumps(result_row) + "\n")
-                f.flush()
-                os.fsync(f.fileno())  # ensure it's written to disk
-                fcntl.flock(f, fcntl.LOCK_UN)
-
-            logger.debug(f"Successfully wrote bootstrap {i} to {db_path}.")
-            return
-        except Exception as e:
-            logger.warning(f"[{i}] Write failed with error: {e}. Retrying...")
-            time.sleep(retry_wait + rng.uniform(0, 2))
-
-    logger.error(
-        f"Failed to write bootstrap {i} to {db_path} after {max_retries} retries."
-    )
-
-
-def sigmoid_bootstrap_worker(
-    args: argparse.Namespace,
-    bootstrap_results_table_name: str = "bootstrap_results",
-    mse_table_name: str = "mse_path",
-) -> None:
-
-    # create input data similar to perturbed_binding_modeling(). There needs to be a
-    # setting to decide whether to do "all data" or "top n" modeling
-
-    # Select bootstrap index
-    i = int(args.bootstrap_idx)
-
-    # Load input data
-    input_data = ModelingInputData.from_files(
-        response_path=args.response_file,
-        predictors_path=args.predictors_file,
-        perturbed_tf=args.perturbed_tf,
-        feature_blacklist_path=args.blacklist_file,
-        top_n=args.top_n,
-    )
-
-    # Determine formula
-    if input_data.top_n_masked:
-        res = BootstrapModelResults.from_jsonl(
-            args.db_path, bootstrap_results_table_name, mse_table_name
-        )
-        all_data_sig_coefs = res.extract_significant_coefficients(
-            ci_level=args.ci_level
-        )
-        logger.info("Top N Sig Coefs:" + str(all_data_sig_coefs.keys()))
-        formula = " + ".join(all_data_sig_coefs.keys())
-
-        # check is the formula is empty / there are no significant coefficients
-        if formula == "":
-            logger.info("No significant coefficients found for Top N Modeling...")
-            return
-    else:
-        predictor_variables = input_data.predictors_df.columns.drop(args.perturbed_tf)
-        predictor_variables = exclude_predictor_variables(
-            list(predictor_variables), args.exclude_interactor_variables
-        )
-        interaction_terms = [
-            f"{args.perturbed_tf}:{var}" for var in predictor_variables
-        ]
-        formula = f"{args.perturbed_tf} + {' + '.join(interaction_terms)}"
-
-        if args.squared_pTF:
-            formula += f" + I({args.perturbed_tf} ** 2)"
-        if args.cubic_pTF:
-            formula += f" + I({args.perturbed_tf} ** 3)"
-        if args.row_max:
-            formula += " + row_max"
-        if args.add_model_variables:
-            formula += " + " + " + ".join(args.add_model_variables)
-
-    logger.info(f"Model formula: {formula}")
-    model_df = input_data.get_modeling_data(
-        formula,
-        add_row_max=args.row_max,
-        drop_intercept=args.drop_intercept,
-        scale_by_std=args.scale_by_std,
-    )
-
-    bootstrap_data = BootstrappedModelingInputData(
-        response_df=input_data.response_df,
-        model_df=model_df,
-        n_bootstraps=args.n_bootstraps,
-        normalize_sample_weights=args.normalize_sample_weights,
-        random_state=args.random_state,
-    )
-
-    _, sample_weights = bootstrap_data.get_bootstrap_sample(i)
-
-    classes = stratification_classification(
-        input_data.predictors_df[input_data.perturbed_tf].squeeze(),
-        input_data.response_df.squeeze(),
-        bin_by_binding_only=args.bin_by_binding_only,
-        bins=args.bins,
-    )
-
-    skf = StratifiedKFold(n_splits=4, shuffle=True, random_state=i)
-
-    folds = list(skf.split(bootstrap_data.model_df, classes))
-
-    estimator = SigmoidModel(warm_start=args.warm_start, alphas=args.alphas, cv=folds)
-    logger.info(f"Fitting model for bootstrap {args.bootstrap_idx}")
-    estimator.fit(
-        bootstrap_data.model_df,
-        bootstrap_data.response_df.values.ravel(),
-        sample_weight=sample_weights,
-        minimize_options=args.minimize_options,
-    )
-
-    result_row = {
-        "bootstrap_idx": i,
-        "alpha": estimator.alpha_,
-        "final_training_score": estimator.score(
-            bootstrap_data.model_df, bootstrap_data.response_df.values.ravel()
-        ),
-        "left_asymptote": estimator.left_asymptote_,
-        "right_asymptote": estimator.right_asymptote_,
-        **dict(zip(bootstrap_data.model_df.columns, estimator.coef_)),
-    }
-
-    # this output dir will store results from all_data step separate from top_n step
-    if input_data.top_n_masked:
-        output_root = os.path.join(args.db_path, f"_top_{args.top_n}")
-        # create directory if it doesn't already exist
-        os.makedirs(output_root, exist_ok=True)
-    else:
-        output_root = args.db_path
-
-    insert_result(
-        i,
-        os.path.join(output_root, f"{bootstrap_results_table_name}.jsonl"),
-        result_row,
-    )
-
-    # Save MSE path if present
-    if hasattr(estimator, "mse_path_") and hasattr(estimator, "alphas_"):
-        n_alphas, n_folds = estimator.mse_path_.shape
-        for a_idx in range(n_alphas):
-            for f_idx in range(n_folds):
-                mse_row = {
-                    "bootstrap_idx": i,
-                    "alpha": estimator.alphas_[a_idx],
-                    "fold": f_idx,
-                    "mse": estimator.mse_path_[a_idx, f_idx],
-                }
-                insert_result(
-                    i, os.path.join(output_root, f"{mse_table_name}.jsonl"), mse_row
-                )
-
-    logger.info(f"Completed bootstrap {i}")
-
-
-def test_sigmoid_interactor_significance(
-    args: argparse.Namespace,
-    bootstrap_results_table_name: str = "bootstrap_results",
-    mse_table_name: str = "mse_path",
-) -> None:
-    """
-    Test the significance of interactor terms against the main effect.
-
-    :param args: Command-line arguments containing input file paths and parameters.
-    :param bootstrap_results_table_name: File name for bootstrap results.
-    :param mse_table_name: File name for MSE results.
-
-    """
-    # check that the topn modeling output dir exists
-    if not os.path.isdir(args.db_path):
-        raise FileNotFoundError(
-            f"Directory {args.db_path} does not exist. "
-            "Please run the linear_perturbation_binding_modeling command first."
-        )
-
-    logger.info("Testing interactor significance...")
-
-    # Load input data
-    input_data = ModelingInputData.from_files(
-        response_path=args.response_file,
-        predictors_path=args.predictors_file,
-        perturbed_tf=args.perturbed_tf,
-        feature_blacklist_path=args.blacklist_file,
-        top_n=args.top_n,
-    )
-
-    classes = stratification_classification(
-        input_data.predictors_df[input_data.perturbed_tf].squeeze(),
-        input_data.response_df.squeeze(),
-        bin_by_binding_only=args.bin_by_binding_only,
-        bins=args.bins,
-    )
-
-    # parse results from the previous step
-    res = BootstrapModelResults.from_jsonl(
-        args.db_path, bootstrap_results_table_name, mse_table_name
-    )
-
-    topn_sig_coefs = res.extract_significant_coefficients(ci_level=args.ci_level)
-    logger.info("Top N Significant Coefs:" + str(topn_sig_coefs.keys()))
-
-    model_vars = topn_sig_coefs.keys()
-
-    results = evaluate_interactor_significance_linear(
-        input_data,
-        classes,
-        list(model_vars),
-        SigmoidModel(),
-    )
-
-    output_significance_file = os.path.join(
-        args.db_path, "interactor_vs_main_result.json"
-    )
-    logger.info(
-        "Writing the final interactor significance "
-        "results to {output_significance_file}"
     )
     results.serialize(output_significance_file)
 
@@ -864,6 +577,14 @@ def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
         action="store_true",
         help=("Scale and center the model matrix by the mean and standard deviation. "),
     )
+    parser.add_argument(
+        "--ptf_main_effect",
+        action="store_true",
+        help=(
+            "Include the perturbed transcription factor (pTF) main effect in the "
+            "modeling formula. This is added to the all_data model formula."
+        ),
+    )
 
 
 def main() -> None:
@@ -1032,167 +753,6 @@ def main() -> None:
     )
 
     linear_lasso_parser.set_defaults(func=linear_perturbation_binding_modeling)
-
-    # Sigmoid worker cmds
-    sigmoid_parser = subparsers.add_parser(
-        "sigmoid_bootstrap_worker",
-        help="Run a single bootstrap iteration of the sigmoid model",
-        description=(
-            "This executes a single bootstrap iteration of the sigmoid model."
-        ),
-        formatter_class=CustomHelpFormatter,
-    )
-
-    sigmoid_input_group = sigmoid_parser.add_argument_group("Input")
-
-    common_modeling_input_arguments(sigmoid_input_group, top_n_default=None)
-
-    sigmoid_input_group.add_argument(
-        "--bootstrap_idx",
-        type=int,
-        required=True,
-        help=(
-            "Bootstrap index to use for the current iteration. This should be "
-            "an integer corresponding to the bootstrap sample."
-        ),
-    )
-
-    sigmoid_parameters_group = sigmoid_parser.add_argument_group("Parameters")
-
-    sigmoid_parameters_group.add_argument(
-        "--drop_intercept",
-        action="store_true",
-        help=(
-            "If set, the model matrix will not include an intercept term. "
-            "Default is False, which means the model will include an intercept."
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--ci_level",
-        type=float,
-        default=98.0,
-        help=(
-            "Confidence interval threshold for the second round of modeling. "
-            "Default is 98.0. Only applied if `--top_n` is set"
-        ),
-    )
-    sigmoid_parameters_group.add_argument(
-        "--warm_start",
-        action="store_true",
-        help=("Enable warm start for the model. Default is False"),
-    )
-    sigmoid_parameters_group.add_argument(
-        "--alphas",
-        type=float,
-        nargs="+",
-        default=[0.1, 1.0, 10.0],
-        help=(
-            "List of alpha values to use for the model. " "Default is [0.1, 1.0, 10.0]"
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--minimize_options",
-        type=parse_lbfgsb_options,
-        help=(
-            "JSON string of options for scipy.optimize.minimize with "
-            "method='L-BFGS-B'. Allowed keys (with defaults): "
-            "maxcor=10, ftol=2.22e-9, gtol=1e-5, eps=1e-8, maxfun=15000, "
-            "maxiter=15000, maxls=20, finite_diff_rel_step=None. "
-            'Example: \'{"maxiter": 1000, "gtol": 1e-6}\''
-        ),
-    )
-
-    sigmoid_parameters_group.add_argument(
-        "--test_interactor_variables",
-        action="store_true",
-        help=(
-            "If set, run last step to evaluate interactor terms against main effects."
-        ),
-    )
-
-    sigmoid_model_feature_options_group = sigmoid_parser.add_argument_group(
-        "Feature Options"
-    )
-
-    common_modeling_feature_options(sigmoid_model_feature_options_group)
-
-    sigmoid_model_binning_group = sigmoid_parser.add_argument_group("Binning Options")
-
-    common_modeling_binning_arguments(sigmoid_model_binning_group)
-
-    sigmoid_output_group = sigmoid_parser.add_argument_group("Output")
-
-    sigmoid_output_group.add_argument(
-        "--db_path",
-        type=str,
-        required=True,
-        help=("Path to the database file where the results will be stored."),
-    )
-
-    sigmoid_parser.set_defaults(func=sigmoid_bootstrap_worker)
-
-    # Sigmoid worker cmds
-    sigmoid_step3_parser = subparsers.add_parser(
-        "sigmoid_interactor_significance",
-        help="Run the interactor significance evaluation step on a sigmoid model",
-        description=(
-            "This executes the interactor significance evaluation step "
-            "on a sigmoid model. It evaluates the interactor terms against "
-            "the corresponding main effect."
-        ),
-        formatter_class=CustomHelpFormatter,
-    )
-
-    sigmoid_step3_input_group = sigmoid_step3_parser.add_argument_group("Input")
-
-    common_modeling_input_arguments(sigmoid_step3_input_group)
-
-    sigmoid_step3_input_group.add_argument(
-        "--db_path",
-        type=str,
-        required=True,
-        help=(
-            "Path to the database file where the results from the previous "
-            "steps are stored. This should point to the directory containing "
-            "the bootstrap results."
-        ),
-    )
-
-    sigmoid_step3_model_binning_group = sigmoid_step3_parser.add_argument_group(
-        "Binning Options"
-    )
-    common_modeling_binning_arguments(sigmoid_step3_model_binning_group)
-
-    sigmoid_step3_parser.set_defaults(func=test_sigmoid_interactor_significance)
-
-    # add create_database command
-    create_db_parser = subparsers.add_parser(
-        "create_database",
-        help="Create an database file (sqlite or csv)",
-        description=(
-            "Create an empty database file with WAL mode and busy timeout " "settings."
-        ),
-        formatter_class=CustomHelpFormatter,
-    )
-
-    create_db_parser.add_argument(
-        "--db_path",
-        type=str,
-        required=True,
-        help="Path to the database file to create.",
-    )
-
-    create_db_parser.add_argument(
-        "--overwrite",
-        action="store_true",
-        help=(
-            "Overwrite the existing database file if it exists. " "Default is False."
-        ),
-    )
-
-    create_db_parser.set_defaults(func=create_database)
 
     # Add the general arguments to the subcommand parsers
     add_general_arguments_to_subparsers(subparsers, [log_level_argument])
