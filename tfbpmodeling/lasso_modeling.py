@@ -1570,7 +1570,7 @@ def evaluate_interactor_significance_linear(
         "for evaluate_interactor_significance: %s",
         add_row_max,
     )
-
+    # Get the average R² of the original model
     avg_r2_original_model = stratified_cv_r2(
         response_df,
         input_data.get_modeling_data(
