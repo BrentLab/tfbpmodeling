@@ -534,7 +534,7 @@ def test_stratified_cv_r2(random_sample_data, bootstrapped_random_sample_data):
 # 3. Testing `evaluate_interactor_significance()`
 @pytest.mark.parametrize("top_n_masked", [True, False])
 def test_evaluate_interactor_significance_linear(
-    random_sample_data, bootstrapped_random_sample_data_factory, top_n_masked
+    random_sample_data, bootstrapped_random_sample_data_factory, top_n_masked, caplog
 ):
     """Tests evaluation of interactor significance."""
     random_sample_data.top_n_masked = top_n_masked
@@ -563,11 +563,19 @@ def test_evaluate_interactor_significance_linear(
         random_sample_data.response_df.squeeze(),
     )
 
-    results = evaluate_interactor_significance_linear(
-        random_sample_data,
-        stratification_classes=classes,
-        model_variables=list(init_results.extract_significant_coefficients().keys()),
-    )
+    with caplog.at_level("INFO"):
+
+        results = evaluate_interactor_significance_linear(
+            random_sample_data,
+            stratification_classes=classes,
+            model_variables=list(
+                init_results.extract_significant_coefficients().keys()
+            ),
+        )
+        assert (
+            "Using 'row_max' in model variables for "
+            "evaluate_interactor_significance: False" in caplog.text
+        )
 
     # Ensure the results contain expected keys
     assert isinstance(results, InteractorSignificanceResults)
@@ -581,7 +589,7 @@ def test_evaluate_interactor_significance_linear(
 
 
 def test_evaluate_interactor_significance_lassocv(
-    random_sample_data, bootstrapped_random_sample_data
+    random_sample_data, bootstrapped_random_sample_data, caplog
 ):
     """Tests LassoCV-based evaluation of interactor significance."""
 
@@ -606,12 +614,19 @@ def test_evaluate_interactor_significance_lassocv(
     )
 
     # Step 3: Evaluate LassoCV interactor significance
-    results = evaluate_interactor_significance_lassocv(
-        random_sample_data,
-        stratification_classes=classes,
-        model_variables=list(init_results.extract_significant_coefficients().keys()),
-        estimator=estimator,
-    )
+    with caplog.at_level("INFO"):
+        results = evaluate_interactor_significance_lassocv(
+            random_sample_data,
+            stratification_classes=classes,
+            model_variables=list(
+                init_results.extract_significant_coefficients().keys()
+            ),
+            estimator=estimator,
+        )
+        assert (
+            "Using 'row_max' in model variables for "
+            "evaluate_interactor_significance: False" in caplog.text
+        )
 
     # Step 4: Validate results
     assert isinstance(results, InteractorSignificanceResults)
