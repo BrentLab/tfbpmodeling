@@ -19,7 +19,7 @@ def stratification_classification(
     :param perturbation_series: The perturbation vector to use for stratification
     :param bins: The bins to use for stratification.
         The default is [0, 8, 64, 512, np.inf]
-    :param bin_by_binding_and_perturbation: If False (default) use both the binding and
+    :param bin_by_binding_only: If False (default) use both the binding and
         perturbation data to create a combined stratification label. This will
         create a unique label for each combination of binding and perturbation bins.
         Setting this to True will bin by the binding data only.
@@ -66,7 +66,7 @@ def stratification_classification(
     binding_bin = pd.cut(binding_rank, bins=bins, labels=labels, right=True).astype(int)
 
     # if bin_by_binding_and_perturbation is False, return the binding_bin
-    if not bin_by_binding_only:
+    if bin_by_binding_only:
         return binding_bin
 
     # if binding_only is False, bin the perturbation data by ranking, and then using
