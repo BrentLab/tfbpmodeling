@@ -537,7 +537,7 @@ def test_evaluate_interactor_significance_linear(
     random_sample_data, bootstrapped_random_sample_data_factory, top_n_masked
 ):
     """Tests evaluation of interactor significance."""
-    random_sample_data.top_n_masked = True  # top_n_masked
+    random_sample_data.top_n_masked = top_n_masked
     bootstrapped_random_sample_data = bootstrapped_random_sample_data_factory(
         random_sample_data
     )
