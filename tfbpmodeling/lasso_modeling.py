@@ -1578,10 +1578,25 @@ def evaluate_interactor_significance_linear(
     # then that column will not be present in the model matrix.
 
     # Get the average R² of the original model
+    # 获取 X 和 y（已经 top-n masked 的 input_data）
+    X = input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True)
+    y = response_df
+
+    # 解决 index 不一致问题：将 classes 的顺序与 X.index 对齐
+    classes_aligned = (
+        pd.Series(
+            stratification_classes,
+            index=input_data.response_df.index,  # 原 full data index
+        )
+        .loc[X.index]
+        .values
+    )  # 取出与 X 对齐的部分
+
+    # 调用 cross-validation R²
     avg_r2_original_model = stratified_cv_r2(
-        response_df,
-        input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True),
-        stratification_classes,
+        y,
+        X,
+        classes_aligned,
         estimator=estimator,
     )
 
