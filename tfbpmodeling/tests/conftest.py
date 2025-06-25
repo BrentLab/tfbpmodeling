@@ -128,6 +128,26 @@ def bootstrapped_random_sample_data(random_sample_data):
 
 
 @pytest.fixture
+def bootstrapped_random_sample_data_factory():
+    def _factory(random_sample_data):
+        perturbed_tf = random_sample_data.perturbed_tf
+        predictor_variables = random_sample_data.predictors_df.columns.drop(
+            perturbed_tf
+        )
+        interaction_terms = [f"{perturbed_tf}:{var}" for var in predictor_variables]
+        formula = f"{perturbed_tf} + {' + '.join(interaction_terms)} - 1"
+
+        return BootstrappedModelingInputData(
+            random_sample_data.response_df,
+            random_sample_data.get_modeling_data(formula=formula),
+            n_bootstraps=100,
+            random_state=42,
+        )
+
+    return _factory
+
+
+@pytest.fixture
 def sample_evaluations() -> list[dict[str, Any]]:
     """Provides sample evaluation data for testing."""
     return [

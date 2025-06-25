@@ -311,11 +311,14 @@ def linear_perturbation_binding_modeling(args):
         "against the corresoponding main effect"
     )
 
-    # unmask the data
-    input_data.top_n_masked = False
+    if args.stage4_topn:
+        logger.info("Stage 4 will use top-n masked input data.")
+        input_data.top_n_masked = True
+    else:
+        logger.info("Stage 4 will use full input data.")
 
     # calculate the statification classes for the perturbed TF (all data)
-    alldata_classes = stratification_classification(
+    stage4_classes = stratification_classification(
         input_data.predictors_df[input_data.perturbed_tf].squeeze(),
         input_data.response_df.squeeze(),
         bin_by_binding_only=args.bin_by_binding_only,
@@ -331,7 +334,7 @@ def linear_perturbation_binding_modeling(args):
 
     results = evaluate_interactor_significance(
         input_data,
-        stratification_classes=alldata_classes,
+        stratification_classes=stage4_classes,
         model_variables=list(
             topn_results.extract_significant_coefficients(
                 ci_level=args.topn_ci_level
@@ -985,6 +988,12 @@ def main() -> None:
         "--stage4_lasso",
         action="store_true",
         help="Use LassoCV-based interactor significance testing in Stage 4",
+    )
+
+    linear_parameters_group.add_argument(
+        "--stage4_topn",
+        action="store_true",
+        help="If set, perform Stage 4 evaluation on top-n data instead of all data.",
     )
 
     # Output arguments
