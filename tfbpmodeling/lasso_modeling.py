@@ -1564,11 +1564,18 @@ def evaluate_interactor_significance_linear(
     # NOTE: add_row_max is set to True such that IF the formula includes row_max,
     # the column is present. However, if the formula doesn't not include row_max,
     # then that column will not be present in the model matrix.
-
+    add_row_max = "row_max" in model_variables
+    logger.info(
+        "Using 'row_max' in model variables "
+        "for evaluate_interactor_significance: %s",
+        add_row_max,
+    )
     # Get the average R² of the original model
     avg_r2_original_model = stratified_cv_r2(
         response_df,
-        input_data.get_modeling_data(" + ".join(model_variables), add_row_max=True),
+        input_data.get_modeling_data(
+            " + ".join(model_variables), add_row_max=add_row_max
+        ),
         stratification_classes,
         estimator=estimator,
     )
@@ -1595,7 +1602,7 @@ def evaluate_interactor_significance_linear(
         avg_r2_main_effect = stratified_cv_r2(
             response_df,
             input_data.get_modeling_data(
-                " + ".join(predictors_with_main_effect), add_row_max=True
+                " + ".join(predictors_with_main_effect), add_row_max=add_row_max
             ),
             stratification_classes,
             estimator=estimator,
@@ -1645,10 +1652,16 @@ def evaluate_interactor_significance_lassocv(
     logger.info(
         f"Model includes interaction terms and their main effects: {augmented_vars}"
     )
+    add_row_max = "row_max" in augmented_vars
+    logger.info(
+        "Using 'row_max' in model variables "
+        "for evaluate_interactor_significance: %s",
+        add_row_max,
+    )
 
     X = input_data.get_modeling_data(
         " + ".join(augmented_vars),
-        add_row_max=True,
+        add_row_max=add_row_max,
         drop_intercept=True,
     )
     y = input_data.response_df
