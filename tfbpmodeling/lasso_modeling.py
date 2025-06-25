@@ -1397,14 +1397,26 @@ def bootstrap_stratified_cv_modeling(
             bins=bins,
         )
 
-        model_i = stratified_cv_modeling(
-            bootstrapped_data.response_df,
-            bootstrapped_data.model_df,
-            classes=classes,
-            estimator=estimator,
-            skf=skf,
-            sample_weight=sample_weight,
-        )
+        try:
+            model_i = stratified_cv_modeling(
+                bootstrapped_data.response_df,
+                bootstrapped_data.model_df,
+                classes=classes,
+                estimator=estimator,
+                skf=skf,
+                sample_weight=sample_weight,
+            )
+        except Exception as e:
+            logger.error(f"Error during modeling for bootstrap iteration {index}: {e}")
+            model_i = stratified_cv_modeling(
+                bootstrapped_data.response_df,
+                bootstrapped_data.model_df,
+                classes=classes,
+                estimator=estimator,
+                skf=skf,
+                sample_weight=sample_weight,
+            )
+            raise
 
         alpha_list.append(model_i.alpha_)
         bootstrap_coefs.append(model_i.coef_)

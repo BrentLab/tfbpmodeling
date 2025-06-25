@@ -532,10 +532,15 @@ def test_stratified_cv_r2(random_sample_data, bootstrapped_random_sample_data):
 
 
 # 3. Testing `evaluate_interactor_significance()`
+@pytest.mark.parametrize("top_n_masked", [True, False])
 def test_evaluate_interactor_significance_linear(
-    random_sample_data, bootstrapped_random_sample_data
+    random_sample_data, bootstrapped_random_sample_data_factory, top_n_masked
 ):
     """Tests evaluation of interactor significance."""
+    random_sample_data.top_n_masked = True  # top_n_masked
+    bootstrapped_random_sample_data = bootstrapped_random_sample_data_factory(
+        random_sample_data
+    )
 
     perturbed_tf_series = random_sample_data.predictors_df[
         random_sample_data.perturbed_tf
@@ -547,7 +552,6 @@ def test_evaluate_interactor_significance_linear(
         perturbed_tf_series,
         estimator=estimator,
         ci_percentiles=[95.0, 99.0],
-        use_sample_weight_in_cv=True,
     )
 
     perturbed_tf_series = random_sample_data.predictors_df[
