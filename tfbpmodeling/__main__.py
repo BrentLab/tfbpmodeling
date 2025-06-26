@@ -320,8 +320,6 @@ def linear_perturbation_binding_modeling(args):
     # calculate the statification classes for the perturbed TF (all data)
     stage4_classes = stratification_classification(
         input_data.predictors_df[input_data.perturbed_tf].squeeze(),
-        input_data.response_df.squeeze(),
-        bin_by_binding_only=args.bin_by_binding_only,
         bins=args.bins,
     )
 
@@ -517,8 +515,6 @@ def sigmoid_bootstrap_worker(
 
     classes = stratification_classification(
         input_data.predictors_df[input_data.perturbed_tf].squeeze(),
-        input_data.response_df.squeeze(),
-        bin_by_binding_only=args.bin_by_binding_only,
         bins=args.bins,
     )
 
@@ -611,8 +607,6 @@ def test_sigmoid_interactor_significance(
 
     classes = stratification_classification(
         input_data.predictors_df[input_data.perturbed_tf].squeeze(),
-        input_data.response_df.squeeze(),
-        bin_by_binding_only=args.bin_by_binding_only,
         bins=args.bins,
     )
 
