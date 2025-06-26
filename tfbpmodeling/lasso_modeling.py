@@ -1295,9 +1295,6 @@ def bootstrap_stratified_cv_modeling(
         and allow setting `.cv`. Default is `LassoCV`.
     :param ci_percentiles: List of confidence intervals (e.g., [95.0, 99.0]).
     :params kwargs: Additional keyword arguments. The following are supported:
-        - bin_by_binding_only: Default False. If False,
-            stratification is based on both binding and perturbation ranks.
-            If True, only binding is used.
         - bins: Default is `[0, 8, 64, 512, np.inf]`. List of bin edges
             for stratification
 
@@ -1347,14 +1344,6 @@ def bootstrap_stratified_cv_modeling(
     # log the columns of the model_df
     logger.info(f"Model frame columns: {bootstrapped_data.model_df.columns}")
 
-    # set the binning strategy
-    bin_by_binding_only = kwargs.pop("bin_by_binding_only", False)
-    # log the binning strategy
-    logger.info(
-        "Using binning strategy: %s",
-        ("binding only" if bin_by_binding_only else "binding and perturbation"),
-    )
-
     # set the bin splits
     bins = kwargs.pop("bins", [0, 8, 64, 512, np.inf])
     # log the bins used for stratification
@@ -1392,8 +1381,6 @@ def bootstrap_stratified_cv_modeling(
 
         classes = stratification_classification(
             perturbed_tf_series.loc[bootstrapped_data.response_df.index].squeeze(),
-            bootstrapped_data.response_df.squeeze(),
-            bin_by_binding_only=bin_by_binding_only,
             bins=bins,
         )
 
