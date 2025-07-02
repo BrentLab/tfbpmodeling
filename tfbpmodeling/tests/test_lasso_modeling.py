@@ -516,7 +516,6 @@ def test_stratified_cv_r2(random_sample_data, bootstrapped_random_sample_data):
 
     classes = stratification_classification(
         perturbed_tf_series.loc[response_df.index].squeeze(),
-        response_df.squeeze(),
     )
 
     r2_value = stratified_cv_r2(
@@ -560,7 +559,6 @@ def test_evaluate_interactor_significance_linear(
 
     classes = stratification_classification(
         perturbed_tf_series.loc[random_sample_data.response_df.index].squeeze(),
-        random_sample_data.response_df.squeeze(),
     )
 
     with caplog.at_level("INFO"):
@@ -610,7 +608,6 @@ def test_evaluate_interactor_significance_lassocv(
     # Step 2: Create stratification classes
     classes = stratification_classification(
         perturbed_tf_series.loc[random_sample_data.response_df.index].squeeze(),
-        random_sample_data.response_df.squeeze(),
     )
 
     # Step 3: Evaluate LassoCV interactor significance
