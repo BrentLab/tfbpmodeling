@@ -1307,6 +1307,9 @@ def bootstrap_stratified_cv_modeling(
     :raises KeyError: If class assignment for stratification fails.
 
     """
+    n_samples = bootstrapped_data.model_df.shape[0]
+    if n_samples <= 100:
+        raise ValueError(f"Need >100 target_symbols for stratified CV, got {n_samples}")
 
     if not isinstance(bootstrapped_data, BootstrappedModelingInputData):
         raise ValueError(

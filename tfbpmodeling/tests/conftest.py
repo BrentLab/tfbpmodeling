@@ -55,16 +55,16 @@ def random_sample_data():
     """Generates synthetic response and predictor data with consistent indexing,
     ensuring the response is derived from a subset of predictors."""
     np.random.seed(42)  # Ensure reproducibility
-    total_features = 100
+    total_features = 200
 
     # Feature column names: gene1, gene2, ..., gene100
     feature_col = [f"gene{i+1}" for i in range(total_features)]
 
     # Select predictor columns: gene5 to gene14
-    predictor_columns = feature_col[4:14]  # (gene5 to gene14)
+    predictor_columns = feature_col[4:104]  # (gene5 to gene14)
 
     # Number of samples
-    n_samples = 100
+    n_samples = 500
 
     # Generate predictors DataFrame
     predictors_df = pd.DataFrame(
@@ -96,7 +96,7 @@ def random_sample_data():
         perturbed_tf="gene5",
         feature_col="target_symbol",
         feature_blacklist=["gene1", "gene2"],
-        top_n=20,
+        top_n=101,
     )
 
 
