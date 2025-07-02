@@ -58,6 +58,7 @@ def bootstrap_stratified_cv_loop(
     stabilized_variables = None
 
     logger.info(f"Starting iterative variable dropping with CI={current_ci}")
+
     i = 0
     while True:
         # Perform bootstrapped modeling at the current CI
