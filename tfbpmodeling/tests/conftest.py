@@ -4,10 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from tfbpmodeling.lasso_modeling import (
-    BootstrappedModelingInputData,
-    ModelingInputData,
-)
+from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
+from tfbpmodeling.modeling_input_data import ModelingInputData
 
 
 @pytest.fixture
