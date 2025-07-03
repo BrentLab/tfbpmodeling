@@ -161,7 +161,6 @@ def linear_perturbation_binding_modeling(args):
             estimator=estimator,
             ci_percentile=float(args.all_data_ci_level),
             stabilization_ci_start=args.stabilization_ci_start,
-            bin_by_binding_only=args.bin_by_binding_only,
             bins=args.bins,
             output_dir=output_subdir,
         )
@@ -172,7 +171,6 @@ def linear_perturbation_binding_modeling(args):
             perturbed_tf_series=input_data.predictors_df[input_data.perturbed_tf],
             estimator=estimator,
             ci_percentiles=[float(args.all_data_ci_level)],
-            bin_by_binding_only=args.bin_by_binding_only,
             bins=args.bins,
         )
     # create the all data object output subdir
@@ -291,8 +289,6 @@ def linear_perturbation_binding_modeling(args):
     # calculate the statification classes for the perturbed TF (all data)
     stage4_classes = stratification_classification(
         input_data.predictors_df[input_data.perturbed_tf].squeeze(),
-        input_data.response_df.squeeze(),
-        bin_by_binding_only=args.bin_by_binding_only,
         bins=args.bins,
     )
 
@@ -322,15 +318,6 @@ def linear_perturbation_binding_modeling(args):
         f"results to {output_significance_file}"
     )
     results.serialize(output_significance_file)
-
-
-class CustomHelpFormatter(argparse.HelpFormatter):
-    """
-    This could be used to customize the help message formatting for the argparse parser.
-
-    Left as a placeholder.
-
-    """
 
 
 def parse_bins(s):
@@ -398,14 +385,6 @@ def common_modeling_binning_arguments(parser: argparse._ArgumentGroup) -> None:
         help=(
             "Comma-separated list of bin edges (integers or 'np.inf'). "
             "Default is --bins 0,8,12,np.inf"
-        ),
-    )
-    parser.add_argument(
-        "--bin_by_binding_only",
-        action="store_true",
-        help=(
-            "When creating stratification classes, use binding data only instead of "
-            "both binding and perturbation data. The default is to use both."
         ),
     )
 

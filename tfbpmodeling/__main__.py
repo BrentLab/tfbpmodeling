@@ -5,7 +5,6 @@ from typing import Literal
 
 from configure_logger import LogLevel, configure_logger
 from tfbpmodeling.interface import (
-    CustomHelpFormatter,
     add_general_arguments_to_subparsers,
     common_modeling_binning_arguments,
     common_modeling_feature_options,
@@ -43,6 +42,15 @@ def configure_logging(
 #     :param args: The parsed command-line arguments.
 #     """
 #     print(f"Running another command with parameter: {args.param}")
+
+
+class CustomHelpFormatter(argparse.HelpFormatter):
+    """
+    This could be used to customize the help message formatting for the argparse parser.
+
+    Left as a placeholder.
+
+    """
 
 
 def main() -> None:
@@ -233,3 +241,7 @@ def main() -> None:
         parser.print_help()
     else:
         args.func(args)
+
+
+if __name__ == "__main__":
+    main()
