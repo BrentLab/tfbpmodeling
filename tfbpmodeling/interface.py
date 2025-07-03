@@ -2,13 +2,10 @@ import argparse
 import json
 import logging
 import os
-import time
-from typing import Literal
 
 import numpy as np
 from sklearn.linear_model import LassoCV
 
-from configure_logger import configure_logger
 from tfbpmodeling.lasso_modeling import (
     BootstrappedModelingInputData,
     ModelingInputData,
@@ -21,24 +18,6 @@ from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
 from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_variables
 
 logger = logging.getLogger("main")
-
-
-def configure_logging(
-    log_level: int, handler_type: Literal["console", "file"] = "console"
-) -> logging.Logger:
-    """
-    Configure the logging for the application.
-
-    :param log_level: The logging level to set.
-    :return: A tuple of the main and shiny loggers.
-
-    """
-    # add a timestamp to the log file name
-    log_file = f"tfbpmodeling_{time.strftime('%Y%m%d-%H%M%S')}.log"
-    main_logger = configure_logger(
-        "main", level=log_level, handler_type=handler_type, log_file=log_file
-    )
-    return main_logger
 
 
 def linear_perturbation_binding_modeling(args):
