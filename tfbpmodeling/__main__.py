@@ -1,18 +1,38 @@
 import argparse
 import logging
+import time
+from typing import Literal
 
-from configure_logger import LogLevel
+from configure_logger import LogLevel, configure_logger
 from tfbpmodeling.interface import (
     CustomHelpFormatter,
     add_general_arguments_to_subparsers,
     common_modeling_binning_arguments,
     common_modeling_feature_options,
     common_modeling_input_arguments,
-    configure_logging,
     linear_perturbation_binding_modeling,
 )
 
 logger = logging.getLogger("main")
+
+
+def configure_logging(
+    log_level: int, handler_type: Literal["console", "file"] = "console"
+) -> logging.Logger:
+    """
+    Configure the logging for the application.
+
+    :param log_level: The logging level to set.
+    :return: A tuple of the main and shiny loggers.
+
+    """
+    # add a timestamp to the log file name
+    log_file = f"tfbpmodeling_{time.strftime('%Y%m%d-%H%M%S')}.log"
+    main_logger = configure_logger(
+        "main", level=log_level, handler_type=handler_type, log_file=log_file
+    )
+    return main_logger
+
 
 # this goes along with an example in the arg parser below, showing how to
 # add cmd line utilies
