@@ -89,7 +89,6 @@ def make_args(tmp_path):
         random_state=0,
         scale_by_std=False,
         bins=[0, 1, 2],
-        bin_by_binding_only=False,
         # feature options
         row_max=False,
         squared_pTF=False,
