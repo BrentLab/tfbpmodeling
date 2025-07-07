@@ -233,3 +233,7 @@ def main() -> None:
         parser.print_help()
     else:
         args.func(args)
+
+
+if __name__ == "__main__":
+    main()
