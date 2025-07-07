@@ -20,6 +20,15 @@ from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_var
 logger = logging.getLogger("main")
 
 
+class CustomHelpFormatter(argparse.HelpFormatter):
+    """
+    This could be used to customize the help message formatting for the argparse parser.
+
+    Left as a placeholder.
+
+    """
+
+
 def linear_perturbation_binding_modeling(args):
     """
     :param args: Command-line arguments containing input file paths and parameters.
