@@ -39,8 +39,19 @@ def stub_all(monkeypatch, tmp_path):
     # 2. Stub ModelingInputData.from_files
     class FakeInput:
         def __init__(self):
-            self.response_df = pd.DataFrame({"TF1": [1, 2, 3]})
-            self.predictors_df = pd.DataFrame({"TF1": [1, 2, 3], "geneA": [3, 2, 1]})
+            self.response_df = pd.DataFrame(
+                {
+                    "feature": ["TF1", "TF1", "TF1"],
+                    "TF1": [1, 2, 3],
+                }
+            )
+            self.predictors_df = pd.DataFrame(
+                {
+                    "feature": ["TF1", "geneA", "geneA"],
+                    "TF1": [1, 2, 3],
+                    "geneA": [3, 2, 1],
+                }
+            )
             self.perturbed_tf = "TF1"
             self.top_n_masked = False
 
@@ -99,7 +110,7 @@ def make_args(tmp_path):
         # CI & iteration
         all_data_ci_level=98.0,
         topn_ci_level=90.0,
-        max_iter=100,  # 正整数
+        max_iter=100,
         iterative_dropout=False,
         stabilization_ci_start=50.0,
         stage4_lasso=False,
