@@ -8,15 +8,11 @@ from sklearn.linear_model import LassoCV
 from sklearn.model_selection import StratifiedKFold
 
 # Import necessary classes and functions
-from tfbpmodeling.lasso_modeling import (
-    BootstrapModelResults,
-    BootstrappedModelingInputData,
-    bootstrap_stratified_cv_modeling,
-    stratified_cv_modeling,
-)
-from tfbpmodeling.stratification_classification import (
-    stratification_classification,
-)
+from tfbpmodeling.bootstrap_model_results import BootstrapModelResults
+from tfbpmodeling.bootstrap_stratified_cv import bootstrap_stratified_cv_modeling
+from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
+from tfbpmodeling.stratification_classification import stratification_classification
+from tfbpmodeling.stratified_cv import stratified_cv_modeling
 
 logger = logging.getLogger("main")
 

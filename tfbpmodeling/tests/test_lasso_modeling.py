@@ -7,18 +7,18 @@ import pandas as pd
 import pytest
 from sklearn.linear_model import LassoCV, LinearRegression
 
-from tfbpmodeling.lasso_modeling import (
-    BootstrapModelResults,
-    BootstrappedModelingInputData,
-    InteractorSignificanceResults,
-    ModelingInputData,
-    bootstrap_stratified_cv_modeling,
+from tfbpmodeling.bootstrap_model_results import BootstrapModelResults
+from tfbpmodeling.bootstrap_stratified_cv import bootstrap_stratified_cv_modeling
+from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
+from tfbpmodeling.evaluate_interactor_significance_lassocv import (
     evaluate_interactor_significance_lassocv,
+)
+from tfbpmodeling.evaluate_interactor_significance_linear import (
     evaluate_interactor_significance_linear,
 )
-from tfbpmodeling.stratification_classification import (
-    stratification_classification,
-)
+from tfbpmodeling.interactor_significance_results import InteractorSignificanceResults
+from tfbpmodeling.modeling_input_data import ModelingInputData
+from tfbpmodeling.stratification_classification import stratification_classification
 from tfbpmodeling.stratified_cv_r2 import stratified_cv_r2
 
 
