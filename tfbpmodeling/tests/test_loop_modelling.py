@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.linear_model import LassoCV
 
 from tfbpmodeling.bootstrap_model_results import BootstrapModelResults
-from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
+from tfbpmodeling.bootstrap_stratified_cv_loop import bootstrap_stratified_cv_loop
 
 
 def test_bootstrap_stratified_cv_loop(

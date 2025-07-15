@@ -7,6 +7,7 @@ import numpy as np
 from sklearn.linear_model import LassoCV
 
 from tfbpmodeling.bootstrap_stratified_cv import bootstrap_stratified_cv_modeling
+from tfbpmodeling.bootstrap_stratified_cv_loop import bootstrap_stratified_cv_loop
 from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
 from tfbpmodeling.evaluate_interactor_significance_lassocv import (
     evaluate_interactor_significance_lassocv,
@@ -14,7 +15,6 @@ from tfbpmodeling.evaluate_interactor_significance_lassocv import (
 from tfbpmodeling.evaluate_interactor_significance_linear import (
     evaluate_interactor_significance_linear,
 )
-from tfbpmodeling.loop_modeling import bootstrap_stratified_cv_loop
 from tfbpmodeling.modeling_input_data import ModelingInputData
 from tfbpmodeling.stratification_classification import stratification_classification
 from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_variables
