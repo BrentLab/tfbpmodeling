@@ -1,5 +1,6 @@
 import json
 import logging
+import math
 import os
 import pickle
 
@@ -142,8 +143,9 @@ class BootstrapModelResults:
         return fig
 
     @staticmethod
-    def truncate_at_threshold(val: float, threshold: float = 1e-15) -> float:
-        return 0.0 if abs(val) < threshold else val
+    def truncate_decimal(val: float, decimal_places: int = 15) -> float:
+        factor = 10**decimal_places
+        return math.trunc(val * factor) / factor
 
     def serialize(self, filename: str, output_dir: str | None = None) -> None:
         """
@@ -174,15 +176,16 @@ class BootstrapModelResults:
             filepath_pkl = f"{filename}.pkl"
 
         # Save confidence intervals as JSON
-        ci_dict_trunc = {}
-        for level, intervals in self.ci_dict.items():
-            ci_dict_trunc[level] = {
+        ci_dict_trunc = {
+            level: {
                 coef: (
-                    self.truncate_at_threshold(bounds[0]),
-                    self.truncate_at_threshold(bounds[1]),
+                    self.truncate_decimal(bounds[0], 15),
+                    self.truncate_decimal(bounds[1], 15),
                 )
                 for coef, bounds in intervals.items()
             }
+            for level, intervals in self.ci_dict.items()
+        }
         with open(filepath_json, "w") as f:
             json.dump(ci_dict_trunc, f, indent=4)
 
