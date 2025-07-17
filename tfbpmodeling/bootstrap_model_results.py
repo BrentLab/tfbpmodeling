@@ -51,7 +51,7 @@ class BootstrapModelResults:
         self.alpha_df = alpha_df
 
     def extract_significant_coefficients(
-        self, ci_level: str = "95.0", threshold: float = 0.0
+        self, ci_level: str = "95.0", threshold: float = 1e-15
     ) -> dict[str, tuple[float, float]]:
         """
         Extract coefficients that are statistically significant based on their bootstrap
@@ -141,6 +141,10 @@ class BootstrapModelResults:
 
         return fig
 
+    @staticmethod
+    def truncate_at_threshold(val: float, threshold: float = 1e-15) -> float:
+        return 0.0 if abs(val) < threshold else val
+
     def serialize(self, filename: str, output_dir: str | None = None) -> None:
         """
         Save the results to disk.
@@ -170,8 +174,17 @@ class BootstrapModelResults:
             filepath_pkl = f"{filename}.pkl"
 
         # Save confidence intervals as JSON
+        ci_dict_trunc = {}
+        for level, intervals in self.ci_dict.items():
+            ci_dict_trunc[level] = {
+                coef: (
+                    self.truncate_at_threshold(bounds[0]),
+                    self.truncate_at_threshold(bounds[1]),
+                )
+                for coef, bounds in intervals.items()
+            }
         with open(filepath_json, "w") as f:
-            json.dump(self.ci_dict, f, indent=4)
+            json.dump(ci_dict_trunc, f, indent=4)
 
         # Save DataFrame and alpha_list as a Pickle file
         with open(filepath_pkl, "wb") as f:
