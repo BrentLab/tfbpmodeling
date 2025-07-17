@@ -1,4 +1,3 @@
-import pytest
 from sklearn.linear_model import LassoCV
 
 from tfbpmodeling.bootstrap_stratified_cv import bootstrap_stratified_cv_modeling
@@ -10,7 +9,6 @@ from tfbpmodeling.stratification_classification import stratification_classifica
 
 
 # Testing `evaluate_interactor_significance_lassocv()`
-@pytest.mark.parametrize("top_n_masked", [True, False])
 def test_evaluate_interactor_significance_lassocv(
     random_sample_data, bootstrapped_random_sample_data, caplog
 ):
