@@ -2,8 +2,6 @@ import argparse
 import json
 import logging
 import os
-import re
-from enum import Enum
 
 import numpy as np
 import pandas as pd
@@ -23,6 +21,77 @@ from tfbpmodeling.stratification_classification import stratification_classifica
 from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_variables
 
 logger = logging.getLogger("main")
+
+
+def generate_stage_result_table(tf_dir):
+    def get_stage_result(interval):
+        if interval is None:
+            return "none"
+        lower, upper = interval
+        if lower > 0:
+            return "positive"
+        elif upper < 0:
+            return "negative"
+        elif lower <= 0 <= upper or (lower == 0 and upper == 0):
+            return "zero"
+        return "none"
+
+    all_data_path = os.path.join(tf_dir, "all_data_result_object", "result_obj.json")
+    topn_path = os.path.join(tf_dir, "topn_result_object", "result_obj.json")
+    main_effect_path = os.path.join(tf_dir, "interactor_vs_main_result.json")
+    output_csv_path = os.path.join(tf_dir, "stage_result_table.csv")
+
+    if not os.path.exists(all_data_path):
+        print(f"Skipping：{tf_dir}，Not find all_data_result_object")
+        return
+
+    with open(all_data_path) as f:
+        all_data_json = json.load(f)
+    all_data_stage = list(all_data_json.values())[0]
+
+    topn_stage = {}
+    if os.path.exists(topn_path):
+        with open(topn_path) as f:
+            topn_json = json.load(f)
+            topn_stage = list(topn_json.values())[0]
+
+    main_effect_dict = {}
+    mtf_dict = {}
+    if os.path.exists(main_effect_path):
+        with open(main_effect_path) as f:
+            main_effect_list = json.load(f)
+        for entry in main_effect_list:
+            tf, variant = entry["interactor"].split(":")
+            predictor = f"{tf}:{entry['variant']}"
+            interval_main = [entry["avg_r2_main_effect"]] * 2
+            interval_interactor = [entry["avg_r2_interactor"]] * 2
+            main_effect_dict[predictor] = get_stage_result(interval_main)
+            mtf_dict[predictor] = get_stage_result(interval_interactor)
+
+    predictors = sorted(
+        set(all_data_stage.keys())
+        | set(topn_stage.keys())
+        | set(main_effect_dict.keys())
+    )
+
+    rows = []
+    for predictor in predictors:
+        rows.append(
+            {
+                "predictor": predictor,
+                "all_data": get_stage_result(all_data_stage.get(predictor)),
+                "topn": (
+                    get_stage_result(topn_stage.get(predictor))
+                    if topn_stage
+                    else "none"
+                ),
+                "main_effect": main_effect_dict.get(predictor, "none"),
+                "mTF": mtf_dict.get(predictor, "none"),
+            }
+        )
+
+    df = pd.DataFrame(rows)
+    df.to_csv(output_csv_path, index=False)
 
 
 class CustomHelpFormatter(argparse.HelpFormatter):
@@ -333,120 +402,7 @@ def linear_perturbation_binding_modeling(args):
     )
     results.serialize(output_significance_file)
 
-    # Create summary table with STAGE_RESULT levels
-    class StageResult(str, Enum):
-        POSITIVE = "positive"
-        NEGATIVE = "negative"
-        ZERO = "zero"
-        NONE = "none"
-
-    def get_stage_result(value):
-        if value is None:
-            return StageResult.NONE
-        if isinstance(value, (float, int)):
-            if value > 0:
-                return StageResult.POSITIVE
-            elif value < 0:
-                return StageResult.NEGATIVE
-            else:
-                return StageResult.ZERO
-        if isinstance(value, dict):  # CI dict
-            lower = value.get("lower")
-            upper = value.get("upper")
-            if lower is None or upper is None:
-                return StageResult.ZERO
-            if lower > 0:
-                return StageResult.POSITIVE
-            elif upper < 0:
-                return StageResult.NEGATIVE
-            else:
-                return StageResult.ZERO
-        return StageResult.ZERO
-
-    logger.info("Step 5: Creating STAGE_RESULT summary table...")
-
-    # extract predictors from all_data_formula
-    predictors_in_formula = re.split(r"\s*\+\s*", all_data_formula)
-    predictors_cleaned = []
-    for term in predictors_in_formula:
-        term = term.strip()
-        if term.startswith("I("):
-            term = term[2:-1]
-        predictors_cleaned.append(term)
-
-    # Load result_obj.json
-    result_obj_path = os.path.join(
-        output_subdir, "all_data_result_object", "result_obj.json"
-    )
-    if not os.path.exists(result_obj_path):
-        logger.warning(f"{result_obj_path} not found. Cannot proceed.")
-        return
-
-    with open(result_obj_path) as f:
-        result_json = json.load(f)
-
-    ci_str = str(args.all_data_ci_level)
-    if ci_str not in result_json:
-        logger.warning(
-            f"CI level {ci_str} not found in result_obj.json. Cannot proceed."
-        )
-        return
-
-    ci_data = result_json[ci_str]
-
-    # Filter for significant predictors in all_data
-    all_data_sig = {}
-    for predictor, ci_pair in ci_data.items():
-        lower, upper = ci_pair
-        if lower > 0 or upper < 0:
-            all_data_sig[predictor] = {"lower": lower, "upper": upper}
-
-    # Load topn significance file (dict of predictor -> [coef, pval])
-    if os.path.exists(topn_output_file):
-        with open(topn_output_file) as f:
-            topn_raw = json.load(f)
-        # Convert to dict of predictor -> pval for consistency
-        topn_sig = {
-            k: v[1] if isinstance(v, list) and len(v) == 2 else None
-            for k, v in topn_raw.items()
-        }
-    else:
-        logger.warning(f"{topn_output_file} not found. Filling topn with 'none'")
-        topn_sig = {}
-
-    # Load interactor_vs_main_result
-    if os.path.exists(output_significance_file):
-        with open(output_significance_file) as f:
-            interactor_main_results = json.load(f)
-
-        main_effect_results = interactor_main_results.get("main_effects", {})
-        mTF_result = interactor_main_results.get("perturbed_tf", {})
-    else:
-        main_effect_results = {}
-        mTF_result = {}
-
-    # Compile results into summary
-    rows = []
-    for predictor in predictors_cleaned:
-        all_data_status = get_stage_result(all_data_sig.get(predictor, 0.0))
-        topn_status = get_stage_result(topn_sig.get(predictor, None))
-        main_effect_status = get_stage_result(main_effect_results.get(predictor, None))
-        mTF_status = get_stage_result(mTF_result.get(predictor, None))
-
-        rows.append(
-            {
-                "predictor": predictor,
-                "all_data": all_data_status,
-                "topn": topn_status,
-                "main_effect": main_effect_status,
-                "mTF": mTF_status,
-            }
-        )
-
-    summary_df = pd.DataFrame(rows)
-    summary_csv_path = os.path.join(output_subdir, "stage_result_summary.csv")
-    summary_df.to_csv(summary_csv_path, index=False)
-    logger.info(f"STAGE_RESULT summary saved to {summary_csv_path}")
+    generate_stage_result_table(output_subdir)
 
 
 def parse_bins(s):
