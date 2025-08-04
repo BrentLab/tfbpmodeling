@@ -379,11 +379,14 @@ def linear_perturbation_binding_modeling(args):
         all_data_sig = json.load(f)
     with open(topn_output_file) as f:
         topn_sig = json.load(f)
-    with open(output_significance_file) as f:
-        interactor_main_results = json.load(f)
-
-    main_effect_results = interactor_main_results.get("main_effects", {})
-    mTF_result = interactor_main_results.get("perturbed_tf", None)
+    if os.path.exists(output_significance_file):
+        with open(output_significance_file) as f:
+            interactor_main_results = json.load(f)
+        main_effect_results = interactor_main_results.get("main_effects", {})
+        mTF_result = interactor_main_results.get("perturbed_tf", None)
+    else:
+        main_effect_results = {}
+        mTF_result = None
 
     rows = []
     for predictor in predictors_cleaned:
