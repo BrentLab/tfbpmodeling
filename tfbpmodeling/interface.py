@@ -374,14 +374,34 @@ def linear_perturbation_binding_modeling(args):
             term = term[2:-1]
         predictors_cleaned.append(term)
 
-    # Load results
-    if os.path.exists(all_data_output_file):
-        with open(all_data_output_file) as f:
-            all_data_sig = json.load(f)
-    else:
-        logger.warning(f"{all_data_output_file} not found. Cannot proceed.")
+    result_obj_path = os.path.join(
+        output_subdir, "all_data_result_object", "result_obj.json"
+    )
+    if not os.path.exists(result_obj_path):
+        logger.warning(f"{result_obj_path} not found. Cannot proceed.")
         return
 
+    with open(result_obj_path) as f:
+        result_json = json.load(f)
+
+    ci_str = str(args.all_data_ci_level)
+    if ci_str not in result_json.get("confidence_intervals", {}):
+        logger.warning(
+            f"CI level {ci_str} not found in result_obj.json. Cannot proceed."
+        )
+        return
+
+    ci_data = result_json["confidence_intervals"][ci_str]
+
+    # Filter for significant predictors
+    all_data_sig = {}
+    for predictor, ci in ci_data.items():
+        lower = ci.get("lower", 0)
+        upper = ci.get("upper", 0)
+        if lower > 0 or upper < 0:
+            all_data_sig[predictor] = ci
+
+    # === Load topn if exists ===
     if os.path.exists(topn_output_file):
         with open(topn_output_file) as f:
             topn_sig = json.load(f)
@@ -389,6 +409,7 @@ def linear_perturbation_binding_modeling(args):
         logger.warning(f"{topn_output_file} not found. Filling topn with 'none'")
         topn_sig = {}
 
+    # === Load interactor results if exists ===
     if os.path.exists(output_significance_file):
         with open(output_significance_file) as f:
             interactor_main_results = json.load(f)
