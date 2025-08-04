@@ -375,10 +375,19 @@ def linear_perturbation_binding_modeling(args):
         predictors_cleaned.append(term)
 
     # Load results
-    with open(all_data_output_file) as f:
-        all_data_sig = json.load(f)
-    with open(topn_output_file) as f:
-        topn_sig = json.load(f)
+    if os.path.exists(all_data_output_file):
+        with open(all_data_output_file) as f:
+            all_data_sig = json.load(f)
+    else:
+        logger.warning(f"{all_data_output_file} not found. Cannot proceed.")
+        return
+
+    if os.path.exists(topn_output_file):
+        with open(topn_output_file) as f:
+            topn_sig = json.load(f)
+    else:
+        logger.warning(f"{topn_output_file} not found. Filling topn with 'none'")
+        topn_sig = {}
 
     if os.path.exists(output_significance_file):
         with open(output_significance_file) as f:
@@ -389,7 +398,6 @@ def linear_perturbation_binding_modeling(args):
             for entry in interactor_main_results
             if "predictor" in entry
         }
-
         mTF_result = None
     else:
         main_effect_results = {}
