@@ -379,11 +379,18 @@ def linear_perturbation_binding_modeling(args):
         all_data_sig = json.load(f)
     with open(topn_output_file) as f:
         topn_sig = json.load(f)
+
     if os.path.exists(output_significance_file):
         with open(output_significance_file) as f:
             interactor_main_results = json.load(f)
-        main_effect_results = interactor_main_results.get("main_effects", {})
-        mTF_result = interactor_main_results.get("perturbed_tf", None)
+
+        main_effect_results = {
+            entry["predictor"]: entry.get("main_effect", "none")
+            for entry in interactor_main_results
+            if "predictor" in entry
+        }
+
+        mTF_result = None
     else:
         main_effect_results = {}
         mTF_result = None
