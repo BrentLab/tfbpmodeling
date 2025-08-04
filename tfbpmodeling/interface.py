@@ -385,21 +385,20 @@ def linear_perturbation_binding_modeling(args):
         result_json = json.load(f)
 
     ci_str = str(args.all_data_ci_level)
-    if ci_str not in result_json.get("confidence_intervals", {}):
+    if ci_str not in result_json:
         logger.warning(
             f"CI level {ci_str} not found in result_obj.json. Cannot proceed."
         )
         return
 
-    ci_data = result_json["confidence_intervals"][ci_str]
+    ci_data = result_json[ci_str]
 
     # Filter for significant predictors
     all_data_sig = {}
-    for predictor, ci in ci_data.items():
-        lower = ci.get("lower", 0)
-        upper = ci.get("upper", 0)
+    for predictor, ci_pair in ci_data.items():
+        lower, upper = ci_pair
         if lower > 0 or upper < 0:
-            all_data_sig[predictor] = ci
+            all_data_sig[predictor] = {"lower": lower, "upper": upper}
 
     # === Load topn if exists ===
     if os.path.exists(topn_output_file):
