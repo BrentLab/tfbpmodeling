@@ -2,8 +2,11 @@ import argparse
 import json
 import logging
 import os
+import re
+from enum import Enum
 
 import numpy as np
+import pandas as pd
 from sklearn.linear_model import LassoCV
 
 from tfbpmodeling.bootstrap_stratified_cv import bootstrap_stratified_cv_modeling
@@ -329,6 +332,80 @@ def linear_perturbation_binding_modeling(args):
         f"results to {output_significance_file}"
     )
     results.serialize(output_significance_file)
+
+    # Create summary table with STAGE_RESULT levels
+    class StageResult(str, Enum):
+        POSITIVE = "positive"
+        NEGATIVE = "negative"
+        ZERO = "zero"
+        NONE = "none"
+
+    def get_stage_result(value):
+        if value is None:
+            return StageResult.NONE
+        if isinstance(value, (float, int)):
+            if value > 0:
+                return StageResult.POSITIVE
+            elif value < 0:
+                return StageResult.NEGATIVE
+            else:
+                return StageResult.ZERO
+        if isinstance(value, dict):  # CI dict
+            lower = value.get("lower")
+            upper = value.get("upper")
+            if lower is None or upper is None:
+                return StageResult.ZERO
+            if lower > 0:
+                return StageResult.POSITIVE
+            elif upper < 0:
+                return StageResult.NEGATIVE
+            else:
+                return StageResult.ZERO
+        return StageResult.ZERO
+
+    logger.info("Step 5: Creating STAGE_RESULT summary table...")
+
+    # extract predictors from all_data_formula
+    predictors_in_formula = re.split(r"\s*\+\s*", all_data_formula)
+    predictors_cleaned = []
+    for term in predictors_in_formula:
+        term = term.strip()
+        if term.startswith("I("):
+            term = term[2:-1]
+        predictors_cleaned.append(term)
+
+    # Load results
+    with open(all_data_output_file) as f:
+        all_data_sig = json.load(f)
+    with open(topn_output_file) as f:
+        topn_sig = json.load(f)
+    with open(output_significance_file) as f:
+        interactor_main_results = json.load(f)
+
+    main_effect_results = interactor_main_results.get("main_effects", {})
+    mTF_result = interactor_main_results.get("perturbed_tf", None)
+
+    rows = []
+    for predictor in predictors_cleaned:
+        all_data_status = get_stage_result(all_data_sig.get(predictor, 0.0))
+        topn_status = get_stage_result(topn_sig.get(predictor, None))
+        main_effect_status = get_stage_result(main_effect_results.get(predictor, None))
+        mTF_status = get_stage_result(mTF_result)
+
+        rows.append(
+            {
+                "predictor": predictor,
+                "all_data": all_data_status,
+                "topn": topn_status,
+                "main_effect": main_effect_status,
+                "mTF": mTF_status,
+            }
+        )
+
+    summary_df = pd.DataFrame(rows)
+    summary_csv_path = os.path.join(output_subdir, "stage_result_summary.csv")
+    summary_df.to_csv(summary_csv_path, index=False)
+    logger.info(f"STAGE_RESULT summary saved to {summary_csv_path}")
 
 
 def parse_bins(s):
