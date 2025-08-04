@@ -374,6 +374,7 @@ def linear_perturbation_binding_modeling(args):
             term = term[2:-1]
         predictors_cleaned.append(term)
 
+    # Load result_obj.json
     result_obj_path = os.path.join(
         output_subdir, "all_data_result_object", "result_obj.json"
     )
@@ -393,42 +394,44 @@ def linear_perturbation_binding_modeling(args):
 
     ci_data = result_json[ci_str]
 
-    # Filter for significant predictors
+    # Filter for significant predictors in all_data
     all_data_sig = {}
     for predictor, ci_pair in ci_data.items():
         lower, upper = ci_pair
         if lower > 0 or upper < 0:
             all_data_sig[predictor] = {"lower": lower, "upper": upper}
 
-    # === Load topn if exists ===
+    # Load topn significance file (dict of predictor -> [coef, pval])
     if os.path.exists(topn_output_file):
         with open(topn_output_file) as f:
-            topn_sig = json.load(f)
+            topn_raw = json.load(f)
+        # Convert to dict of predictor -> pval for consistency
+        topn_sig = {
+            k: v[1] if isinstance(v, list) and len(v) == 2 else None
+            for k, v in topn_raw.items()
+        }
     else:
         logger.warning(f"{topn_output_file} not found. Filling topn with 'none'")
         topn_sig = {}
 
-    # === Load interactor results if exists ===
+    # Load interactor_vs_main_result
     if os.path.exists(output_significance_file):
         with open(output_significance_file) as f:
             interactor_main_results = json.load(f)
 
-        main_effect_results = {
-            entry["predictor"]: entry.get("main_effect", "none")
-            for entry in interactor_main_results
-            if "predictor" in entry
-        }
-        mTF_result = None
+        main_effect_results = interactor_main_results.get("main_effects", {})
+        mTF_result = interactor_main_results.get("perturbed_tf", {})
     else:
         main_effect_results = {}
-        mTF_result = None
+        mTF_result = {}
 
+    # Compile results into summary
     rows = []
     for predictor in predictors_cleaned:
         all_data_status = get_stage_result(all_data_sig.get(predictor, 0.0))
         topn_status = get_stage_result(topn_sig.get(predictor, None))
         main_effect_status = get_stage_result(main_effect_results.get(predictor, None))
-        mTF_status = get_stage_result(mTF_result)
+        mTF_status = get_stage_result(mTF_result.get(predictor, None))
 
         rows.append(
             {
