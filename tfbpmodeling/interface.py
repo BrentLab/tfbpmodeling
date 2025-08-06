@@ -43,6 +43,7 @@ def generate_stage_result_table(tf_dir):
 
     if not os.path.exists(all_data_path):
         print(f"Skipping：{tf_dir}，Not find all_data_result_object")
+        return
 
     with open(all_data_path) as f:
         all_data_json = json.load(f)
@@ -274,6 +275,7 @@ def linear_perturbation_binding_modeling(args):
             f"No significant coefficients found at {args.all_data_ci_level}% "
             "confidence level. Exiting."
         )
+        generate_stage_result_table(output_subdir)
         return
 
     # write all_data_sig_coefs to a json file
