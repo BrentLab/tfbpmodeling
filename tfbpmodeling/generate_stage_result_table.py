@@ -4,18 +4,40 @@ import os
 import pandas as pd
 
 
-def generate_stage_result_table(tf_dir):
-    def get_stage_result(interval):
-        if interval is None:
-            return "none"
-        lower, upper = interval
-        if lower > 0:
-            return "positive"
-        elif upper < 0:
-            return "negative"
-        elif lower <= 0 <= upper or (lower == 0 and upper == 0):
-            return "zero"
+def get_stage_result(interval):
+    """
+    Map a coefficient interval to a STAGE_RESULT string.
+
+    Parameters
+    ----------
+    interval : tuple[float, float] | list[float] | None
+        The (lower, upper) bounds for a predictor's coefficient interval.
+        Pass None if the predictor/stage is absent.
+
+    Returns
+    -------
+    str
+        One of:
+        - "positive": lower > 0 (strictly positive interval)
+        - "negative": upper < 0 (strictly negative interval)
+        - "zero": the interval contains 0 (e.g., lower <= 0 <= upper) or both
+          bounds are exactly 0
+        - "none": the interval is None or unrecognized (fallback)
+
+    """
+    if interval is None:
         return "none"
+    lower, upper = interval
+    if lower > 0:
+        return "positive"
+    elif upper < 0:
+        return "negative"
+    elif lower <= 0 <= upper or (lower == 0 and upper == 0):
+        return "zero"
+    return "none"
+
+
+def generate_stage_result_table(tf_dir):
 
     all_data_path = os.path.join(tf_dir, "all_data_result_object", "result_obj.json")
     topn_path = os.path.join(tf_dir, "topn_result_object", "result_obj.json")
@@ -49,11 +71,7 @@ def generate_stage_result_table(tf_dir):
             main_effect_dict[predictor] = get_stage_result(interval_main)
             mtf_dict[predictor] = get_stage_result(interval_interactor)
 
-    predictors = sorted(
-        set(all_data_stage.keys())
-        | set(topn_stage.keys())
-        | set(main_effect_dict.keys())
-    )
+    predictors = sorted(all_data_stage.keys())
 
     rows = []
     for predictor in predictors:

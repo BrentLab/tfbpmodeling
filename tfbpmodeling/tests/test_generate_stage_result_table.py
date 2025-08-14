@@ -1,8 +1,12 @@
 import json
 
 import pandas as pd
+import pytest
 
-from tfbpmodeling.generate_stage_result_table import generate_stage_result_table
+from tfbpmodeling.generate_stage_result_table import (
+    generate_stage_result_table,
+    get_stage_result,
+)
 
 
 def test_generate_stage_result_table(tmp_path):
@@ -75,3 +79,19 @@ def test_generate_stage_result_table(tmp_path):
     row_var2 = df[df["predictor"] == "TF1:VAR2"].iloc[0]
     assert row_var2["all_data"] == "negative"
     assert row_var2["mTF"] == "positive"
+
+
+@pytest.mark.parametrize(
+    "interval,expected",
+    [
+        (None, "none"),  # absent
+        ((0.10, 0.20), "positive"),  # strictly > 0
+        ((-0.30, -0.05), "negative"),  # strictly < 0
+        ((-0.10, 0.25), "zero"),  # spans 0
+        ((0.00, 0.00), "zero"),  # exactly zero
+        ((0.00, 0.30), "zero"),  # touches 0 on lower bound
+        ((-0.30, 0.00), "zero"),  # touches 0 on upper bound
+    ],
+)
+def test_get_stage_result_all_paths(interval, expected):
+    assert get_stage_result(interval) == expected
