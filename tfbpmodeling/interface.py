@@ -15,6 +15,7 @@ from tfbpmodeling.evaluate_interactor_significance_lassocv import (
 from tfbpmodeling.evaluate_interactor_significance_linear import (
     evaluate_interactor_significance_linear,
 )
+from tfbpmodeling.generate_stage_result_table import generate_stage_result_table
 from tfbpmodeling.modeling_input_data import ModelingInputData
 from tfbpmodeling.stratification_classification import stratification_classification
 from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_variables
@@ -203,6 +204,7 @@ def linear_perturbation_binding_modeling(args):
             f"No significant coefficients found at {args.all_data_ci_level}% "
             "confidence level. Exiting."
         )
+        generate_stage_result_table(output_subdir)
         return
 
     # write all_data_sig_coefs to a json file
@@ -329,6 +331,8 @@ def linear_perturbation_binding_modeling(args):
         f"results to {output_significance_file}"
     )
     results.serialize(output_significance_file)
+
+    generate_stage_result_table(output_subdir)
 
 
 def parse_bins(s):
