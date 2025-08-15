@@ -6,25 +6,30 @@ import pandas as pd
 
 def get_stage_result(interval):
     """
-    Map a coefficient interval to a STAGE_RESULT string.
+    Map a coefficient interval to a STAGE_RESULT label.
 
-    Parameters
-    ----------
-    interval : tuple[float, float] | list[float] | None
-        The (lower, upper) bounds for a predictor's coefficient interval.
-        Pass None if the predictor/stage is absent.
+    This helper converts a coefficient's confidence interval (or a point
+    estimate represented as a degenerate interval) into one of the categorical
+    stage results used in the summary table.
 
-    Returns
-    -------
-    str
-        One of:
-        - "positive": lower > 0 (strictly positive interval)
-        - "negative": upper < 0 (strictly negative interval)
-        - "zero": the interval contains 0 (e.g., lower <= 0 <= upper) or both
-          bounds are exactly 0
-        - "none": the interval is None or unrecognized (fallback)
+    - "positive": lower > 0
+    - "negative": upper < 0
+    - "zero": the interval contains 0 (e.g., lower <= 0 <= upper) or both
+      bounds are exactly 0
+    - "none": the predictor/stage is absent (interval is None) or unrecognized
+
+    :param interval: A 2-element tuple/list (lower, upper) of floats representing
+        the coefficient interval for a predictor at a given stage. Use the same
+        value for lower and upper to represent a point estimate. Pass None if the
+        predictor/stage is absent.
+
+    :return: A string in {"positive", "negative", "zero", "none"} indicating the
+        STAGE_RESULT classification.
+
+    :raises: None
 
     """
+
     if interval is None:
         return "none"
     lower, upper = interval
@@ -38,6 +43,28 @@ def get_stage_result(interval):
 
 
 def generate_stage_result_table(tf_dir):
+    """
+    Build and write `stage_result_table.csv` for a single TF modeling run.
+
+    This function collates stage-level outcomes from three pipeline stages—
+    "all data", "topn", and "main effect/interactor"—and emits a unified table
+    with one row per predictor. Each stage’s numeric interval (or point estimate)
+    is mapped to a categorical STAGE_RESULT via `get_stage_result`, producing the
+    columns:
+      - predictor
+      - all_data
+      - topn
+      - main_effect
+      - mTF
+
+    :param tf_dir: Directory containing stage outputs for a single TF run.
+
+    :return: None (writes CSV to disk)
+
+    :raises: None. If the required all-data file is missing, prints a message and
+             returns early without writing a CSV.
+
+    """
 
     all_data_path = os.path.join(tf_dir, "all_data_result_object", "result_obj.json")
     topn_path = os.path.join(tf_dir, "topn_result_object", "result_obj.json")
