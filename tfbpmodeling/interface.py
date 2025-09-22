@@ -531,11 +531,6 @@ def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
         ),
     )
     parser.add_argument(
-        "--scale_center",
-        action="store_true",
-        help=("Scale and center the model matrix by the mean and standard deviation. "),
-    )
-    parser.add_argument(
         "--ptf_main_effect",
         action="store_true",
         help=(
