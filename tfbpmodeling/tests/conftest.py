@@ -4,10 +4,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from tfbpmodeling.lasso_modeling import (
-    BootstrappedModelingInputData,
-    ModelingInputData,
-)
+from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
+from tfbpmodeling.modeling_input_data import ModelingInputData
 
 
 @pytest.fixture
@@ -39,7 +37,7 @@ def bootstrapped_sample_data(sample_data):
     model_df = input_data.get_modeling_data(formula="TF1 + TF1:TF2 + TF1:TF3 - 1")
 
     return BootstrappedModelingInputData(
-        input_data.response_df, model_df, n_bootstraps=5
+        input_data.response_df, model_df, n_bootstraps=5, random_state=42
     )
 
 
@@ -55,16 +53,16 @@ def random_sample_data():
     """Generates synthetic response and predictor data with consistent indexing,
     ensuring the response is derived from a subset of predictors."""
     np.random.seed(42)  # Ensure reproducibility
-    total_features = 100
+    total_features = 200
 
     # Feature column names: gene1, gene2, ..., gene100
     feature_col = [f"gene{i+1}" for i in range(total_features)]
 
     # Select predictor columns: gene5 to gene14
-    predictor_columns = feature_col[4:14]  # (gene5 to gene14)
+    predictor_columns = feature_col[4:104]  # (gene5 to gene14)
 
     # Number of samples
-    n_samples = 100
+    n_samples = 500
 
     # Generate predictors DataFrame
     predictors_df = pd.DataFrame(
@@ -96,7 +94,7 @@ def random_sample_data():
         perturbed_tf="gene5",
         feature_col="target_symbol",
         feature_blacklist=["gene1", "gene2"],
-        top_n=20,
+        top_n=101,
     )
 
 
@@ -123,7 +121,28 @@ def bootstrapped_random_sample_data(random_sample_data):
         random_sample_data.response_df,
         random_sample_data.get_modeling_data(formula=formula),
         n_bootstraps=100,
+        random_state=42,
     )
+
+
+@pytest.fixture
+def bootstrapped_random_sample_data_factory():
+    def _factory(random_sample_data):
+        perturbed_tf = random_sample_data.perturbed_tf
+        predictor_variables = random_sample_data.predictors_df.columns.drop(
+            perturbed_tf
+        )
+        interaction_terms = [f"{perturbed_tf}:{var}" for var in predictor_variables]
+        formula = f"{perturbed_tf} + {' + '.join(interaction_terms)} - 1"
+
+        return BootstrappedModelingInputData(
+            random_sample_data.response_df,
+            random_sample_data.get_modeling_data(formula=formula),
+            n_bootstraps=100,
+            random_state=42,
+        )
+
+    return _factory
 
 
 @pytest.fixture
@@ -152,3 +171,59 @@ def sample_evaluations() -> list[dict[str, Any]]:
             "delta_r2": 0.00,
         },
     ]
+
+
+@pytest.fixture
+def random_sample_data_no_signal():
+    """Generates random predictors and completely random response (no signal)."""
+    np.random.seed(42)
+    total_features = 20
+    n_samples = 100
+
+    feature_col = [f"gene{i+1}" for i in range(total_features)]
+
+    predictors_df = pd.DataFrame(
+        np.random.randn(n_samples, total_features),
+        columns=feature_col,
+        index=[f"gene{i+1}" for i in range(n_samples)],
+    ).reset_index(names="target_symbol")
+
+    # Response is just noise
+    response_values = np.random.randn(n_samples)
+
+    response_df = pd.DataFrame(
+        {"response": response_values, "target_symbol": predictors_df.target_symbol}
+    )
+
+    return ModelingInputData(
+        response_df=response_df,
+        predictors_df=predictors_df,
+        perturbed_tf="gene1",
+        feature_col="target_symbol",
+        feature_blacklist=[],
+        top_n=10,
+    )
+
+
+@pytest.fixture
+def bootstrapped_random_sample_data_no_signal(random_sample_data_no_signal):
+    """Bootstrapped version of the no-signal data."""
+    random_sample_data_no_signal.top_n_masked = False
+    predictor_variables = random_sample_data_no_signal.predictors_df.columns.drop(
+        random_sample_data_no_signal.perturbed_tf
+    )
+
+    interaction_terms = [
+        f"{random_sample_data_no_signal.perturbed_tf}:{var}"
+        for var in predictor_variables
+    ]
+
+    formula = f"{random_sample_data_no_signal.perturbed_tf} + \
+        {' + '.join(interaction_terms)} - 1"
+
+    return BootstrappedModelingInputData(
+        random_sample_data_no_signal.response_df,
+        random_sample_data_no_signal.get_modeling_data(formula=formula),
+        n_bootstraps=50,
+        random_state=42,
+    )

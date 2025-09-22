@@ -8,17 +8,13 @@ from sklearn.linear_model import LassoCV
 from sklearn.model_selection import StratifiedKFold
 
 # Import necessary classes and functions
-from tfbpmodeling.lasso_modeling import (
-    BootstrapModelResults,
-    BootstrappedModelingInputData,
-    bootstrap_stratified_cv_modeling,
-    stratified_cv_modeling,
-)
-from tfbpmodeling.stratification_classification import (
-    stratification_classification,
-)
+from tfbpmodeling.bootstrap_model_results import BootstrapModelResults
+from tfbpmodeling.bootstrap_stratified_cv import bootstrap_stratified_cv_modeling
+from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
+from tfbpmodeling.stratification_classification import stratification_classification
+from tfbpmodeling.stratified_cv import stratified_cv_modeling
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("main")
 
 
 def bootstrap_stratified_cv_loop(
@@ -32,7 +28,6 @@ def bootstrap_stratified_cv_loop(
         n_jobs=4,
     ),
     ci_percentile: float = 98.0,  # Final confidence interval
-    use_sample_weight_in_cv: bool = False,
     stabilization_ci_start: float = 50.0,  # Starting CI for stabilization
     output_dir: str = "",
     **kwargs,
@@ -45,7 +40,6 @@ def bootstrap_stratified_cv_loop(
     :param perturbed_tf_series: Series of TF binding values for stratification.
     :param estimator: scikit-learn estimator. Default is LassoCV.
     :param ci_percentile: Final confidence interval for results (e.g., 99.0).
-    :param use_sample_weight_in_cv: Whether to use sample weights in CV.
     :param stabilization_ci_start: Starting confidence interval for stabilization (e.g.,
         50.0).
     :param stabilization_ci_step: Step size for increasing CI during stabilization.
@@ -63,15 +57,14 @@ def bootstrap_stratified_cv_loop(
     # for variability in how each bootstrap sample is partitioned into train/test
     skf = StratifiedKFold(n_splits=4, shuffle=True, random_state=42)
     logger.info(f"Starting iterative variable dropping with CI={current_ci}")
+
     i = 0
     while True:
         # Perform bootstrapped modeling at the current CI
         bootstrap_coefs = []
         alpha_list = []
 
-        for index, (y_resampled, x_resampled, sample_weight) in enumerate(
-            bootstrapped_data
-        ):
+        for index, (_, sample_weight) in enumerate(bootstrapped_data):
             logger.debug(f"Bootstrap iteration index: {index}")
             # Set the random state for StratifiedKFold to the current index
             skf.random_state = index
@@ -86,45 +79,20 @@ def bootstrap_stratified_cv_loop(
             except AttributeError:
                 logger.warning("Estimator does not have a random_state attribute.")
                 pass
-            # by default, use the sample weights rather than the resampled data directly
-            if kwargs.get("use_sample_weight_in_cv", True):
-                # this should be over the entire data set, since we are
-                # using the weights to perform the sampling
-                logger.info("Performing CV by sample weights")
-                classes = stratification_classification(
-                    perturbed_tf_series.loc[
-                        bootstrapped_data.response_df.index
-                    ].squeeze(),
-                    bootstrapped_data.response_df.squeeze(),
-                    bin_by_binding_only=kwargs.get("bin_by_binding_only", False),
-                    bins=kwargs.get("bins", None),
-                )
 
-                model_i = stratified_cv_modeling(
-                    bootstrapped_data.response_df,
-                    bootstrapped_data.model_df,
-                    classes=classes,
-                    estimator=estimator,
-                    skf=skf,
-                    sample_weight=sample_weight,
-                )
-            else:
-                # this is performed on the resampled data
-                logger.info("Performing CV by index partitioning")
-                classes = stratification_classification(
-                    perturbed_tf_series.loc[y_resampled.index].squeeze(),
-                    y_resampled.squeeze(),
-                    bin_by_binding_only=kwargs.get("bin_by_binding_only", False),
-                    bins=kwargs.get("bins", None),
-                )
+            classes = stratification_classification(
+                perturbed_tf_series.loc[bootstrapped_data.response_df.index].squeeze(),
+                bins=kwargs.get("bins", [0, 8, 64, 512, np.inf]),
+            )
 
-                model_i = stratified_cv_modeling(
-                    y_resampled,
-                    x_resampled,
-                    classes=classes,
-                    estimator=estimator,
-                    skf=skf,
-                )
+            model_i = stratified_cv_modeling(
+                bootstrapped_data.response_df,
+                bootstrapped_data.model_df,
+                classes=classes,
+                estimator=estimator,
+                skf=skf,
+                sample_weight=sample_weight,
+            )
 
             alpha_list.append(model_i.alpha_)
             bootstrap_coefs.append(model_i.coef_)
@@ -136,21 +104,34 @@ def bootstrap_stratified_cv_loop(
 
         # Compute confidence intervals
         ci_dict = {
-            colname: (
-                np.percentile(bootstrap_coefs_df[colname], (100 - current_ci) / 2),
-                np.percentile(
-                    bootstrap_coefs_df[colname], 100 - (100 - current_ci) / 2
-                ),
-            )
-            for colname in bootstrap_coefs_df.columns
+            f"{current_ci}": {
+                colname: (
+                    np.percentile(bootstrap_coefs_df[colname], (100 - current_ci) / 2),
+                    np.percentile(
+                        bootstrap_coefs_df[colname], 100 - (100 - current_ci) / 2
+                    ),
+                )
+                for colname in bootstrap_coefs_df.columns
+            }
         }
 
         # Select variables within the confidence interval
         selected_variables = [
             colname
-            for colname, (lower, upper) in ci_dict.items()
+            for colname, (lower, upper) in ci_dict[f"{current_ci}"].items()
             if lower > 0 or upper < 0
         ]
+
+        if not selected_variables:
+            logger.warning(
+                f"No variables selected at CI={current_ci}. "
+                "Consider adjusting the confidence interval."
+            )
+            return BootstrapModelResults(
+                ci_dict=ci_dict,
+                bootstrap_coefs_df=bootstrap_coefs_df,
+                alpha_list=alpha_list,
+            )
 
         logger.info(f"CI={current_ci}: Selected {len(selected_variables)} variables")
         output_path = os.path.join(output_dir, f"selected_variables_ci_{i}.txt")
@@ -182,7 +163,6 @@ def bootstrap_stratified_cv_loop(
         perturbed_tf_series=perturbed_tf_series,
         estimator=estimator,
         ci_percentiles=[ci_percentile],
-        use_sample_weight_in_cv=use_sample_weight_in_cv,
         **kwargs,
     )
 
