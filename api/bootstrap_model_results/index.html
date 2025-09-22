@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/api/bootstrap_model_results/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>bootstrap_model_results - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "bootstrap_model_results";
+        var mkdocs_page_input_path = "api/bootstrap_model_results.md";
+        var mkdocs_page_url = "/tfbpmodeling/api/bootstrap_model_results/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/basic-workflow/">Basic Workflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/advanced-features/">Advanced Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" >Core Modules</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">bootstrap_model_results</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#tfbpmodeling.bootstrap_model_results">bootstrap_model_results</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults">BootstrapModelResults</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#key-features">Key Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#usage-examples">Usage Examples</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#result-aggregation">Result Aggregation</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#statistical-analysis">Statistical Analysis</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#related-modules">Related Modules</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API Reference</li>
+          <li class="breadcrumb-item">Core Modules</li>
+      <li class="breadcrumb-item active">bootstrap_model_results</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/api/bootstrap_model_results.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="bootstrap_model_results">bootstrap_model_results<a class="headerlink" href="#bootstrap_model_results" title="Permanent link">&para;</a></h1>
+<p>Results aggregation and statistical analysis for bootstrap modeling.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="tfbpmodeling.bootstrap_model_results" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">tfbpmodeling.bootstrap_model_results</span>
+
+
+<a href="#tfbpmodeling.bootstrap_model_results" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="tfbpmodeling.bootstrap_model_results.BootstrapModelResults" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">BootstrapModelResults</span>
+
+
+<a href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">BootstrapModelResults</span><span class="p">(</span>
+    <span class="n">ci_dict</span><span class="p">,</span>
+    <span class="n">bootstrap_coefs_df</span><span class="p">,</span>
+    <span class="n">alpha_list</span><span class="p">,</span>
+    <span class="n">alpha_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+
+        <p>Encapsulates the results from bootstrapped stratified cross-validation modeling.</p>
+<p>This includes:
+- Confidence intervals for model coefficients across bootstrap iterations
+- Raw coefficient estimates from each iteration
+- Alpha values (regularization strengths) selected during each iteration
+- Methods for extracting statistically significant coefficients
+- Visualization utilities
+- Serialization and deserialization support</p>
+
+        <p>Initialize BootstrapModelResults.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ci_dict</code></b>
+                  (<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="dict">dict</span>[<span title="str">str</span>, <span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>]]]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Nested dictionary mapping confidence levels to (low, high) confidence intervals for each coefficient.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>bootstrap_coefs_df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame of shape (n_bootstraps, n_features) containing coefficient values from each bootstrap sample.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>alpha_list</code></b>
+                  (<code><span title="list">list</span>[<span title="float">float</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>List of alpha values (regularization strength) selected during each bootstrap iteration.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>alpha_df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>, default:
+                      <code><span title="pandas.DataFrame">DataFrame</span>()</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>a dataframe with the columns 'bootstrap_idx', 'alpha', 'fold', and 'mse'</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+                  <details class="quote">
+                    <summary>Source code in <code>tfbpmodeling/bootstrap_model_results.py</code></summary>
+                    <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">ci_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]],</span>
+    <span class="n">bootstrap_coefs_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">alpha_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+    <span class="n">alpha_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize BootstrapModelResults.</span>
+
+<span class="sd">    :param ci_dict: Nested dictionary mapping confidence levels to (low, high)</span>
+<span class="sd">        confidence intervals for each coefficient.</span>
+<span class="sd">    :param bootstrap_coefs_df: DataFrame of shape (n_bootstraps, n_features)</span>
+<span class="sd">        containing coefficient values from each bootstrap sample.</span>
+<span class="sd">    :param alpha_list: List of alpha values (regularization strength) selected</span>
+<span class="sd">        during each bootstrap iteration.</span>
+<span class="sd">    :param alpha_df: a dataframe with the columns &#39;bootstrap_idx&#39;, &#39;alpha&#39;, &#39;fold&#39;,</span>
+<span class="sd">        and &#39;mse&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ci_dict</span> <span class="o">=</span> <span class="n">ci_dict</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span> <span class="o">=</span> <span class="n">bootstrap_coefs_df</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">alpha_list</span> <span class="o">=</span> <span class="n">alpha_list</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">alpha_df</span> <span class="o">=</span> <span class="n">alpha_df</span>
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="tfbpmodeling.bootstrap_model_results.BootstrapModelResults.deserialize" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">deserialize</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults.deserialize" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">deserialize</span><span class="p">(</span><span class="n">ci_dict_json</span><span class="p">,</span> <span class="n">coefs_alphas_pkl</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Load model results from disk.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ci_dict_json</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to the JSON file with confidence intervals.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>coefs_alphas_pkl</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to the Pickle file with coefficient matrix and alpha list.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="BootstrapModelResults (tfbpmodeling.bootstrap_model_results.BootstrapModelResults)" href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults">BootstrapModelResults</a></code>
+              –
+              <div class="doc-md-description">
+                <p>A new BootstrapModelResults instance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>FileNotFoundError</code>
+              –
+              <div class="doc-md-description">
+                <p>If either file is missing.</p>
+              </div>
+            </li>
+            <li>
+                  <code>ValueError</code>
+              –
+              <div class="doc-md-description">
+                <p>If the pickle file contents are invalid.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>tfbpmodeling/bootstrap_model_results.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">,</span> <span class="n">ci_dict_json</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">coefs_alphas_pkl</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BootstrapModelResults&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load model results from disk.</span>
+
+<span class="sd">    :param ci_dict_json: Path to the JSON file with confidence intervals.</span>
+<span class="sd">    :param coefs_alphas_pkl: Path to the Pickle file with coefficient matrix and</span>
+<span class="sd">        alpha list.</span>
+<span class="sd">    :return: A new BootstrapModelResults instance.</span>
+<span class="sd">    :raises FileNotFoundError: If either file is missing.</span>
+<span class="sd">    :raises ValueError: If the pickle file contents are invalid.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Ensure both files exist before proceeding</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ci_dict_json</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Confidence intervals file &#39;</span><span class="si">{</span><span class="n">ci_dict_json</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">coefs_alphas_pkl</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pickle file &#39;</span><span class="si">{</span><span class="n">coefs_alphas_pkl</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Load confidence intervals from JSON</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ci_dict_json</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">ci_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># Load DataFrame and alpha_list from Pickle</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">coefs_alphas_pkl</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="c1"># Validate loaded data</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loaded_data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">loaded_data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Pickle file does not contain expected (DataFrame, list) format.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">bootstrap_coefs_df</span><span class="p">,</span> <span class="n">alpha_list</span> <span class="o">=</span> <span class="n">loaded_data</span>
+
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">ci_dict</span><span class="p">,</span> <span class="n">bootstrap_coefs_df</span><span class="p">,</span> <span class="n">alpha_list</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="tfbpmodeling.bootstrap_model_results.BootstrapModelResults.extract_significant_coefficients" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">extract_significant_coefficients</span>
+
+
+<a href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults.extract_significant_coefficients" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">extract_significant_coefficients</span><span class="p">(</span>
+    <span class="n">ci_level</span><span class="o">=</span><span class="s2">&quot;95.0&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Extract coefficients that are statistically significant based on their bootstrap
+confidence intervals.</p>
+<p>A coefficient is considered significant if its entire confidence interval
+    lies above <code>threshold</code> or below <code>-threshold</code>.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ci_level</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;95.0&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Confidence interval level (e.g., "95.0").</p>
+              </div>
+            </li>
+            <li>
+              <b><code>threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Minimum effect size for significance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>]]</code>
+              –
+              <div class="doc-md-description">
+                <p>Dictionary mapping coefficient names to their (low, high) CI bounds.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>tfbpmodeling/bootstrap_model_results.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_significant_coefficients</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">ci_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;95.0&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract coefficients that are statistically significant based on their bootstrap</span>
+<span class="sd">    confidence intervals.</span>
+
+<span class="sd">    A coefficient is considered significant if its entire confidence interval</span>
+<span class="sd">        lies above `threshold` or below `-threshold`.</span>
+
+<span class="sd">    :param ci_level: Confidence interval level (e.g., &quot;95.0&quot;).</span>
+<span class="sd">    :param threshold: Minimum effect size for significance.</span>
+<span class="sd">    :return: Dictionary mapping coefficient names to their (low, high) CI bounds.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ci_dict_local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># If CI level is not precomputed, calculate it</span>
+    <span class="k">if</span> <span class="n">ci_level</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ci_dict_local</span><span class="p">:</span>
+        <span class="n">ci_level_numeric</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ci_level</span><span class="p">)</span>
+        <span class="c1"># log that the ci_level is not in the ci_dict</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Generating confidence intervals for ci level: </span><span class="si">{</span><span class="n">ci_level_numeric</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">ci_dict_local</span><span class="p">[</span><span class="n">ci_level</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">colname</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span><span class="p">[</span><span class="n">colname</span><span class="p">],</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">ci_level_numeric</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+                <span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span><span class="p">[</span><span class="n">colname</span><span class="p">],</span>
+                    <span class="mi">100</span> <span class="o">-</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">ci_level_numeric</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">colname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span><span class="o">.</span><span class="n">columns</span>
+        <span class="p">}</span>
+
+    <span class="c1"># Select significant coefficients based on the confidence interval threshold</span>
+    <span class="n">significant_coefs_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">coef</span><span class="p">:</span> <span class="n">bounds</span>
+        <span class="k">for</span> <span class="n">coef</span><span class="p">,</span> <span class="n">bounds</span> <span class="ow">in</span> <span class="n">ci_dict_local</span><span class="p">[</span><span class="n">ci_level</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span> <span class="ow">or</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">threshold</span>
+    <span class="p">}</span>
+
+    <span class="c1"># remove the following terms from ci_dict:</span>
+    <span class="n">keys_to_remove</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;bootstrap_idx&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;final_training_score&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;left_asymptote&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;right_asymptote&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Intercept&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_to_remove</span><span class="p">:</span>
+        <span class="n">significant_coefs_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">significant_coefs_dict</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="tfbpmodeling.bootstrap_model_results.BootstrapModelResults.from_jsonl" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">from_jsonl</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults.from_jsonl" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">from_jsonl</span><span class="p">(</span>
+    <span class="n">db_path</span><span class="p">,</span>
+    <span class="n">bootstrap_results_table_name</span><span class="o">=</span><span class="s2">&quot;bootstrap_results&quot;</span><span class="p">,</span>
+    <span class="n">mse_table_name</span><span class="o">=</span><span class="s2">&quot;mse_path&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Load bootstrap results from JSONL files. This is intended to be used with the
+sigmoid bootstrap results.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>db_path</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Path to the directory containing the JSONL files for a given regulator</p>
+              </div>
+            </li>
+            <li>
+              <b><code>bootstrap_results_table_name</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;bootstrap_results&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Name of the JSONL file containing bootstrap coefficient/final model results</p>
+              </div>
+            </li>
+            <li>
+              <b><code>mse_table_name</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;mse_path&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Name of the JSONL file containing fold-wise MSE results by bootstrap_idx/alpha</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><a class="autorefs autorefs-internal" title="BootstrapModelResults (tfbpmodeling.bootstrap_model_results.BootstrapModelResults)" href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults">BootstrapModelResults</a></code>
+              –
+              <div class="doc-md-description">
+                <p>An instance of BootstrapModelResults</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>FileNotFoundError</code>
+              –
+              <div class="doc-md-description">
+                <p>If the JSONL files do not exist.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>tfbpmodeling/bootstrap_model_results.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">from_jsonl</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">,</span>
+    <span class="n">db_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">bootstrap_results_table_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bootstrap_results&quot;</span><span class="p">,</span>
+    <span class="n">mse_table_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mse_path&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BootstrapModelResults&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load bootstrap results from JSONL files. This is intended to be used with the</span>
+<span class="sd">    sigmoid bootstrap results.</span>
+
+<span class="sd">    :param db_path: Path to the directory containing the JSONL files for a given</span>
+<span class="sd">        regulator</span>
+<span class="sd">    :param bootstrap_results_table_name: Name of the JSONL file containing bootstrap</span>
+<span class="sd">        coefficient/final model results</span>
+<span class="sd">    :param mse_table_name: Name of the JSONL file containing fold-wise MSE results</span>
+<span class="sd">        by bootstrap_idx/alpha</span>
+<span class="sd">    :return: An instance of BootstrapModelResults</span>
+<span class="sd">    :raises FileNotFoundError: If the JSONL files do not exist.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bootstrap_coef_results_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">db_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bootstrap_results_table_name</span><span class="si">}</span><span class="s2">.jsonl&quot;</span>
+    <span class="p">)</span>
+    <span class="n">mse_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">db_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mse_table_name</span><span class="si">}</span><span class="s2">.jsonl&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">bootstrap_coef_results_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Results file not found: </span><span class="si">{</span><span class="n">bootstrap_coef_results_path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">mse_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results file not found: </span><span class="si">{</span><span class="n">mse_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">results_rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bootstrap_coef_results_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">results_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">results_rows</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No valid records found in the results JSONL file.&quot;</span><span class="p">)</span>
+
+    <span class="n">bootstrap_coef_results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results_rows</span><span class="p">)</span>
+
+    <span class="c1"># Handle optional MSE file</span>
+    <span class="n">mse_rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mse_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">mse_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+                <span class="k">continue</span>
+    <span class="n">alpha_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mse_rows</span><span class="p">)</span> <span class="k">if</span> <span class="n">mse_rows</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+        <span class="n">ci_dict</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">bootstrap_coefs_df</span><span class="o">=</span><span class="n">bootstrap_coef_results_df</span><span class="p">,</span>
+        <span class="n">alpha_list</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">alpha_df</span><span class="o">=</span><span class="n">alpha_df</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="tfbpmodeling.bootstrap_model_results.BootstrapModelResults.serialize" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">serialize</span>
+
+
+<a href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults.serialize" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">serialize</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Save the results to disk.</p>
+<p>Creates two files:
+- <code>{filename}.json</code>: confidence intervals
+- <code>{filename}.pkl</code>: tuple of (bootstrap_coefs_df, alpha_list)</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>filename</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Base filename (without extension).</p>
+              </div>
+            </li>
+            <li>
+              <b><code>output_dir</code></b>
+                  (<code><span title="str">str</span> | None</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Optional directory to write files into. Uses current directory if not specified.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>FileNotFoundError</code>
+              –
+              <div class="doc-md-description">
+                <p>If the specified directory does not exist.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>tfbpmodeling/bootstrap_model_results.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save the results to disk.</span>
+
+<span class="sd">    Creates two files:</span>
+<span class="sd">    - `{filename}.json`: confidence intervals</span>
+<span class="sd">    - `{filename}.pkl`: tuple of (bootstrap_coefs_df, alpha_list)</span>
+
+<span class="sd">    :param filename: Base filename (without extension).</span>
+<span class="sd">    :param output_dir: Optional directory to write files into. Uses current</span>
+<span class="sd">        directory if not specified.</span>
+
+<span class="sd">    :raises FileNotFoundError: If the specified directory does not exist.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate that the output directory exists</span>
+    <span class="k">if</span> <span class="n">output_dir</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The output directory &#39;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&#39; does not exist. &quot;</span>
+                <span class="s2">&quot;Please create it before saving.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">filepath_json</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="n">filepath_pkl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.pkl&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filepath_json</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.json&quot;</span>
+        <span class="n">filepath_pkl</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+
+    <span class="c1"># Save confidence intervals as JSON</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath_json</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ci_dict</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># Save DataFrame and alpha_list as a Pickle file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath_pkl</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_list</span><span class="p">),</span> <span class="n">f</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="tfbpmodeling.bootstrap_model_results.BootstrapModelResults.visualize_significant_coefficients" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">visualize_significant_coefficients</span>
+
+
+<a href="#tfbpmodeling.bootstrap_model_results.BootstrapModelResults.visualize_significant_coefficients" class="headerlink" title="Permanent link">&para;</a></h4>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">visualize_significant_coefficients</span><span class="p">(</span>
+    <span class="n">ci_level</span><span class="o">=</span><span class="s2">&quot;95.0&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Visualize the distribution of coefficients that are significant at the specified
+confidence level.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>ci_level</code></b>
+                  (<code><span title="str">str</span></code>, default:
+                      <code>&#39;95.0&#39;</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Confidence interval level (e.g., "95.0").</p>
+              </div>
+            </li>
+            <li>
+              <b><code>threshold</code></b>
+                  (<code><span title="float">float</span></code>, default:
+                      <code>0.0</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Minimum absolute value for significance.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="matplotlib.pyplot.Figure">Figure</span> | None</code>
+              –
+              <div class="doc-md-description">
+                <p>Matplotlib figure, or None if no significant coefficients are found.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>tfbpmodeling/bootstrap_model_results.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">visualize_significant_coefficients</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">ci_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;95.0&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visualize the distribution of coefficients that are significant at the specified</span>
+<span class="sd">    confidence level.</span>
+
+<span class="sd">    :param ci_level: Confidence interval level (e.g., &quot;95.0&quot;).</span>
+<span class="sd">    :param threshold: Minimum absolute value for significance.</span>
+<span class="sd">    :return: Matplotlib figure, or None if no significant coefficients are found.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">significant_coefs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_significant_coefficients</span><span class="p">(</span><span class="n">ci_level</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">significant_coefs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;No significant coefficients found for CI </span><span class="si">{</span><span class="n">ci_level</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="s2">&quot;at threshold </span><span class="si">{threshold}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Extract relevant coefficients for plotting</span>
+    <span class="n">df_extracted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">significant_coefs</span><span class="o">.</span><span class="n">keys</span><span class="p">())]</span>
+
+    <span class="c1"># Create the boxplot</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_extracted</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Coefficient Values&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coefficients with </span><span class="si">{</span><span class="n">ci_level</span><span class="si">}</span><span class="s2">% CI outside ±</span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <code>bootstrap_model_results</code> module provides classes and functions for aggregating and analyzing results from bootstrap modeling. It handles the statistical analysis of coefficient distributions, confidence intervals, and significance testing.</p>
+<h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Coefficient Aggregation</strong>: Combines results from multiple bootstrap samples</li>
+<li><strong>Confidence Interval Calculation</strong>: Computes percentile-based confidence intervals</li>
+<li><strong>Statistical Significance</strong>: Determines feature significance based on CI bounds</li>
+<li><strong>Result Export</strong>: Saves results in multiple formats for analysis</li>
+</ul>
+<h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
+<h3 id="result-aggregation">Result Aggregation<a class="headerlink" href="#result-aggregation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.bootstrap_model_results</span><span class="w"> </span><span class="kn">import</span> <span class="n">BootstrapModelResults</span>
+
+<span class="c1"># Create results aggregator</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">BootstrapModelResults</span><span class="p">(</span>
+    <span class="n">bootstrap_coefficients</span><span class="o">=</span><span class="n">coef_matrix</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="n">feature_list</span><span class="p">,</span>
+    <span class="n">confidence_level</span><span class="o">=</span><span class="mf">95.0</span>
+<span class="p">)</span>
+
+<span class="c1"># Get confidence intervals</span>
+<span class="n">ci_results</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_confidence_intervals</span><span class="p">()</span>
+
+<span class="c1"># Get significant features</span>
+<span class="n">significant_features</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_significant_features</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="statistical-analysis">Statistical Analysis<a class="headerlink" href="#statistical-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Calculate summary statistics</span>
+<span class="n">summary_stats</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get_summary_statistics</span><span class="p">()</span>
+
+<span class="c1"># Export results</span>
+<span class="n">results</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;./results/&#39;</span><span class="p">)</span>
+
+<span class="c1"># Generate diagnostic plots</span>
+<span class="n">results</span><span class="o">.</span><span class="n">plot_coefficient_distributions</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="related-modules">Related Modules<a class="headerlink" href="#related-modules" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../bootstrapped_input_data/">bootstrapped_input_data</a></strong>: Bootstrap data generation</li>
+<li><strong><a href="../interface/">interface</a></strong>: Main workflow integration</li>
+<li><strong><a href="../interactor_significance_results/">interactor_significance_results</a></strong>: Interaction analysis</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../bootstrapped_input_data/" class="btn btn-neutral float-left" title="bootstrapped_input_data"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../interactor_significance_results/" class="btn btn-neutral float-right" title="interactor_significance_results">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../bootstrapped_input_data/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../interactor_significance_results/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../../js/mermaid-init.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

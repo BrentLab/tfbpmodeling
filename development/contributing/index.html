@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/development/contributing/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Contributing - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Contributing";
+        var mkdocs_page_input_path = "development/contributing.md";
+        var mkdocs_page_url = "/tfbpmodeling/development/contributing/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/basic-workflow/">Basic Workflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/advanced-features/">Advanced Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Contributing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#development-setup">Development Setup</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#development-workflow">Development Workflow</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#core-modules">Core Modules</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exploratory-development">Exploratory Development</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#code-standards">Code Standards</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#style-guidelines">Style Guidelines</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#code-quality">Code Quality</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example-code-style">Example Code Style</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#test-structure">Test Structure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#writing-tests">Writing Tests</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#running-tests">Running Tests</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#documentation-structure">Documentation Structure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#writing-documentation">Writing Documentation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#building-documentation">Building Documentation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#issue-reporting">Issue Reporting</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#bug-reports">Bug Reports</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#feature-requests">Feature Requests</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#development-guidelines">Development Guidelines</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#branch-management">Branch Management</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#commit-messages">Commit Messages</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#code-review-process">Code Review Process</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#release-process">Release Process</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#communication-channels">Communication Channels</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#maintainer-contact">Maintainer Contact</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#resources">Resources</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#development-environment-issues">Development Environment Issues</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#poetry-installation-problems">Poetry Installation Problems</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#virtual-environment-issues">Virtual Environment Issues</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#pre-commit-hook-failures">Pre-commit Hook Failures</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#documentation-build-issues">Documentation Build Issues</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#test-failures">Test Failures</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#common-development-issues">Common Development Issues</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#import-errors">Import Errors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#module-not-found">Module Not Found</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#permission-errors">Permission Errors</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#getting-help-with-development">Getting Help with Development</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#recognition">Recognition</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../testing/">Testing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Development</li>
+      <li class="breadcrumb-item active">Contributing</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/development/contributing.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="contributing-to-tfbpmodeling">Contributing to tfbpmodeling<a class="headerlink" href="#contributing-to-tfbpmodeling" title="Permanent link">&para;</a></h1>
+<p>We welcome contributions to tfbpmodeling! This guide will help you get started with contributing code, documentation, or bug reports.</p>
+<h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
+<h3 id="development-setup">Development Setup<a class="headerlink" href="#development-setup" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Fork and Clone</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Fork the repository on GitHub</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YOUR_USERNAME/tfbpmodeling.git
+<span class="nb">cd</span><span class="w"> </span>tfbpmodeling
+
+<span class="c1"># Add upstream remote</span>
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/BrentLab/tfbpmodeling.git
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Install Dependencies</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Install Poetry if you haven&#39;t already</span>
+pip<span class="w"> </span>install<span class="w"> </span>poetry
+
+<span class="c1"># Configure Poetry (recommended)</span>
+poetry<span class="w"> </span>config<span class="w"> </span>virtualenvs.in-project<span class="w"> </span><span class="nb">true</span>
+
+<span class="c1"># Install all dependencies including dev tools</span>
+poetry<span class="w"> </span>install
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Set Up Pre-commit Hooks</strong>
+   <div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="development-workflow">Development Workflow<a class="headerlink" href="#development-workflow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Create Feature Branch</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Start from dev branch</span>
+git<span class="w"> </span>checkout<span class="w"> </span>dev
+git<span class="w"> </span>pull<span class="w"> </span>upstream<span class="w"> </span>dev
+
+<span class="c1"># Create feature branch</span>
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/your-feature-name
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Make Changes</strong></p>
+</li>
+<li>Write code following our style guidelines</li>
+<li>Add tests for new functionality</li>
+<li>
+<p>Update documentation as needed</p>
+</li>
+<li>
+<p><strong>Test Your Changes</strong>
+   <div class="highlight"><pre><span></span><code><span class="c1"># Run tests</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest
+
+<span class="c1"># Run with coverage</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="w"> </span>--cov-branch<span class="w"> </span>--cov-report<span class="o">=</span>xml
+
+<span class="c1"># Check code style</span>
+poetry<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>.
+poetry<span class="w"> </span>run<span class="w"> </span>flake8
+poetry<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>tfbpmodeling
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Commit and Push</strong>
+   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add feature: description of your changes&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/your-feature-name
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Create Pull Request</strong></p>
+</li>
+<li>Open a pull request against the <code>dev</code> branch</li>
+<li>Provide clear description of changes</li>
+<li>Reference any related issues</li>
+</ol>
+<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>tfbpmodeling/
+├── tfbpmodeling/           # Main package
+│   ├── __main__.py         # CLI entry point
+│   ├── interface.py        # Main workflow functions
+│   ├── modeling_input_data.py
+│   ├── bootstrapped_input_data.py
+│   ├── bootstrap_model_results.py
+│   ├── evaluate_interactor_significance_*.py
+│   ├── stratified_cv*.py
+│   ├── utils/              # Utility functions
+│   └── tests/              # Test suite
+├── docs/                   # Documentation (MkDocs)
+├── tmp/                    # Exploratory development
+├── pyproject.toml          # Poetry configuration
+├── mkdocs.yml             # Documentation configuration
+├── CLAUDE.md              # Claude Code instructions
+└── README.md
+</code></pre></div>
+<h3 id="core-modules">Core Modules<a class="headerlink" href="#core-modules" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>__main__.py</code></strong>: CLI entry point with argparse setup</li>
+<li><strong><code>interface.py</code></strong>: Main workflow orchestration and CLI functions</li>
+<li><strong><code>modeling_input_data.py</code></strong>: Data loading and preprocessing</li>
+<li><strong><code>bootstrapped_input_data.py</code></strong>: Bootstrap resampling functionality</li>
+<li><strong><code>bootstrap_model_results.py</code></strong>: Results aggregation and statistics</li>
+<li><strong><code>evaluate_interactor_significance_*.py</code></strong>: Statistical significance testing</li>
+<li><strong><code>stratified_cv*.py</code></strong>: Cross-validation with stratification</li>
+<li><strong><code>utils/</code></strong>: Helper functions for data manipulation</li>
+</ul>
+<h3 id="exploratory-development">Exploratory Development<a class="headerlink" href="#exploratory-development" title="Permanent link">&para;</a></h3>
+<p>The <code>tmp/</code> directory is set up for exploratory data analysis and interactive development:</p>
+<ul>
+<li><strong>Jupyter notebooks</strong>: Can be run from <code>tmp/</code> in the virtual environment</li>
+<li><strong>iPython kernel</strong>: Installed in the development environment</li>
+<li><strong>Version control</strong>: Files in <code>tmp/</code> are excluded from git tracking</li>
+<li><strong>Testing</strong>: <code>tmp/</code> directory is ignored by pytest</li>
+<li><strong>Experimentation</strong>: Safe space for prototyping and data exploration</li>
+</ul>
+<p>See <a href="../tmp/README.md">tmp/README.md</a> for more information about using this directory.</p>
+<h2 id="code-standards">Code Standards<a class="headerlink" href="#code-standards" title="Permanent link">&para;</a></h2>
+<h3 id="style-guidelines">Style Guidelines<a class="headerlink" href="#style-guidelines" title="Permanent link">&para;</a></h3>
+<p>We use automated tools to maintain consistent code style:</p>
+<ul>
+<li><strong>Black</strong>: Code formatting (88 character line length)</li>
+<li><strong>Flake8</strong>: Style checking and linting</li>
+<li><strong>MyPy</strong>: Type checking</li>
+<li><strong>isort</strong>: Import sorting</li>
+</ul>
+<h3 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Type Hints</strong>: All functions should have type hints</li>
+<li><strong>Docstrings</strong>: Use Sphinx-style docstrings for all public functions</li>
+<li><strong>Tests</strong>: Write tests for all new functionality</li>
+<li><strong>No Secrets</strong>: Never commit API keys, passwords, or other secrets</li>
+</ul>
+<h3 id="example-code-style">Example Code Style<a class="headerlink" href="#example-code-style" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span>
+    <span class="n">Process</span> <span class="nb">input</span> <span class="n">data</span> <span class="k">with</span> <span class="n">filtering</span> <span class="ow">and</span> <span class="n">normalization</span><span class="o">.</span>
+
+    <span class="p">:</span><span class="n">param</span> <span class="n">data</span><span class="p">:</span> <span class="n">Input</span> <span class="n">dataframe</span> <span class="k">with</span> <span class="n">features</span> <span class="k">as</span> <span class="n">columns</span>
+    <span class="p">:</span><span class="n">param</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">Minimum</span> <span class="n">value</span> <span class="n">threshold</span> <span class="k">for</span> <span class="n">filtering</span>
+    <span class="p">:</span><span class="n">param</span> <span class="n">normalize</span><span class="p">:</span> <span class="n">Whether</span> <span class="n">to</span> <span class="n">normalize</span> <span class="n">data</span> <span class="n">to</span> <span class="n">unit</span> <span class="n">variance</span>
+    <span class="p">:</span><span class="k">return</span><span class="p">:</span> <span class="n">Processed</span> <span class="n">dataframe</span> <span class="ow">and</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">excluded</span> <span class="n">features</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span>
+    <span class="n">excluded_features</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Filter low-variance features</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>
+            <span class="n">excluded_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+    <span class="n">processed_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">excluded_features</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+        <span class="n">processed_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">processed_data</span> <span class="o">-</span> <span class="n">processed_data</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">processed_data</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">processed_data</span><span class="p">,</span> <span class="n">excluded_features</span>
+</code></pre></div>
+<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
+<h3 id="test-structure">Test Structure<a class="headerlink" href="#test-structure" title="Permanent link">&para;</a></h3>
+<p>Tests are located in <code>tfbpmodeling/tests/</code>:</p>
+<div class="highlight"><pre><span></span><code>tests/
+├── test_interface.py
+├── test_modeling_input_data.py
+├── test_bootstrapped_input_data.py
+├── test_utils.py
+└── fixtures/
+    ├── sample_expression.csv
+    └── sample_binding.csv
+</code></pre></div>
+<h3 id="writing-tests">Writing Tests<a class="headerlink" href="#writing-tests" title="Permanent link">&para;</a></h3>
+<p>Use pytest for all tests:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.modeling_input_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelingInputData</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestModelingInputData</span><span class="p">:</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test suite for ModelingInputData class.</span><span class="se">\&quot;\&quot;\&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_initialization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test basic initialization.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
+            <span class="n">response_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span>
+            <span class="n">predictors_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span>
+            <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_invalid_perturbed_tf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test error handling for invalid perturbed TF.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;not found in response&quot;</span><span class="p">):</span>
+            <span class="n">ModelingInputData</span><span class="p">(</span>
+                <span class="n">response_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span>
+                <span class="n">predictors_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span>
+                <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;INVALID_TF&#39;</span>
+            <span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_normalization_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">,</span> <span class="n">normalize</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test normalization parameter.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
+            <span class="n">response_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span>
+            <span class="n">predictors_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span>
+            <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+            <span class="n">normalize_weights</span><span class="o">=</span><span class="n">normalize</span>
+        <span class="p">)</span>
+        <span class="c1"># Test that normalization was applied correctly</span>
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">normalize_weights</span> <span class="o">==</span> <span class="n">normalize</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_data_files</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Create sample data files for testing.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="c1"># Create sample response data</span>
+    <span class="n">response_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;sample1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+        <span class="s1">&#39;sample2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+        <span class="s1">&#39;YPD1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+    <span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene1&#39;</span><span class="p">,</span> <span class="s1">&#39;gene2&#39;</span><span class="p">,</span> <span class="s1">&#39;gene3&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Create sample predictor data</span>
+    <span class="n">predictor_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;TF1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+        <span class="s1">&#39;TF2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]</span>
+    <span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene1&#39;</span><span class="p">,</span> <span class="s1">&#39;gene2&#39;</span><span class="p">,</span> <span class="s1">&#39;gene3&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Save to temporary files</span>
+    <span class="n">response_file</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;response.csv&quot;</span>
+    <span class="n">predictor_file</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;predictors.csv&quot;</span>
+
+    <span class="n">response_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">response_file</span><span class="p">,</span> <span class="n">index_label</span><span class="o">=</span><span class="s1">&#39;gene_id&#39;</span><span class="p">)</span>
+    <span class="n">predictor_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">predictor_file</span><span class="p">,</span> <span class="n">index_label</span><span class="o">=</span><span class="s1">&#39;gene_id&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">response_file</span><span class="p">),</span>
+        <span class="s1">&#39;predictors&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">predictor_file</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div>
+<h3 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest
+
+<span class="c1"># Run specific test file</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tfbpmodeling/tests/test_interface.py
+
+<span class="c1"># Run with coverage</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="o">=</span>tfbpmodeling<span class="w"> </span>--cov-report<span class="o">=</span>html
+
+<span class="c1"># Run tests matching pattern</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;test_modeling&quot;</span>
+
+<span class="c1"># Run tests with verbose output</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-v
+</code></pre></div>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<h3 id="documentation-structure">Documentation Structure<a class="headerlink" href="#documentation-structure" title="Permanent link">&para;</a></h3>
+<p>Documentation is built with MkDocs and uses the Material theme:</p>
+<div class="highlight"><pre><span></span><code>docs/
+├── index.md
+├── getting-started/
+│   ├── installation.md
+│   └── quickstart.md
+├── cli/
+│   ├── overview.md
+│   └── linear-perturbation-binding-modeling.md
+├── tutorials/
+│   ├── basic-workflow.md
+│   └── advanced-features.md
+├── api/
+│   ├── interface.md
+│   └── modeling_input_data.md
+└── development/
+    ├── contributing.md
+    └── testing.md
+</code></pre></div>
+<h3 id="writing-documentation">Writing Documentation<a class="headerlink" href="#writing-documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Use clear, concise language</li>
+<li>Include code examples for all features</li>
+<li>Provide both basic and advanced usage examples</li>
+<li>Link between related sections</li>
+</ul>
+<h3 id="building-documentation">Building Documentation<a class="headerlink" href="#building-documentation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Serve documentation locally with live reload</span>
+mkdocs<span class="w"> </span>serve
+
+<span class="c1"># Build documentation</span>
+mkdocs<span class="w"> </span>build
+
+<span class="c1"># Deploy to GitHub Pages (maintainers only)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>gh-deploy
+</code></pre></div>
+<h2 id="issue-reporting">Issue Reporting<a class="headerlink" href="#issue-reporting" title="Permanent link">&para;</a></h2>
+<h3 id="bug-reports">Bug Reports<a class="headerlink" href="#bug-reports" title="Permanent link">&para;</a></h3>
+<p>When reporting bugs, please include:</p>
+<ol>
+<li><strong>Environment Information</strong></li>
+<li>Python version</li>
+<li>tfbpmodeling version</li>
+<li>
+<p>Operating system</p>
+</li>
+<li>
+<p><strong>Reproduction Steps</strong></p>
+</li>
+<li>Minimal code example</li>
+<li>Input data characteristics</li>
+<li>
+<p>Expected vs actual behavior</p>
+</li>
+<li>
+<p><strong>Error Messages</strong></p>
+</li>
+<li>Complete error traceback</li>
+<li>Log output if available</li>
+</ol>
+<h3 id="feature-requests">Feature Requests<a class="headerlink" href="#feature-requests" title="Permanent link">&para;</a></h3>
+<p>For feature requests, provide:</p>
+<ol>
+<li><strong>Use Case</strong>: Describe the problem you're trying to solve</li>
+<li><strong>Proposed Solution</strong>: How you envision the feature working</li>
+<li><strong>Alternatives</strong>: Other approaches you've considered</li>
+<li><strong>Examples</strong>: Code examples of how it would be used</li>
+</ol>
+<h2 id="development-guidelines">Development Guidelines<a class="headerlink" href="#development-guidelines" title="Permanent link">&para;</a></h2>
+<h3 id="branch-management">Branch Management<a class="headerlink" href="#branch-management" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>main</strong>: Stable release branch</li>
+<li><strong>dev</strong>: Development branch for integration</li>
+<li><strong>feature/</strong>*: Feature development branches</li>
+<li><strong>hotfix/</strong>*: Critical bug fixes</li>
+</ul>
+<h3 id="commit-messages">Commit Messages<a class="headerlink" href="#commit-messages" title="Permanent link">&para;</a></h3>
+<p>Use clear, descriptive commit messages:</p>
+<div class="highlight"><pre><span></span><code>Add bootstrap confidence interval calculation
+
+- Implement percentile method for CI estimation
+- Add support for custom confidence levels
+- Include tests for edge cases
+- Update documentation with examples
+</code></pre></div>
+<h3 id="code-review-process">Code Review Process<a class="headerlink" href="#code-review-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li>All changes require pull request review</li>
+<li>CI tests must pass</li>
+<li>Code coverage should not decrease</li>
+<li>Documentation must be updated for new features</li>
+<li>At least one maintainer approval required</li>
+</ol>
+<h3 id="release-process">Release Process<a class="headerlink" href="#release-process" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Features merged to <code>dev</code> branch</li>
+<li>Testing and integration on <code>dev</code></li>
+<li>Release candidate created</li>
+<li>Final testing and documentation review</li>
+<li>Merge to <code>main</code> and tag release</li>
+<li>Update changelog and documentation</li>
+</ol>
+<h2 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
+<h3 id="communication-channels">Communication Channels<a class="headerlink" href="#communication-channels" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>GitHub Issues</strong>: Bug reports and feature requests</li>
+<li><strong>GitHub Discussions</strong>: Questions and general discussion</li>
+<li><strong>Pull Request Reviews</strong>: Code-specific feedback</li>
+</ul>
+<h3 id="maintainer-contact">Maintainer Contact<a class="headerlink" href="#maintainer-contact" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Chase Mateusiak</strong>: Lead developer</li>
+<li><strong>Michael Brent</strong>: Principal investigator</li>
+</ul>
+<h3 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="https://brentlab.github.io/tfbpmodeling/">Project Documentation</a></strong></li>
+<li><strong><a href="https://github.com/BrentLab/tfbpmodeling">GitHub Repository</a></strong></li>
+<li><strong><a href="https://github.com/BrentLab/tfbpmodeling/issues">Issue Tracker</a></strong></li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="development-environment-issues">Development Environment Issues<a class="headerlink" href="#development-environment-issues" title="Permanent link">&para;</a></h3>
+<h4 id="poetry-installation-problems">Poetry Installation Problems<a class="headerlink" href="#poetry-installation-problems" title="Permanent link">&para;</a></h4>
+<p>If Poetry installation fails, try the alternative installation method:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>poetry
+</code></pre></div>
+<h4 id="virtual-environment-issues">Virtual Environment Issues<a class="headerlink" href="#virtual-environment-issues" title="Permanent link">&para;</a></h4>
+<p>If you encounter virtual environment problems:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Remove existing environment</span>
+poetry<span class="w"> </span>env<span class="w"> </span>remove<span class="w"> </span>python
+
+<span class="c1"># Reinstall dependencies</span>
+poetry<span class="w"> </span>install
+</code></pre></div>
+<h4 id="pre-commit-hook-failures">Pre-commit Hook Failures<a class="headerlink" href="#pre-commit-hook-failures" title="Permanent link">&para;</a></h4>
+<p>If pre-commit hooks fail during commits:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run pre-commit manually to see specific issues</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
+
+<span class="c1"># Fix any reported issues and commit again</span>
+</code></pre></div>
+<h4 id="documentation-build-issues">Documentation Build Issues<a class="headerlink" href="#documentation-build-issues" title="Permanent link">&para;</a></h4>
+<p>If mkdocs build fails:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check for missing dependencies</span>
+poetry<span class="w"> </span>install
+
+<span class="c1"># Try building with verbose output</span>
+mkdocs<span class="w"> </span>build<span class="w"> </span>--verbose
+
+<span class="c1"># Check configuration</span>
+mkdocs<span class="w"> </span>config
+</code></pre></div>
+<h4 id="test-failures">Test Failures<a class="headerlink" href="#test-failures" title="Permanent link">&para;</a></h4>
+<p>If tests fail unexpectedly:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run tests with verbose output</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-v
+
+<span class="c1"># Run specific failing test</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>path/to/failing_test.py::test_name<span class="w"> </span>-v
+
+<span class="c1"># Check test dependencies</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--collect-only
+</code></pre></div>
+<h3 id="common-development-issues">Common Development Issues<a class="headerlink" href="#common-development-issues" title="Permanent link">&para;</a></h3>
+<h4 id="import-errors">Import Errors<a class="headerlink" href="#import-errors" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ensure package is installed in development mode</span>
+poetry<span class="w"> </span>install
+
+<span class="c1"># Check Python path</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import tfbpmodeling; print(tfbpmodeling.__file__)&quot;</span>
+</code></pre></div>
+<h4 id="module-not-found">Module Not Found<a class="headerlink" href="#module-not-found" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify virtual environment is activated</span>
+which<span class="w"> </span>python
+poetry<span class="w"> </span>env<span class="w"> </span>info
+
+<span class="c1"># Reinstall in development mode</span>
+poetry<span class="w"> </span>install<span class="w"> </span>--no-deps
+</code></pre></div>
+<h4 id="permission-errors">Permission Errors<a class="headerlink" href="#permission-errors" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check file permissions</span>
+ls<span class="w"> </span>-la
+
+<span class="c1"># Fix permissions if needed</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>scripts/your_script.sh
+</code></pre></div>
+<h3 id="getting-help-with-development">Getting Help with Development<a class="headerlink" href="#getting-help-with-development" title="Permanent link">&para;</a></h3>
+<p>If you encounter issues not covered here:</p>
+<ol>
+<li><strong>Search existing issues</strong>: Check if someone else has faced the same problem</li>
+<li><strong>Create a detailed issue</strong>: Include error messages, environment info, and steps to reproduce</li>
+<li><strong>Join discussions</strong>: Use GitHub Discussions for questions and help</li>
+<li><strong>Contact maintainers</strong>: Reach out directly for urgent issues</li>
+</ol>
+<h2 id="recognition">Recognition<a class="headerlink" href="#recognition" title="Permanent link">&para;</a></h2>
+<p>Contributors are recognized in:</p>
+<ul>
+<li><strong>CHANGELOG.md</strong>: Feature and bug fix credits</li>
+<li><strong>AUTHORS.md</strong>: Comprehensive contributor list</li>
+<li><strong>Release Notes</strong>: Major contribution highlights</li>
+<li><strong>Documentation</strong>: Author attributions for significant additions</li>
+</ul>
+<p>Thank you for contributing to tfbpmodeling!</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../api/stratified_cv_r2/" class="btn btn-neutral float-left" title="stratified_cv_r2"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../testing/" class="btn btn-neutral float-right" title="Testing">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../../api/stratified_cv_r2/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../testing/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../../js/mermaid-init.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

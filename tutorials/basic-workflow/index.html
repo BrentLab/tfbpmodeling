@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/tutorials/basic-workflow/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Basic Workflow - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Basic Workflow";
+        var mkdocs_page_input_path = "tutorials/basic-workflow.md";
+        var mkdocs_page_url = "/tfbpmodeling/tutorials/basic-workflow/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Basic Workflow</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sample-data">Sample Data</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#creating-sample-data">Creating Sample Data</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-1-basic-analysis">Step 1: Basic Analysis</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#run-default-analysis">Run Default Analysis</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#monitor-progress">Monitor Progress</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-2-understanding-results">Step 2: Understanding Results</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#output-directory-structure">Output Directory Structure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#key-result-files">Key Result Files</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#1-confidence-intervals-most-important">1. Confidence Intervals (most important)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#2-model-statistics">2. Model Statistics</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#3-final-significant-interactions">3. Final Significant Interactions</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-3-interpreting-results">Step 3: Interpreting Results</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#biological-interpretation">Biological Interpretation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#statistical-interpretation">Statistical Interpretation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#example-interpretation">Example Interpretation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-4-parameter-optimization">Step 4: Parameter Optimization</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#increasing-statistical-power">Increasing Statistical Power</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adjusting-sensitivity">Adjusting Sensitivity</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adding-feature-engineering">Adding Feature Engineering</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#reproducible-analysis">Reproducible Analysis</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-5-comparing-results">Step 5: Comparing Results</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#compare-different-analyses">Compare Different Analyses</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#visualize-results">Visualize Results</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#for-your-own-data">For Your Own Data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#advanced-techniques">Advanced Techniques</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#low-r2-scores">Low R² Scores</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#few-significant-features">Few Significant Features</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#long-runtime">Long Runtime</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../advanced-features/">Advanced Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Tutorials</li>
+      <li class="breadcrumb-item active">Basic Workflow</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/tutorials/basic-workflow.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="basic-workflow-tutorial">Basic Workflow Tutorial<a class="headerlink" href="#basic-workflow-tutorial" title="Permanent link">&para;</a></h1>
+<p>This tutorial walks through a complete tfbpmodeling analysis from data preparation to result interpretation.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>We'll analyze the relationship between transcription factor binding and gene expression perturbation using a sample dataset. The workflow demonstrates:</p>
+<ol>
+<li><strong>Data preparation</strong>: Formatting input files</li>
+<li><strong>Basic analysis</strong>: Running with default parameters</li>
+<li><strong>Result interpretation</strong>: Understanding output files</li>
+<li><strong>Parameter tuning</strong>: Optimizing for your data</li>
+</ol>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>tfbpmodeling installed and configured</li>
+<li>Basic familiarity with CSV files and command-line interfaces</li>
+<li>Understanding of transcription factor biology (helpful but not required)</li>
+</ul>
+<h2 id="sample-data">Sample Data<a class="headerlink" href="#sample-data" title="Permanent link">&para;</a></h2>
+<p>For this tutorial, we'll use example data representing:
+- <strong>Response data</strong>: Gene expression changes after YPD1 knockout
+- <strong>Predictor data</strong>: Transcription factor binding probabilities from ChIP-seq</p>
+<h3 id="creating-sample-data">Creating Sample Data<a class="headerlink" href="#creating-sample-data" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Set random seed for reproducibility</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Create sample gene list</span>
+<span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;YBR</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">W&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1001</span><span class="p">)]</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;sample_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">)]</span>
+<span class="n">tfs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;TF_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">51</span><span class="p">)]</span>
+
+<span class="c1"># Generate response data (expression changes)</span>
+<span class="n">response_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">genes</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="n">samples</span>
+<span class="p">)</span>
+<span class="n">response_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gene_id&#39;</span>
+
+<span class="c1"># Add YPD1 column (our perturbed TF)</span>
+<span class="n">response_data</span><span class="p">[</span><span class="s1">&#39;YPD1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Generate predictor data (binding probabilities)</span>
+<span class="n">predictor_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">genes</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="n">tfs</span>
+<span class="p">)</span>
+<span class="n">predictor_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gene_id&#39;</span>
+
+<span class="c1"># Save to CSV</span>
+<span class="n">response_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;tutorial_expression.csv&#39;</span><span class="p">)</span>
+<span class="n">predictor_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;tutorial_binding.csv&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample data created:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response data: </span><span class="si">{</span><span class="n">response_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictor data: </span><span class="si">{</span><span class="n">predictor_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="step-1-basic-analysis">Step 1: Basic Analysis<a class="headerlink" href="#step-1-basic-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="run-default-analysis">Run Default Analysis<a class="headerlink" href="#run-default-analysis" title="Permanent link">&para;</a></h3>
+<p>Start with the simplest possible command:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1
+</code></pre></div>
+<p>This command will:
+- Use 1000 bootstrap samples
+- Apply 98% confidence interval for feature selection
+- Process top 600 features in second round
+- Save results to <code>./linear_perturbation_binding_modeling_results/YPD1_{timestamp}/</code></p>
+<h3 id="monitor-progress">Monitor Progress<a class="headerlink" href="#monitor-progress" title="Permanent link">&para;</a></h3>
+<p>The command provides real-time progress information:</p>
+<div class="highlight"><pre><span></span><code>2024-01-15 14:30:22 - INFO - Starting linear perturbation binding modeling
+2024-01-15 14:30:22 - INFO - Loading response data from: tutorial_expression.csv
+2024-01-15 14:30:23 - INFO - Loading predictor data from: tutorial_binding.csv
+2024-01-15 14:30:23 - INFO - Perturbed TF: YPD1
+2024-01-15 14:30:23 - INFO - Data preprocessing complete
+2024-01-15 14:30:23 - INFO - Features: 1000, Samples: 100
+2024-01-15 14:30:24 - INFO - Starting Stage 1: Bootstrap modeling on all data
+2024-01-15 14:30:24 - INFO - Bootstrap parameters: n_bootstraps=1000, random_state=None
+2024-01-15 14:32:15 - INFO - Stage 1 complete. Significant features: 156
+2024-01-15 14:32:15 - INFO - Starting Stage 2: Top-N modeling
+2024-01-15 14:33:45 - INFO - Stage 2 complete. Refined features: 78
+2024-01-15 14:33:45 - INFO - Starting Stage 3: Interactor significance testing
+2024-01-15 14:34:20 - INFO - Analysis complete. Results saved to: ./linear_perturbation_binding_modeling_results/YPD1_20240115_143022/
+</code></pre></div>
+<h2 id="step-2-understanding-results">Step 2: Understanding Results<a class="headerlink" href="#step-2-understanding-results" title="Permanent link">&para;</a></h2>
+<h3 id="output-directory-structure">Output Directory Structure<a class="headerlink" href="#output-directory-structure" title="Permanent link">&para;</a></h3>
+<p>After completion, examine the results directory:</p>
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-la<span class="w"> </span>linear_perturbation_binding_modeling_results/YPD1_*/
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>YPD1_20240115_143022/
+├── all_data_results/
+│   ├── bootstrap_coefficients.csv
+│   ├── confidence_intervals.csv
+│   ├── model_statistics.csv
+│   └── diagnostic_plots/
+├── topn_results/
+│   ├── bootstrap_coefficients.csv
+│   ├── confidence_intervals.csv
+│   ├── model_statistics.csv
+│   └── diagnostic_plots/
+├── interactor_significance/
+│   ├── significance_results.csv
+│   ├── comparison_statistics.csv
+│   └── final_selection.csv
+├── input_data/
+│   ├── processed_response.csv
+│   ├── processed_predictors.csv
+│   └── data_summary.json
+└── tfbpmodeling_20240115_143022.log
+</code></pre></div>
+<h3 id="key-result-files">Key Result Files<a class="headerlink" href="#key-result-files" title="Permanent link">&para;</a></h3>
+<h4 id="1-confidence-intervals-most-important">1. Confidence Intervals (most important)<a class="headerlink" href="#1-confidence-intervals-most-important" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>head<span class="w"> </span>-10<span class="w"> </span>YPD1_*/all_data_results/confidence_intervals.csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>feature,mean_coef,std_coef,ci_lower,ci_upper,significant,abs_mean_coef
+TF_1,0.023,0.008,0.007,0.039,True,0.023
+TF_2,-0.045,0.012,-0.069,-0.021,True,0.045
+TF_3,0.001,0.006,-0.011,0.013,False,0.001
+</code></pre></div>
+<p><strong>Key columns</strong>:
+- <code>feature</code>: Transcription factor name
+- <code>mean_coef</code>: Average effect size across bootstrap samples
+- <code>ci_lower/ci_upper</code>: Confidence interval bounds
+- <code>significant</code>: Whether the effect is statistically significant</p>
+<h4 id="2-model-statistics">2. Model Statistics<a class="headerlink" href="#2-model-statistics" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>YPD1_*/all_data_results/model_statistics.csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>metric,value
+mean_r2,0.234
+std_r2,0.023
+mean_cv_score,0.198
+n_significant_features,156
+total_features,1000
+</code></pre></div>
+<p><strong>Key metrics</strong>:
+- <code>mean_r2</code>: Model explanatory power
+- <code>mean_cv_score</code>: Cross-validation performance
+- <code>n_significant_features</code>: Count of statistically significant predictors</p>
+<h4 id="3-final-significant-interactions">3. Final Significant Interactions<a class="headerlink" href="#3-final-significant-interactions" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>head<span class="w"> </span>-10<span class="w"> </span>YPD1_*/interactor_significance/final_selection.csv
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>feature,interaction_coef,main_effect_coef,p_value,significant,effect_size
+TF_1:binding_strength,0.034,0.012,0.003,True,0.022
+TF_2:binding_strength,-0.028,-0.008,0.012,True,0.020
+</code></pre></div>
+<p>This shows transcription factors with significant interaction effects beyond their main effects.</p>
+<h2 id="step-3-interpreting-results">Step 3: Interpreting Results<a class="headerlink" href="#step-3-interpreting-results" title="Permanent link">&para;</a></h2>
+<h3 id="biological-interpretation">Biological Interpretation<a class="headerlink" href="#biological-interpretation" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Significant Features</strong>: TFs with non-zero confidence intervals affect YPD1 expression</li>
+<li><strong>Effect Direction</strong>: Positive coefficients indicate binding increases expression</li>
+<li><strong>Effect Size</strong>: Larger absolute coefficients indicate stronger effects</li>
+<li><strong>Interactions</strong>: Features in final selection have context-dependent effects</li>
+</ol>
+<h3 id="statistical-interpretation">Statistical Interpretation<a class="headerlink" href="#statistical-interpretation" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Confidence Intervals</strong>: 98% CIs that exclude zero are statistically significant</li>
+<li><strong>Bootstrap Stability</strong>: Lower standard deviations indicate more stable effects</li>
+<li><strong>Cross-Validation</strong>: CV scores show generalization performance</li>
+<li><strong>Multiple Testing</strong>: Built-in correction through bootstrap resampling</li>
+</ol>
+<h3 id="example-interpretation">Example Interpretation<a class="headerlink" href="#example-interpretation" title="Permanent link">&para;</a></h3>
+<p>From our results:
+- <strong>TF_1</strong> (coef: 0.023): Binding increases YPD1 expression
+- <strong>TF_2</strong> (coef: -0.045): Binding decreases YPD1 expression
+- <strong>TF_3</strong> (coef: 0.001, not significant): No detectable effect</p>
+<h2 id="step-4-parameter-optimization">Step 4: Parameter Optimization<a class="headerlink" href="#step-4-parameter-optimization" title="Permanent link">&para;</a></h2>
+<h3 id="increasing-statistical-power">Increasing Statistical Power<a class="headerlink" href="#increasing-statistical-power" title="Permanent link">&para;</a></h3>
+<p>For more robust results, increase bootstrap samples:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">2000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_suffix<span class="w"> </span>_high_power
+</code></pre></div>
+<h3 id="adjusting-sensitivity">Adjusting Sensitivity<a class="headerlink" href="#adjusting-sensitivity" title="Permanent link">&para;</a></h3>
+<p>For more sensitive detection, lower confidence thresholds:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--all_data_ci_level<span class="w"> </span><span class="m">95</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--topn_ci_level<span class="w"> </span><span class="m">85</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_suffix<span class="w"> </span>_sensitive
+</code></pre></div>
+<h3 id="adding-feature-engineering">Adding Feature Engineering<a class="headerlink" href="#adding-feature-engineering" title="Permanent link">&para;</a></h3>
+<p>Include polynomial terms for non-linear relationships:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--squared_pTF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ptf_main_effect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--row_max<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_suffix<span class="w"> </span>_engineered
+</code></pre></div>
+<h3 id="reproducible-analysis">Reproducible Analysis<a class="headerlink" href="#reproducible-analysis" title="Permanent link">&para;</a></h3>
+<p>For reproducible results, set random seed:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--random_state<span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_suffix<span class="w"> </span>_reproducible
+</code></pre></div>
+<h2 id="step-5-comparing-results">Step 5: Comparing Results<a class="headerlink" href="#step-5-comparing-results" title="Permanent link">&para;</a></h2>
+<h3 id="compare-different-analyses">Compare Different Analyses<a class="headerlink" href="#compare-different-analyses" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># List all result directories</span>
+ls<span class="w"> </span>-d<span class="w"> </span>YPD1_*/
+
+<span class="c1"># Compare significant feature counts</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Analysis,Significant_Features&quot;</span>
+<span class="k">for</span><span class="w"> </span>dir<span class="w"> </span><span class="k">in</span><span class="w"> </span>YPD1_*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">count</span><span class="o">=</span><span class="k">$(</span>tail<span class="w"> </span>-n<span class="w"> </span>+2<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">/all_data_results/confidence_intervals.csv&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;$6==&quot;True&quot;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l<span class="k">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">,</span><span class="nv">$count</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</code></pre></div>
+<h3 id="visualize-results">Visualize Results<a class="headerlink" href="#visualize-results" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Load confidence intervals from different analyses</span>
+<span class="n">default_ci</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;YPD1_20240115_143022/all_data_results/confidence_intervals.csv&#39;</span><span class="p">)</span>
+<span class="n">sensitive_ci</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;YPD1_sensitive_20240115_143522/all_data_results/confidence_intervals.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Compare significant feature counts</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default analysis: </span><span class="si">{</span><span class="n">default_ci</span><span class="p">[</span><span class="s1">&#39;significant&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> significant features&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sensitive analysis: </span><span class="si">{</span><span class="n">sensitive_ci</span><span class="p">[</span><span class="s1">&#39;significant&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> significant features&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot effect size distributions</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">default_ci</span><span class="p">[</span><span class="s1">&#39;abs_mean_coef&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Default&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Absolute Effect Size&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Default Analysis&#39;</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">sensitive_ci</span><span class="p">[</span><span class="s1">&#39;abs_mean_coef&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sensitive&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Absolute Effect Size&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Sensitive Analysis&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;effect_size_comparison.png&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<h3 id="for-your-own-data">For Your Own Data<a class="headerlink" href="#for-your-own-data" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Prepare your files</strong>: Follow the CSV format requirements</li>
+<li><strong>Start simple</strong>: Use default parameters first</li>
+<li><strong>Validate results</strong>: Check that results make biological sense</li>
+<li><strong>Optimize parameters</strong>: Adjust based on data characteristics</li>
+<li><strong>Document analysis</strong>: Save parameter choices and interpretations</li>
+</ol>
+<h3 id="advanced-techniques">Advanced Techniques<a class="headerlink" href="#advanced-techniques" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="../advanced-features/">Advanced Features Tutorial</a></strong>: Feature engineering and model tuning</li>
+<li><strong><a href="../input-formats/">Input Formats Guide</a></strong>: Detailed data preparation instructions</li>
+<li><strong><a href="../../cli/linear-perturbation-binding-modeling/">CLI Reference</a></strong>: Complete parameter documentation</li>
+</ul>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<h4 id="low-r2-scores">Low R² Scores<a class="headerlink" href="#low-r2-scores" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Cause</strong>: Weak signal, noisy data, or model misspecification</li>
+<li><strong>Solutions</strong>: Increase sample size, add feature engineering, check data quality</li>
+</ul>
+<h4 id="few-significant-features">Few Significant Features<a class="headerlink" href="#few-significant-features" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Cause</strong>: Stringent thresholds or weak effects</li>
+<li><strong>Solutions</strong>: Lower confidence levels, increase bootstrap samples, check effect sizes</li>
+</ul>
+<h4 id="long-runtime">Long Runtime<a class="headerlink" href="#long-runtime" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Cause</strong>: Large datasets or high bootstrap counts</li>
+<li><strong>Solutions</strong>: Reduce parameters, increase <code>--n_cpus</code>, use smaller subset for testing</li>
+</ul>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>This tutorial demonstrated:</p>
+<ol>
+<li><strong>Basic analysis</strong> with default parameters</li>
+<li><strong>Result interpretation</strong> using key output files</li>
+<li><strong>Parameter optimization</strong> for different analysis goals</li>
+<li><strong>Comparison methods</strong> for evaluating different approaches</li>
+</ol>
+<p>The tfbpmodeling workflow provides a robust framework for analyzing transcription factor binding and perturbation relationships while controlling for multiple testing and providing interpretable results.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../cli/linear-perturbation-binding-modeling/" class="btn btn-neutral float-left" title="linear_perturbation_binding_modeling"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../advanced-features/" class="btn btn-neutral float-right" title="Advanced Features">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../../cli/linear-perturbation-binding-modeling/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../advanced-features/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../../js/mermaid-init.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

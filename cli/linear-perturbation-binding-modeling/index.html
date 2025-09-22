@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/cli/linear-perturbation-binding-modeling/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>linear_perturbation_binding_modeling - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "linear_perturbation_binding_modeling";
+        var mkdocs_page_input_path = "cli/linear-perturbation-binding-modeling.md";
+        var mkdocs_page_url = "/tfbpmodeling/cli/linear-perturbation-binding-modeling/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">linear_perturbation_binding_modeling</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#required-arguments">Required Arguments</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#input-files">Input Files</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-response_file-response_file">--response_file RESPONSE_FILE</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-predictors_file-predictors_file">--predictors_file PREDICTORS_FILE</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-perturbed_tf-perturbed_tf">--perturbed_tf PERTURBED_TF</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#optional-arguments">Optional Arguments</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#input-control">Input Control</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-blacklist_file-blacklist_file">--blacklist_file BLACKLIST_FILE</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-n_bootstraps-n_bootstraps">--n_bootstraps N_BOOTSTRAPS</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-random_state-random_state">--random_state RANDOM_STATE</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-top_n-top_n">--top_n TOP_N</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-processing">Data Processing</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-normalize_sample_weights">--normalize_sample_weights</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-scale_by_std">--scale_by_std</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#feature-engineering">Feature Engineering</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-row_max">--row_max</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-squared_ptf">--squared_pTF</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-cubic_ptf">--cubic_pTF</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-ptf_main_effect">--ptf_main_effect</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-exclude_interactor_variables-exclude_interactor_variables">--exclude_interactor_variables EXCLUDE_INTERACTOR_VARIABLES</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-add_model_variables-add_model_variables">--add_model_variables ADD_MODEL_VARIABLES</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#binning-options">Binning Options</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-bins-bins">--bins BINS</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#model-parameters">Model Parameters</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-all_data_ci_level-all_data_ci_level">--all_data_ci_level ALL_DATA_CI_LEVEL</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-topn_ci_level-topn_ci_level">--topn_ci_level TOPN_CI_LEVEL</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-max_iter-max_iter">--max_iter MAX_ITER</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-iterative_dropout">--iterative_dropout</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-stabilization_ci_start-stabilization_ci_start">--stabilization_ci_start STABILIZATION_CI_START</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-stage4_lasso">--stage4_lasso</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-stage4_topn">--stage4_topn</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#output-control">Output Control</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-output_dir-output_dir">--output_dir OUTPUT_DIR</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#-output_suffix-output_suffix">--output_suffix OUTPUT_SUFFIX</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#system-options">System Options</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#-n_cpus-n_cpus">--n_cpus N_CPUS</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#output-structure">Output Structure</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#basic-analysis">Basic Analysis</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#reproducible-high-quality-analysis">Reproducible High-Quality Analysis</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#advanced-feature-engineering">Advanced Feature Engineering</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#high-performance-analysis">High-Performance Analysis</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#memory-usage">Memory Usage</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#runtime-estimation">Runtime Estimation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#optimization-tips">Optimization Tips</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#file-format-errors">File Format Errors</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#missing-perturbed-tf">Missing Perturbed TF</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#convergence-issues">Convergence Issues</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#memory-issues">Memory Issues</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#related-commands">Related Commands</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/basic-workflow/">Basic Workflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/advanced-features/">Advanced Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">CLI Reference</li>
+      <li class="breadcrumb-item active">linear_perturbation_binding_modeling</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/cli/linear-perturbation-binding-modeling.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="linear_perturbation_binding_modeling">linear_perturbation_binding_modeling<a class="headerlink" href="#linear_perturbation_binding_modeling" title="Permanent link">&para;</a></h1>
+<p>The main command for running transcription factor binding and perturbation analysis.</p>
+<h2 id="synopsis">Synopsis<a class="headerlink" href="#synopsis" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>RESPONSE_FILE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>PREDICTORS_FILE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>PERTURBED_TF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</code></pre></div>
+<h2 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h2>
+<p>This command executes a sequential 4-stage workflow that models the relationship between transcription factor binding data and gene expression perturbation data:</p>
+<ol>
+<li><strong>All Data Modeling</strong>: Bootstrap resampling with LassoCV on complete dataset</li>
+<li><strong>Top-N Modeling</strong>: Secondary modeling on significant predictors from top-performing data subset</li>
+<li><strong>Interactor Significance</strong>: Statistical evaluation of interaction terms vs corresponding main effects</li>
+<li><strong>Results Generation</strong>: Comprehensive output with confidence intervals and diagnostic information</li>
+</ol>
+<p>The workflow uses bootstrap resampling to provide robust statistical inference and regularized regression (LassoCV) for feature selection and model fitting.</p>
+<h2 id="required-arguments">Required Arguments<a class="headerlink" href="#required-arguments" title="Permanent link">&para;</a></h2>
+<h3 id="input-files">Input Files<a class="headerlink" href="#input-files" title="Permanent link">&para;</a></h3>
+<h4 id="-response_file-response_file"><code>--response_file RESPONSE_FILE</code><a class="headerlink" href="#-response_file-response_file" title="Permanent link">&para;</a></h4>
+<p>Path to the response CSV file containing gene expression data.</p>
+<p><strong>Format Requirements:</strong>
+- CSV format with genes/features as rows
+- First column: feature names or locus tags (e.g., gene symbols)
+- Subsequent columns: expression values for each sample
+- Must contain a column matching the <code>--perturbed_tf</code> parameter
+- Gene identifiers must match those in the predictors file</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code>gene_id,sample1,sample2,sample3,sample4
+YPD1,0.23,-1.45,0.87,-0.12
+YBR123W,1.34,0.56,-0.23,0.78
+YCR456X,-0.45,0.12,1.23,-0.56
+</code></pre></div></p>
+<h4 id="-predictors_file-predictors_file"><code>--predictors_file PREDICTORS_FILE</code><a class="headerlink" href="#-predictors_file-predictors_file" title="Permanent link">&para;</a></h4>
+<p>Path to the predictors CSV file containing transcription factor binding data.</p>
+<p><strong>Format Requirements:</strong>
+- CSV format with genes/features as rows
+- First column: feature names or locus tags matching response file
+- Subsequent columns: binding measurements for different transcription factors
+- Numeric values representing binding strength/probability</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code>gene_id,TF1,TF2,TF3,TF4
+YPD1,0.34,0.12,0.78,0.01
+YBR123W,0.89,0.45,0.23,0.67
+YCR456X,0.12,0.78,0.34,0.90
+</code></pre></div></p>
+<h4 id="-perturbed_tf-perturbed_tf"><code>--perturbed_tf PERTURBED_TF</code><a class="headerlink" href="#-perturbed_tf-perturbed_tf" title="Permanent link">&para;</a></h4>
+<p>Name of the perturbed transcription factor used as the response variable.</p>
+<p><strong>Requirements:</strong>
+- Must exactly match a column name in the response file
+- Case-sensitive
+- Will be used as the dependent variable in modeling</p>
+<h2 id="optional-arguments">Optional Arguments<a class="headerlink" href="#optional-arguments" title="Permanent link">&para;</a></h2>
+<h3 id="input-control">Input Control<a class="headerlink" href="#input-control" title="Permanent link">&para;</a></h3>
+<h4 id="-blacklist_file-blacklist_file"><code>--blacklist_file BLACKLIST_FILE</code><a class="headerlink" href="#-blacklist_file-blacklist_file" title="Permanent link">&para;</a></h4>
+<p>Optional file containing features to exclude from analysis.</p>
+<p><strong>Format</strong>: Plain text file with one feature identifier per line
+<strong>Example:</strong>
+<div class="highlight"><pre><span></span><code>YBR999W
+YCR888X
+control_gene
+batch_effect_gene
+</code></pre></div></p>
+<h4 id="-n_bootstraps-n_bootstraps"><code>--n_bootstraps N_BOOTSTRAPS</code><a class="headerlink" href="#-n_bootstraps-n_bootstraps" title="Permanent link">&para;</a></h4>
+<p>Number of bootstrap samples for resampling analysis.
+- <strong>Default</strong>: 1000
+- <strong>Range</strong>: 100-10000 recommended
+- <strong>Impact</strong>: Higher values provide more robust statistics but increase runtime</p>
+<h4 id="-random_state-random_state"><code>--random_state RANDOM_STATE</code><a class="headerlink" href="#-random_state-random_state" title="Permanent link">&para;</a></h4>
+<p>Seed for reproducible bootstrap sampling.
+- <strong>Default</strong>: None (random seed each run)
+- <strong>Type</strong>: Integer
+- <strong>Note</strong>: If set, top-N modeling uses <code>random_state + 10</code> for different sampling</p>
+<h4 id="-top_n-top_n"><code>--top_n TOP_N</code><a class="headerlink" href="#-top_n-top_n" title="Permanent link">&para;</a></h4>
+<p>Number of features to retain for second-round modeling.
+- <strong>Default</strong>: 600
+- <strong>Impact</strong>: Higher values include more features but may reduce specificity</p>
+<h3 id="data-processing">Data Processing<a class="headerlink" href="#data-processing" title="Permanent link">&para;</a></h3>
+<h4 id="-normalize_sample_weights"><code>--normalize_sample_weights</code><a class="headerlink" href="#-normalize_sample_weights" title="Permanent link">&para;</a></h4>
+<p>Normalize bootstrap sample weights to sum to 1.
+- <strong>Default</strong>: False
+- <strong>Use case</strong>: When sample weights need explicit normalization</p>
+<h4 id="-scale_by_std"><code>--scale_by_std</code><a class="headerlink" href="#-scale_by_std" title="Permanent link">&para;</a></h4>
+<p>Center and scale the model matrix by standard deviation.
+- <strong>Default</strong>: False
+- <strong>Effect</strong>: Sets LassoCV <code>fit_intercept</code> parameter to False
+- <strong>Use case</strong>: When features have very different scales</p>
+<h3 id="feature-engineering">Feature Engineering<a class="headerlink" href="#feature-engineering" title="Permanent link">&para;</a></h3>
+<h4 id="-row_max"><code>--row_max</code><a class="headerlink" href="#-row_max" title="Permanent link">&para;</a></h4>
+<p>Include row maximum as an additional predictor in all-data modeling.
+- <strong>Default</strong>: False
+- <strong>Description</strong>: Adds the maximum binding value across all TFs for each gene</p>
+<h4 id="-squared_ptf"><code>--squared_pTF</code><a class="headerlink" href="#-squared_ptf" title="Permanent link">&para;</a></h4>
+<p>Include squared perturbed TF term in all-data modeling.
+- <strong>Default</strong>: False
+- <strong>Mathematical</strong>: Adds <code>pTF²</code> term to capture non-linear relationships</p>
+<h4 id="-cubic_ptf"><code>--cubic_pTF</code><a class="headerlink" href="#-cubic_ptf" title="Permanent link">&para;</a></h4>
+<p>Include cubic perturbed TF term in all-data modeling.
+- <strong>Default</strong>: False
+- <strong>Mathematical</strong>: Adds <code>pTF³</code> term for higher-order non-linearities</p>
+<h4 id="-ptf_main_effect"><code>--ptf_main_effect</code><a class="headerlink" href="#-ptf_main_effect" title="Permanent link">&para;</a></h4>
+<p>Include perturbed transcription factor main effect in modeling formula.
+- <strong>Default</strong>: False
+- <strong>Description</strong>: Adds the pTF binding value as a direct predictor</p>
+<h4 id="-exclude_interactor_variables-exclude_interactor_variables"><code>--exclude_interactor_variables EXCLUDE_INTERACTOR_VARIABLES</code><a class="headerlink" href="#-exclude_interactor_variables-exclude_interactor_variables" title="Permanent link">&para;</a></h4>
+<p>Comma-separated list of variables to exclude from interaction terms.
+- <strong>Format</strong>: <code>var1,var2,var3</code> or <code>exclude_all</code>
+- <strong>Example</strong>: <code>--exclude_interactor_variables "red_median,green_median"</code></p>
+<h4 id="-add_model_variables-add_model_variables"><code>--add_model_variables ADD_MODEL_VARIABLES</code><a class="headerlink" href="#-add_model_variables-add_model_variables" title="Permanent link">&para;</a></h4>
+<p>Comma-separated list of additional variables for all-data modeling.
+- <strong>Format</strong>: <code>var1,var2,var3</code>
+- <strong>Example</strong>: <code>--add_model_variables "red_median,green_median"</code>
+- <strong>Effect</strong>: Adds <code>... + red_median + green_median</code> to model formula</p>
+<h3 id="binning-options">Binning Options<a class="headerlink" href="#binning-options" title="Permanent link">&para;</a></h3>
+<h4 id="-bins-bins"><code>--bins BINS</code><a class="headerlink" href="#-bins-bins" title="Permanent link">&para;</a></h4>
+<p>Comma-separated bin edges for data stratification.
+- <strong>Default</strong>: <code>"0,8,12,np.inf"</code>
+- <strong>Format</strong>: Numbers or <code>np.inf</code> for infinity
+- <strong>Example</strong>: <code>--bins "0,5,10,15,np.inf"</code>
+- <strong>Purpose</strong>: Stratifies data for cross-validation</p>
+<h3 id="model-parameters">Model Parameters<a class="headerlink" href="#model-parameters" title="Permanent link">&para;</a></h3>
+<h4 id="-all_data_ci_level-all_data_ci_level"><code>--all_data_ci_level ALL_DATA_CI_LEVEL</code><a class="headerlink" href="#-all_data_ci_level-all_data_ci_level" title="Permanent link">&para;</a></h4>
+<p>Confidence interval threshold (%) for selecting significant coefficients in first stage.
+- <strong>Default</strong>: 98.0
+- <strong>Range</strong>: 80.0-99.9
+- <strong>Impact</strong>: Higher values are more stringent for feature selection</p>
+<h4 id="-topn_ci_level-topn_ci_level"><code>--topn_ci_level TOPN_CI_LEVEL</code><a class="headerlink" href="#-topn_ci_level-topn_ci_level" title="Permanent link">&para;</a></h4>
+<p>Confidence interval threshold for second round of modeling.
+- <strong>Default</strong>: 90.0
+- <strong>Range</strong>: 80.0-99.9
+- <strong>Typically</strong>: Lower than <code>all_data_ci_level</code> for refinement</p>
+<h4 id="-max_iter-max_iter"><code>--max_iter MAX_ITER</code><a class="headerlink" href="#-max_iter-max_iter" title="Permanent link">&para;</a></h4>
+<p>Maximum iterations for LassoCV convergence.
+- <strong>Default</strong>: 10000
+- <strong>Range</strong>: 1000-100000
+- <strong>Increase if</strong>: Convergence warnings appear</p>
+<h4 id="-iterative_dropout"><code>--iterative_dropout</code><a class="headerlink" href="#-iterative_dropout" title="Permanent link">&para;</a></h4>
+<p>Enable iterative variable dropout based on confidence intervals.
+- <strong>Default</strong>: False
+- <strong>Description</strong>: Progressively removes non-significant variables during modeling</p>
+<h4 id="-stabilization_ci_start-stabilization_ci_start"><code>--stabilization_ci_start STABILIZATION_CI_START</code><a class="headerlink" href="#-stabilization_ci_start-stabilization_ci_start" title="Permanent link">&para;</a></h4>
+<p>Starting confidence interval for iterative dropout stabilization.
+- <strong>Default</strong>: 50.0
+- <strong>Range</strong>: 50.0-95.0
+- <strong>Used with</strong>: <code>--iterative_dropout</code></p>
+<h4 id="-stage4_lasso"><code>--stage4_lasso</code><a class="headerlink" href="#-stage4_lasso" title="Permanent link">&para;</a></h4>
+<p>Use LassoCV-based interactor significance testing in Stage 4.
+- <strong>Default</strong>: False (uses linear regression)
+- <strong>Alternative</strong>: More conservative approach with regularization</p>
+<h4 id="-stage4_topn"><code>--stage4_topn</code><a class="headerlink" href="#-stage4_topn" title="Permanent link">&para;</a></h4>
+<p>Perform Stage 4 evaluation on top-n data instead of all data.
+- <strong>Default</strong>: False (uses all data)
+- <strong>Effect</strong>: Focuses final analysis on high-performing subset</p>
+<h3 id="output-control">Output Control<a class="headerlink" href="#output-control" title="Permanent link">&para;</a></h3>
+<h4 id="-output_dir-output_dir"><code>--output_dir OUTPUT_DIR</code><a class="headerlink" href="#-output_dir-output_dir" title="Permanent link">&para;</a></h4>
+<p>Base directory for saving results.
+- <strong>Default</strong>: <code>"./linear_perturbation_binding_modeling_results"</code>
+- <strong>Structure</strong>: Creates subdirectory per run with timestamp</p>
+<h4 id="-output_suffix-output_suffix"><code>--output_suffix OUTPUT_SUFFIX</code><a class="headerlink" href="#-output_suffix-output_suffix" title="Permanent link">&para;</a></h4>
+<p>Suffix to append to output subdirectory name.
+- <strong>Default</strong>: Empty string
+- <strong>Naming</strong>: <code>{perturbed_tf}{suffix}_{timestamp}</code>
+- <strong>Example</strong>: <code>YPD1_custom_run_20240115_143022</code></p>
+<h3 id="system-options">System Options<a class="headerlink" href="#system-options" title="Permanent link">&para;</a></h3>
+<h4 id="-n_cpus-n_cpus"><code>--n_cpus N_CPUS</code><a class="headerlink" href="#-n_cpus-n_cpus" title="Permanent link">&para;</a></h4>
+<p>Number of CPU cores for parallel processing.
+- <strong>Default</strong>: 4
+- <strong>Recommendation</strong>: Match your system's available cores
+- <strong>Impact</strong>: Each LassoCV call uses specified cores</p>
+<h2 id="output-structure">Output Structure<a class="headerlink" href="#output-structure" title="Permanent link">&para;</a></h2>
+<p>Results are saved in a timestamped subdirectory:</p>
+<div class="highlight"><pre><span></span><code>{output_dir}/{perturbed_tf}{output_suffix}_{timestamp}/
+├── all_data_results/
+│   ├── bootstrap_coefficients.csv      # Coefficient estimates per bootstrap
+│   ├── confidence_intervals.csv        # CI and significance results
+│   ├── model_statistics.csv           # R², CV scores, feature counts
+│   ├── feature_importance.csv         # Ranked feature importance
+│   └── diagnostic_plots/              # Visualization outputs
+├── topn_results/                       # Same structure for top-N analysis
+│   ├── bootstrap_coefficients.csv
+│   ├── confidence_intervals.csv
+│   ├── model_statistics.csv
+│   ├── feature_importance.csv
+│   └── diagnostic_plots/
+├── interactor_significance/
+│   ├── significance_results.csv        # Interaction vs main effect tests
+│   ├── comparison_statistics.csv       # Statistical comparisons
+│   ├── final_selection.csv            # Selected significant interactions
+│   └── interaction_plots/             # Interaction visualizations
+├── input_data/
+│   ├── processed_response.csv         # Cleaned response data
+│   ├── processed_predictors.csv       # Cleaned predictor data
+│   ├── bootstrap_indices.csv          # Bootstrap sample indices
+│   └── data_summary.json             # Data processing summary
+└── tfbpmodeling_{timestamp}.log       # Complete execution log
+</code></pre></div>
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<h3 id="basic-analysis">Basic Analysis<a class="headerlink" href="#basic-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1
+</code></pre></div>
+<h3 id="reproducible-high-quality-analysis">Reproducible High-Quality Analysis<a class="headerlink" href="#reproducible-high-quality-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">2000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--top_n<span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--all_data_ci_level<span class="w"> </span><span class="m">95</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--topn_ci_level<span class="w"> </span><span class="m">85</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--random_state<span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_dir<span class="w"> </span>./results<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_suffix<span class="w"> </span>_high_quality
+</code></pre></div>
+<h3 id="advanced-feature-engineering">Advanced Feature Engineering<a class="headerlink" href="#advanced-feature-engineering" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--blacklist_file<span class="w"> </span>data/exclude_genes.txt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--row_max<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--squared_pTF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cubic_pTF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ptf_main_effect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--add_model_variables<span class="w"> </span><span class="s2">&quot;red_median,green_median&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--exclude_interactor_variables<span class="w"> </span><span class="s2">&quot;batch_effect&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--normalize_sample_weights<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--scale_by_std<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bins<span class="w"> </span><span class="s2">&quot;0,5,10,15,np.inf&quot;</span>
+</code></pre></div>
+<h3 id="high-performance-analysis">High-Performance Analysis<a class="headerlink" href="#high-performance-analysis" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_cpus<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--max_iter<span class="w"> </span><span class="m">20000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--iterative_dropout<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage4_lasso<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage4_topn
+</code></pre></div>
+<h2 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h2>
+<h3 id="memory-usage">Memory Usage<a class="headerlink" href="#memory-usage" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Scales with: features × samples × bootstrap samples</li>
+<li>Large datasets: reduce <code>n_bootstraps</code> or <code>top_n</code></li>
+<li>Monitor with: <code>htop</code> or <code>top</code> during execution</li>
+</ul>
+<h3 id="runtime-estimation">Runtime Estimation<a class="headerlink" href="#runtime-estimation" title="Permanent link">&para;</a></h3>
+<p>For typical datasets (1000 features, 100 samples):
+- 1000 bootstraps: 10-30 minutes
+- 2000 bootstraps: 20-60 minutes
+- 5000 bootstraps: 1-3 hours</p>
+<h3 id="optimization-tips">Optimization Tips<a class="headerlink" href="#optimization-tips" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Start with default parameters</li>
+<li>Use <code>--random_state</code> for reproducible development</li>
+<li>Increase <code>--n_cpus</code> to match available cores</li>
+<li>Use <code>--log-level DEBUG</code> for detailed progress tracking</li>
+<li>Consider <code>--iterative_dropout</code> for feature-rich datasets</li>
+</ol>
+<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<h4 id="file-format-errors">File Format Errors<a class="headerlink" href="#file-format-errors" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verify CSV format</span>
+head<span class="w"> </span>-5<span class="w"> </span>data/expression.csv
+head<span class="w"> </span>-5<span class="w"> </span>data/binding.csv
+</code></pre></div>
+<h4 id="missing-perturbed-tf">Missing Perturbed TF<a class="headerlink" href="#missing-perturbed-tf" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check column names</span>
+head<span class="w"> </span>-1<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;\n&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>YPD1
+</code></pre></div>
+<h4 id="convergence-issues">Convergence Issues<a class="headerlink" href="#convergence-issues" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Increase iterations</span>
+--max_iter<span class="w"> </span><span class="m">20000</span>
+</code></pre></div>
+<h4 id="memory-issues">Memory Issues<a class="headerlink" href="#memory-issues" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Reduce computational load</span>
+--n_bootstraps<span class="w"> </span><span class="m">500</span><span class="w"> </span>--top_n<span class="w"> </span><span class="m">300</span>
+</code></pre></div>
+<h2 id="related-commands">Related Commands<a class="headerlink" href="#related-commands" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../overview/">CLI Overview</a></strong>: General CLI documentation</li>
+<li><strong><a href="../../tutorials/basic-workflow/">Tutorials</a></strong>: Step-by-step examples</li>
+<li><strong><a href="../../api/interface/">API Reference</a></strong>: Programmatic usage</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../tutorials/basic-workflow/" class="btn btn-neutral float-right" title="Basic Workflow">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../tutorials/basic-workflow/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../../js/mermaid-init.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/api/stratified_cv_r2/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>stratified_cv_r2 - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "stratified_cv_r2";
+        var mkdocs_page_input_path = "api/stratified_cv_r2.md";
+        var mkdocs_page_url = "/tfbpmodeling/api/stratified_cv_r2/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/basic-workflow/">Basic Workflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/advanced-features/">Advanced Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >Cross-Validation</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">stratified_cv_r2</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#tfbpmodeling.stratified_cv_r2">stratified_cv_r2</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#tfbpmodeling.stratified_cv_r2.stratified_cv_r2">stratified_cv_r2</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#key-features">Key Features</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#usage-examples">Usage Examples</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#basic-r2-calculation">Basic R² Calculation</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#bootstrap-integration">Bootstrap Integration</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#performance-metrics">Performance Metrics</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#stratified-r2">Stratified R²</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#weighted-aggregation">Weighted Aggregation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#related-modules">Related Modules</a>
+    </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API Reference</li>
+          <li class="breadcrumb-item">Cross-Validation</li>
+      <li class="breadcrumb-item active">stratified_cv_r2</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/api/stratified_cv_r2.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="stratified_cv_r2">stratified_cv_r2<a class="headerlink" href="#stratified_cv_r2" title="Permanent link">&para;</a></h1>
+<p>R² calculation with stratified cross-validation for tfbpmodeling.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="tfbpmodeling.stratified_cv_r2" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">tfbpmodeling.stratified_cv_r2</span>
+
+
+<a href="#tfbpmodeling.stratified_cv_r2" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="tfbpmodeling.stratified_cv_r2.stratified_cv_r2" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">stratified_cv_r2</span>
+
+
+<a href="#tfbpmodeling.stratified_cv_r2.stratified_cv_r2" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">stratified_cv_r2</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">classes</span><span class="p">,</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">skf</span><span class="o">=</span><span class="n">StratifiedKFold</span><span class="p">(</span>
+        <span class="n">n_splits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">),</span>
+    <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate the average stratified CV r-squared for a given estimator and data. By
+default, this is a 4-fold stratified CV with a LinearRegression estimator. Note that
+by default, the estimator is set to LinearRegression() and the StratifiedKFold
+object is set to a 4-fold stratified CV with shuffle=True and random_state=42.
+LinearRegression has fit_intercept explicitly set to True, meaning the data IS NOT
+expected to be centered and there should not be a constant column in X.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>y</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The response variable. See generate_modeling_data()</p>
+              </div>
+            </li>
+            <li>
+              <b><code>X</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The predictor variables. See generate_modeling_data()</p>
+              </div>
+            </li>
+            <li>
+              <b><code>classes</code></b>
+                  (<code><span title="numpy.ndarray">ndarray</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>the stratification classes for the data</p>
+              </div>
+            </li>
+            <li>
+              <b><code>estimator</code></b>
+                  (<code><span title="sklearn.base.BaseEstimator">BaseEstimator</span></code>, default:
+                      <code><span title="sklearn.linear_model.LinearRegression">LinearRegression</span>(fit_intercept=True)</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>the estimator to be used in the modeling. By default, this is a LinearRegression() model.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>skf</code></b>
+                  (<code><span title="sklearn.model_selection.StratifiedKFold">StratifiedKFold</span></code>, default:
+                      <code><span title="sklearn.model_selection.StratifiedKFold">StratifiedKFold</span>(n_splits=4, shuffle=True, random_state=42)</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>the StratifiedKFold object to be used in the modeling. By default, this is a 4-fold stratified CV with shuffle=True and random_state=42.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="float">float</span></code>
+              –
+              <div class="doc-md-description">
+                <p>the average r-squared value for the stratified CV</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="quote">
+              <summary>Source code in <code>tfbpmodeling/stratified_cv_r2.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stratified_cv_r2</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">classes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">estimator</span><span class="p">:</span> <span class="n">BaseEstimator</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">skf</span><span class="p">:</span> <span class="n">StratifiedKFold</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the average stratified CV r-squared for a given estimator and data. By</span>
+<span class="sd">    default, this is a 4-fold stratified CV with a LinearRegression estimator. Note that</span>
+<span class="sd">    by default, the estimator is set to LinearRegression() and the StratifiedKFold</span>
+<span class="sd">    object is set to a 4-fold stratified CV with shuffle=True and random_state=42.</span>
+<span class="sd">    LinearRegression has fit_intercept explicitly set to True, meaning the data IS NOT</span>
+<span class="sd">    expected to be centered and there should not be a constant column in X.</span>
+
+<span class="sd">    :param y: The response variable. See generate_modeling_data()</span>
+<span class="sd">    :param X: The predictor variables. See generate_modeling_data()</span>
+<span class="sd">    :param classes: the stratification classes for the data</span>
+<span class="sd">    :param estimator: the estimator to be used in the modeling. By default, this is a</span>
+<span class="sd">        LinearRegression() model.</span>
+<span class="sd">    :param skf: the StratifiedKFold object to be used in the modeling. By default, this</span>
+<span class="sd">        is a 4-fold stratified CV with shuffle=True and random_state=42.</span>
+<span class="sd">    :return: the average r-squared value for the stratified CV</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">estimator_local</span> <span class="o">=</span> <span class="n">clone</span><span class="p">(</span><span class="n">estimator</span><span class="p">)</span>
+    <span class="n">r2_scores</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
+        <span class="n">folds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">classes</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">w</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Warning encountered during stratified k-fold split: </span><span class="si">{</span><span class="n">warning</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">folds</span><span class="p">:</span>
+        <span class="c1"># Use train and test indices to split X and y</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span>
+            <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+
+        <span class="c1"># Fit the model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">estimator_local</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+            <span class="n">X_train</span><span class="p">,</span>
+            <span class="n">y_train</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Calculate R-squared and append to r2_scores</span>
+        <span class="n">r2_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">r2_scores</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <code>stratified_cv_r2</code> module provides specialized functions for calculating R² scores using stratified cross-validation. This ensures that model performance metrics accurately reflect the model's ability to generalize across different data strata.</p>
+<h2 id="key-features">Key Features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Stratified R² Calculation</strong>: R² scores that account for data stratification</li>
+<li><strong>Cross-Validation Integration</strong>: Works with stratified CV folds</li>
+<li><strong>Bootstrap Compatibility</strong>: Integrates with bootstrap resampling</li>
+<li><strong>Robust Performance Metrics</strong>: Reduces bias in performance estimation</li>
+</ul>
+<h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
+<h3 id="basic-r2-calculation">Basic R² Calculation<a class="headerlink" href="#basic-r2-calculation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv_r2</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_stratified_r2</span>
+
+<span class="c1"># Calculate stratified R² scores</span>
+<span class="n">r2_scores</span> <span class="o">=</span> <span class="n">calculate_stratified_r2</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">LassoCV</span><span class="p">(),</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">predictor_data</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">response_data</span><span class="p">,</span>
+    <span class="n">cv_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">stratification_bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean R²: </span><span class="si">{</span><span class="n">r2_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Std R²: </span><span class="si">{</span><span class="n">r2_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="bootstrap-integration">Bootstrap Integration<a class="headerlink" href="#bootstrap-integration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv_r2</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap_stratified_r2</span>
+
+<span class="c1"># Bootstrap R² with stratification</span>
+<span class="n">bootstrap_r2</span> <span class="o">=</span> <span class="n">bootstrap_stratified_r2</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">LassoCV</span><span class="p">(),</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">predictor_data</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">response_data</span><span class="p">,</span>
+    <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">cv_folds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">stratification_bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Get confidence interval for R²</span>
+<span class="n">r2_ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">bootstrap_r2</span><span class="p">,</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² 95% CI: [</span><span class="si">{</span><span class="n">r2_ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">r2_ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="performance-metrics">Performance Metrics<a class="headerlink" href="#performance-metrics" title="Permanent link">&para;</a></h2>
+<h3 id="stratified-r2">Stratified R²<a class="headerlink" href="#stratified-r2" title="Permanent link">&para;</a></h3>
+<p>Calculates R² separately for each stratum and then aggregates:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Per-stratum R² calculation</span>
+<span class="n">stratum_r2</span> <span class="o">=</span> <span class="n">calculate_per_stratum_r2</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span>
+    <span class="n">strata</span><span class="o">=</span><span class="n">test_strata</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="weighted-aggregation">Weighted Aggregation<a class="headerlink" href="#weighted-aggregation" title="Permanent link">&para;</a></h3>
+<p>Combines R² scores across strata with appropriate weighting:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Weighted average R²</span>
+<span class="n">weighted_r2</span> <span class="o">=</span> <span class="n">calculate_weighted_r2</span><span class="p">(</span>
+    <span class="n">stratum_r2_scores</span><span class="o">=</span><span class="n">stratum_scores</span><span class="p">,</span>
+    <span class="n">stratum_weights</span><span class="o">=</span><span class="n">stratum_sizes</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="related-modules">Related Modules<a class="headerlink" href="#related-modules" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../stratified_cv/">stratified_cv</a></strong>: Stratified cross-validation</li>
+<li><strong><a href="../bootstrap_model_results/">bootstrap_model_results</a></strong>: Results aggregation</li>
+<li><strong><a href="../interface/">interface</a></strong>: Workflow integration</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../stratified_cv/" class="btn btn-neutral float-left" title="stratified_cv"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../development/contributing/" class="btn btn-neutral float-right" title="Contributing">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../stratified_cv/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../development/contributing/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../../js/mermaid-init.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

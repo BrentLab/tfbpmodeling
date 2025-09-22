@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/tutorials/advanced-features/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Advanced Features - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Advanced Features";
+        var mkdocs_page_input_path = "tutorials/advanced-features.md";
+        var mkdocs_page_url = "/tfbpmodeling/tutorials/advanced-features/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../basic-workflow/">Basic Workflow</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Advanced Features</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#feature-engineering">Feature Engineering</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#polynomial-terms">Polynomial Terms</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#custom-variables">Custom Variables</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#row-wise-features">Row-wise Features</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#advanced-model-configuration">Advanced Model Configuration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#iterative-dropout">Iterative Dropout</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#stage-4-configuration">Stage 4 Configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#data-preprocessing">Data Preprocessing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#high-performance-computing">High-Performance Computing</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#parallel-processing">Parallel Processing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#memory-management">Memory Management</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cluster-computing">Cluster Computing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#programmatic-usage">Programmatic Usage</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#python-api">Python API</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#batch-processing">Batch Processing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#advanced-analysis-patterns">Advanced Analysis Patterns</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#comparative-analysis">Comparative Analysis</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cross-validation">Cross-Validation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#troubleshooting-advanced-features">Troubleshooting Advanced Features</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#convergence-issues">Convergence Issues</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#memory-issues">Memory Issues</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#feature-selection-issues">Feature Selection Issues</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Tutorials</li>
+      <li class="breadcrumb-item active">Advanced Features</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/tutorials/advanced-features.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="advanced-features-tutorial">Advanced Features Tutorial<a class="headerlink" href="#advanced-features-tutorial" title="Permanent link">&para;</a></h1>
+<p>This tutorial covers advanced features and configuration options in tfbpmodeling for power users and specialized analyses.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Beyond the basic workflow, tfbpmodeling offers advanced features for:</p>
+<ul>
+<li><strong>Feature Engineering</strong>: Polynomial terms and custom variables</li>
+<li><strong>Model Tuning</strong>: Advanced parameter optimization</li>
+<li><strong>Statistical Methods</strong>: Alternative significance testing approaches</li>
+<li><strong>Performance Optimization</strong>: High-performance computing configurations</li>
+<li><strong>Custom Workflows</strong>: Programmatic usage and customization</li>
+</ul>
+<h2 id="feature-engineering">Feature Engineering<a class="headerlink" href="#feature-engineering" title="Permanent link">&para;</a></h2>
+<h3 id="polynomial-terms">Polynomial Terms<a class="headerlink" href="#polynomial-terms" title="Permanent link">&para;</a></h3>
+<p>Add non-linear relationships to capture complex binding-expression dynamics:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add squared and cubic terms for the perturbed TF</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--squared_pTF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cubic_pTF<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ptf_main_effect
+</code></pre></div>
+<p><strong>When to use polynomial terms</strong>:
+- Non-linear dose-response relationships
+- Saturation effects in binding
+- Threshold behaviors in gene expression</p>
+<h3 id="custom-variables">Custom Variables<a class="headerlink" href="#custom-variables" title="Permanent link">&para;</a></h3>
+<p>Include additional experimental variables in the model:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add batch effects and technical variables</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--add_model_variables<span class="w"> </span><span class="s2">&quot;batch_id,plate_position,extraction_date&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--exclude_interactor_variables<span class="w"> </span><span class="s2">&quot;batch_id,technical_replicate&quot;</span>
+</code></pre></div>
+<h3 id="row-wise-features">Row-wise Features<a class="headerlink" href="#row-wise-features" title="Permanent link">&para;</a></h3>
+<p>Include summary statistics as predictors:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Add maximum binding strength across all TFs</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--row_max<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--normalize_sample_weights
+</code></pre></div>
+<h2 id="advanced-model-configuration">Advanced Model Configuration<a class="headerlink" href="#advanced-model-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="iterative-dropout">Iterative Dropout<a class="headerlink" href="#iterative-dropout" title="Permanent link">&para;</a></h3>
+<p>Use iterative variable selection for feature-rich datasets:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--iterative_dropout<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stabilization_ci_start<span class="w"> </span><span class="m">50</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--all_data_ci_level<span class="w"> </span><span class="m">95</span>.0
+</code></pre></div>
+<p><strong>How iterative dropout works</strong>:
+1. Start with low confidence threshold (50%)
+2. Remove non-significant features
+3. Gradually increase threshold
+4. Stabilize at final confidence level</p>
+<h3 id="stage-4-configuration">Stage 4 Configuration<a class="headerlink" href="#stage-4-configuration" title="Permanent link">&para;</a></h3>
+<p>Choose between linear and LassoCV approaches for final significance testing:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Conservative LassoCV approach</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage4_lasso<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage4_topn
+
+<span class="c1"># Sensitive linear regression approach (default)</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1
+</code></pre></div>
+<h3 id="data-preprocessing">Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permanent link">&para;</a></h3>
+<p>Advanced data handling options:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--scale_by_std<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--normalize_sample_weights<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bins<span class="w"> </span><span class="s2">&quot;0,5,10,15,20,np.inf&quot;</span>
+</code></pre></div>
+<h2 id="high-performance-computing">High-Performance Computing<a class="headerlink" href="#high-performance-computing" title="Permanent link">&para;</a></h2>
+<h3 id="parallel-processing">Parallel Processing<a class="headerlink" href="#parallel-processing" title="Permanent link">&para;</a></h3>
+<p>Optimize for multi-core systems:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use all available cores</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_cpus<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">5000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--max_iter<span class="w"> </span><span class="m">20000</span>
+</code></pre></div>
+<h3 id="memory-management">Memory Management<a class="headerlink" href="#memory-management" title="Permanent link">&para;</a></h3>
+<p>For large datasets:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Reduce memory usage</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">500</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--top_n<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--max_iter<span class="w"> </span><span class="m">5000</span>
+</code></pre></div>
+<h3 id="cluster-computing">Cluster Computing<a class="headerlink" href="#cluster-computing" title="Permanent link">&para;</a></h3>
+<p>Example SLURM script for HPC environments:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --job-name=tfbp_analysis</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=1</span>
+<span class="c1">#SBATCH --cpus-per-task=32</span>
+<span class="c1">#SBATCH --mem=64GB</span>
+<span class="c1">#SBATCH --time=24:00:00</span>
+
+module<span class="w"> </span>load<span class="w"> </span>python/3.11
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span><span class="nv">$SCRATCH</span>/data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span><span class="nv">$SCRATCH</span>/data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_cpus<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">10000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_dir<span class="w"> </span><span class="nv">$SCRATCH</span>/results<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--log-handler<span class="w"> </span>file
+</code></pre></div>
+<h2 id="programmatic-usage">Programmatic Usage<a class="headerlink" href="#programmatic-usage" title="Permanent link">&para;</a></h2>
+<h3 id="python-api">Python API<a class="headerlink" href="#python-api" title="Permanent link">&para;</a></h3>
+<p>Use tfbpmodeling programmatically:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_perturbation_binding_modeling</span>
+
+<span class="c1"># Create arguments programmatically</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span>
+    <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;data/expression.csv&#39;</span><span class="p">,</span>
+    <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;data/binding.csv&#39;</span><span class="p">,</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+    <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+    <span class="n">top_n</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">all_data_ci_level</span><span class="o">=</span><span class="mf">95.0</span><span class="p">,</span>
+    <span class="n">topn_ci_level</span><span class="o">=</span><span class="mf">85.0</span><span class="p">,</span>
+    <span class="n">max_iter</span><span class="o">=</span><span class="mi">15000</span><span class="p">,</span>
+    <span class="n">iterative_dropout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">stage4_lasso</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">squared_pTF</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">ptf_main_effect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;./results&#39;</span><span class="p">,</span>
+    <span class="n">output_suffix</span><span class="o">=</span><span class="s1">&#39;_programmatic&#39;</span><span class="p">,</span>
+    <span class="n">n_cpus</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="c1"># Set all other required parameters...</span>
+<span class="p">)</span>
+
+<span class="c1"># Run analysis</span>
+<span class="n">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="batch-processing">Batch Processing<a class="headerlink" href="#batch-processing" title="Permanent link">&para;</a></h3>
+<p>Process multiple transcription factors:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">tfs_to_analyze</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span> <span class="s1">&#39;YBR123W&#39;</span><span class="p">,</span> <span class="s1">&#39;YCR456X&#39;</span><span class="p">]</span>
+<span class="n">base_args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;response_file&#39;</span><span class="p">:</span> <span class="s1">&#39;data/expression.csv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;predictors_file&#39;</span><span class="p">:</span> <span class="s1">&#39;data/binding.csv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;n_bootstraps&#39;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+    <span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="c1"># ... other common parameters</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">tf</span> <span class="ow">in</span> <span class="n">tfs_to_analyze</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analyzing </span><span class="si">{</span><span class="n">tf</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span>
+        <span class="n">perturbed_tf</span><span class="o">=</span><span class="n">tf</span><span class="p">,</span>
+        <span class="n">output_suffix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;_batch_</span><span class="si">{</span><span class="n">tf</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">base_args</span>
+    <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ </span><span class="si">{</span><span class="n">tf</span><span class="si">}</span><span class="s2"> completed successfully&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ </span><span class="si">{</span><span class="n">tf</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="advanced-analysis-patterns">Advanced Analysis Patterns<a class="headerlink" href="#advanced-analysis-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="comparative-analysis">Comparative Analysis<a class="headerlink" href="#comparative-analysis" title="Permanent link">&para;</a></h3>
+<p>Compare different parameter settings:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Conservative analysis</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--all_data_ci_level<span class="w"> </span><span class="m">99</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--topn_ci_level<span class="w"> </span><span class="m">95</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage4_lasso<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_suffix<span class="w"> </span>_conservative<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--random_state<span class="w"> </span><span class="m">42</span>
+
+<span class="c1"># Sensitive analysis</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--all_data_ci_level<span class="w"> </span><span class="m">90</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--topn_ci_level<span class="w"> </span><span class="m">80</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_suffix<span class="w"> </span>_sensitive<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--random_state<span class="w"> </span><span class="m">42</span>
+</code></pre></div>
+<h3 id="cross-validation">Cross-Validation<a class="headerlink" href="#cross-validation" title="Permanent link">&para;</a></h3>
+<p>Validate results across different data subsets:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Load data</span>
+<span class="n">response_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/expression.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">predictor_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/binding.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Cross-validation across samples</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">fold</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">response_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+    <span class="c1"># Create train/test splits</span>
+    <span class="n">train_samples</span> <span class="o">=</span> <span class="n">response_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+    <span class="n">test_samples</span> <span class="o">=</span> <span class="n">response_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+
+    <span class="n">train_response</span> <span class="o">=</span> <span class="n">response_df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">train_samples</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;YPD1&#39;</span><span class="p">]]</span>
+    <span class="n">test_response</span> <span class="o">=</span> <span class="n">response_df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">test_samples</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;YPD1&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># Save fold data</span>
+    <span class="n">train_response</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;data/fold_</span><span class="si">{</span><span class="n">fold</span><span class="si">}</span><span class="s1">_train_response.csv&#39;</span><span class="p">)</span>
+    <span class="n">test_response</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;data/fold_</span><span class="si">{</span><span class="n">fold</span><span class="si">}</span><span class="s1">_test_response.csv&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Run analysis on training data</span>
+    <span class="c1"># ... (analysis code)</span>
+</code></pre></div>
+<h2 id="troubleshooting-advanced-features">Troubleshooting Advanced Features<a class="headerlink" href="#troubleshooting-advanced-features" title="Permanent link">&para;</a></h2>
+<h3 id="convergence-issues">Convergence Issues<a class="headerlink" href="#convergence-issues" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Increase iterations and adjust tolerance</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--max_iter<span class="w"> </span><span class="m">50000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">500</span><span class="w">  </span><span class="c1"># Reduce for testing</span>
+</code></pre></div>
+<h3 id="memory-issues">Memory Issues<a class="headerlink" href="#memory-issues" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Reduce computational load</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--top_n<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--n_cpus<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<h3 id="feature-selection-issues">Feature Selection Issues<a class="headerlink" href="#feature-selection-issues" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># More lenient thresholds</span>
+python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--response_file<span class="w"> </span>data/expression.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span>data/binding.csv<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--all_data_ci_level<span class="w"> </span><span class="m">80</span>.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--topn_ci_level<span class="w"> </span><span class="m">70</span>.0
+</code></pre></div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../input-formats/">Input Formats</a></strong>: Detailed data preparation</li>
+<li><strong><a href="../../cli/linear-perturbation-binding-modeling/">CLI Reference</a></strong>: Complete parameter documentation</li>
+<li><strong><a href="../../api/interface/">API Reference</a></strong>: Programmatic usage details</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../basic-workflow/" class="btn btn-neutral float-left" title="Basic Workflow"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../input-formats/" class="btn btn-neutral float-right" title="Input Data Formats">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../basic-workflow/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../input-formats/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../../js/mermaid-init.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

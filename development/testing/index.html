@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/development/testing/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Testing - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Testing";
+        var mkdocs_page_input_path = "development/testing.md";
+        var mkdocs_page_url = "/tfbpmodeling/development/testing/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/basic-workflow/">Basic Workflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/advanced-features/">Advanced Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../contributing/">Contributing</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Testing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-tests">Running Tests</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#basic-test-execution">Basic Test Execution</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#coverage-testing">Coverage Testing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#verbose-testing">Verbose Testing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#test-structure">Test Structure</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#directory-layout">Directory Layout</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#test-configuration">Test Configuration</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#writing-tests">Writing Tests</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#test-class-structure">Test Class Structure</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fixtures">Fixtures</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#testing-async-and-complex-operations">Testing Async and Complex Operations</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#integration-tests">Integration Tests</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#end-to-end-workflow-tests">End-to-End Workflow Tests</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#performance-testing">Performance Testing</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#benchmarking">Benchmarking</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#continuous-integration">Continuous Integration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#github-actions">GitHub Actions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#test-matrix">Test Matrix</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#coverage-requirements">Coverage Requirements</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#debugging-tests">Debugging Tests</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#running-specific-tests">Running Specific Tests</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#test-data-inspection">Test Data Inspection</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#test-organization">Test Organization</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#test-data">Test Data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#assertions">Assertions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#mock-and-patch">Mock and Patch</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#common-testing-patterns">Common Testing Patterns</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#testing-file-io">Testing File I/O</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#testing-statistical-functions">Testing Statistical Functions</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#testing-error-conditions">Testing Error Conditions</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Development</li>
+      <li class="breadcrumb-item active">Testing</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/development/testing.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="testing-guide">Testing Guide<a class="headerlink" href="#testing-guide" title="Permanent link">&para;</a></h1>
+<p>This guide covers testing practices, running tests, and writing new tests for tfbpmodeling.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>tfbpmodeling uses <strong>pytest</strong> as the testing framework with the following testing practices:</p>
+<ul>
+<li><strong>Unit tests</strong>: Test individual functions and classes</li>
+<li><strong>Integration tests</strong>: Test complete workflows</li>
+<li><strong>Coverage tracking</strong>: Monitor test coverage with codecov</li>
+<li><strong>Automated testing</strong>: CI/CD pipeline runs tests on all PRs</li>
+</ul>
+<h2 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h2>
+<h3 id="basic-test-execution">Basic Test Execution<a class="headerlink" href="#basic-test-execution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest
+
+<span class="c1"># Run specific test file</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tfbpmodeling/tests/test_interface.py
+
+<span class="c1"># Run specific test method</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tfbpmodeling/tests/test_interface.py::test_linear_perturbation_binding_modeling
+
+<span class="c1"># Run tests matching pattern</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;test_modeling&quot;</span>
+</code></pre></div>
+<h3 id="coverage-testing">Coverage Testing<a class="headerlink" href="#coverage-testing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run with coverage</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="w"> </span>--cov-branch<span class="w"> </span>--cov-report<span class="o">=</span>xml
+
+<span class="c1"># Generate HTML coverage report</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="o">=</span>tfbpmodeling<span class="w"> </span>--cov-report<span class="o">=</span>html
+
+<span class="c1"># View coverage report</span>
+open<span class="w"> </span>htmlcov/index.html
+</code></pre></div>
+<h3 id="verbose-testing">Verbose Testing<a class="headerlink" href="#verbose-testing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Show detailed output</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-v
+
+<span class="c1"># Show print statements</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-s
+
+<span class="c1"># Stop on first failure</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-x
+
+<span class="c1"># Run in parallel (if pytest-xdist installed)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-n<span class="w"> </span>auto
+</code></pre></div>
+<h2 id="test-structure">Test Structure<a class="headerlink" href="#test-structure" title="Permanent link">&para;</a></h2>
+<h3 id="directory-layout">Directory Layout<a class="headerlink" href="#directory-layout" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>tfbpmodeling/tests/
+├── __init__.py
+├── test_interface.py                    # Main workflow tests
+├── test_modeling_input_data.py          # Data handling tests
+├── test_bootstrapped_input_data.py      # Bootstrap tests
+├── test_bootstrap_model_results.py      # Results tests
+├── test_evaluation_modules.py           # Significance testing
+├── test_utils.py                        # Utility function tests
+├── fixtures/                            # Test data files
+│   ├── sample_expression.csv
+│   ├── sample_binding.csv
+│   └── sample_blacklist.txt
+└── conftest.py                          # Shared fixtures
+</code></pre></div>
+<h3 id="test-configuration">Test Configuration<a class="headerlink" href="#test-configuration" title="Permanent link">&para;</a></h3>
+<p>Tests are configured in <code>pyproject.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.pytest.ini_options]</span>
+<span class="n">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tfbpmodeling/tests&quot;</span><span class="p">]</span>
+<span class="n">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;test_*.py&quot;</span><span class="p">]</span>
+<span class="n">python_classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Test*&quot;</span><span class="p">]</span>
+<span class="n">python_functions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;test_*&quot;</span><span class="p">]</span>
+<span class="n">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;--strict-markers&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--strict-config&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--cov=tfbpmodeling&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--cov-branch&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--cov-report=term-missing&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">markers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;slow: marks tests as slow (deselect with &#39;-m </span><span class="se">\&quot;</span><span class="s2">not slow</span><span class="se">\&quot;</span><span class="s2">&#39;)&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;integration: marks tests as integration tests&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<h2 id="writing-tests">Writing Tests<a class="headerlink" href="#writing-tests" title="Permanent link">&para;</a></h2>
+<h3 id="test-class-structure">Test Class Structure<a class="headerlink" href="#test-class-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.modeling_input_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelingInputData</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestModelingInputData</span><span class="p">:</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test suite for ModelingInputData class.</span><span class="se">\&quot;\&quot;\&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_basic_initialization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test basic object creation.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
+            <span class="n">response_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span>
+            <span class="n">predictors_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span>
+            <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">perturbed_tf</span> <span class="o">==</span> <span class="s1">&#39;YPD1&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_file_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test input file validation.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="c1"># Test missing response file</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">):</span>
+            <span class="n">ModelingInputData</span><span class="p">(</span>
+                <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;nonexistent.csv&#39;</span><span class="p">,</span>
+                <span class="n">predictors_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span>
+                <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span>
+            <span class="p">)</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;normalize&quot;</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_normalization_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">,</span> <span class="n">normalize</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test different normalization settings.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
+            <span class="n">response_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span>
+            <span class="n">predictors_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span>
+            <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+            <span class="n">normalize_weights</span><span class="o">=</span><span class="n">normalize</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">normalize_weights</span> <span class="o">==</span> <span class="n">normalize</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">slow</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_large_dataset_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">large_sample_data</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test performance with large datasets.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="c1"># This test is marked as slow and can be skipped</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span><span class="o">**</span><span class="n">large_sample_data</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1000</span>
+</code></pre></div>
+<h3 id="fixtures">Fixtures<a class="headerlink" href="#fixtures" title="Permanent link">&para;</a></h3>
+<p>Create reusable test data with fixtures:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># conftest.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_data_files</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Create sample CSV files for testing.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="c1"># Generate sample data</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">genes</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;gene_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;sample_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)]</span>
+    <span class="n">tfs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;TF_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+
+    <span class="c1"># Response data</span>
+    <span class="n">response_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)),</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">genes</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">samples</span>
+    <span class="p">)</span>
+    <span class="n">response_data</span><span class="p">[</span><span class="s1">&#39;YPD1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">response_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gene_id&#39;</span>
+
+    <span class="c1"># Predictor data</span>
+    <span class="n">predictor_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">genes</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">tfs</span>
+    <span class="p">)</span>
+    <span class="n">predictor_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gene_id&#39;</span>
+
+    <span class="c1"># Save files</span>
+    <span class="n">response_file</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;response.csv&quot;</span>
+    <span class="n">predictor_file</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;predictors.csv&quot;</span>
+
+    <span class="n">response_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">response_file</span><span class="p">)</span>
+    <span class="n">predictor_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">predictor_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">response_file</span><span class="p">),</span>
+        <span class="s1">&#39;predictors&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">predictor_file</span><span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_blacklist_file</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Create sample blacklist file.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="n">blacklist_file</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;blacklist.txt&quot;</span>
+    <span class="n">blacklist_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;gene_1</span><span class="se">\\</span><span class="s2">ngene_2</span><span class="se">\\</span><span class="s2">ngene_3</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">blacklist_file</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">large_sample_data</span><span class="p">():</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Create large dataset for performance testing.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="c1"># Only create once per test session</span>
+    <span class="c1"># Implementation for large test data</span>
+    <span class="k">pass</span>
+</code></pre></div>
+<h3 id="testing-async-and-complex-operations">Testing Async and Complex Operations<a class="headerlink" href="#testing-async-and-complex-operations" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">patch</span><span class="p">,</span> <span class="n">MagicMock</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestBootstrapModeling</span><span class="p">:</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test bootstrap modeling functionality.</span><span class="se">\&quot;\&quot;\&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bootstrap_sampling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test bootstrap sample generation.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">BootstrappedModelingInputData</span><span class="p">(</span>
+            <span class="n">base_data</span><span class="o">=</span><span class="n">ModelingInputData</span><span class="p">(</span><span class="o">**</span><span class="n">sample_data_files</span><span class="p">,</span> <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">),</span>
+            <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Test reproducibility</span>
+        <span class="n">indices1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_bootstrap_indices</span><span class="p">()</span>
+
+        <span class="n">data_copy</span> <span class="o">=</span> <span class="n">BootstrappedModelingInputData</span><span class="p">(</span>
+            <span class="n">base_data</span><span class="o">=</span><span class="n">ModelingInputData</span><span class="p">(</span><span class="o">**</span><span class="n">sample_data_files</span><span class="p">,</span> <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">),</span>
+            <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+        <span class="p">)</span>
+        <span class="n">indices2</span> <span class="o">=</span> <span class="n">data_copy</span><span class="o">.</span><span class="n">get_bootstrap_indices</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">indices1</span><span class="p">,</span> <span class="n">indices2</span><span class="p">)</span>
+
+    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;tfbpmodeling.interface.LassoCV&#39;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_lasso_cv_integration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_lasso</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test LassoCV integration with mocking.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="c1"># Mock LassoCV behavior</span>
+        <span class="n">mock_estimator</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">mock_estimator</span><span class="o">.</span><span class="n">fit</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">mock_estimator</span>
+        <span class="n">mock_estimator</span><span class="o">.</span><span class="n">coef_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">mock_lasso</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">mock_estimator</span>
+
+        <span class="c1"># Test the integration</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">create_test_args</span><span class="p">(</span><span class="n">sample_data_files</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="c1"># Verify LassoCV was called</span>
+        <span class="n">mock_lasso</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
+        <span class="n">mock_estimator</span><span class="o">.</span><span class="n">fit</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_error_handling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test error handling in edge cases.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="c1"># Test with insufficient data</span>
+        <span class="n">minimal_data</span> <span class="o">=</span> <span class="n">create_minimal_data</span><span class="p">(</span><span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;Insufficient data&quot;</span><span class="p">):</span>
+            <span class="n">ModelingInputData</span><span class="p">(</span><span class="o">**</span><span class="n">minimal_data</span><span class="p">,</span> <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="integration-tests">Integration Tests<a class="headerlink" href="#integration-tests" title="Permanent link">&para;</a></h2>
+<h3 id="end-to-end-workflow-tests">End-to-End Workflow Tests<a class="headerlink" href="#end-to-end-workflow-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TestCompleteWorkflow</span><span class="p">:</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test complete analysis workflow.</span><span class="se">\&quot;\&quot;\&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_full_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test complete analysis from start to finish.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span>
+            <span class="n">response_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span>
+            <span class="n">predictors_file</span><span class="o">=</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span>
+            <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+            <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># Reduced for testing</span>
+            <span class="n">top_n</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+            <span class="n">all_data_ci_level</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span>
+            <span class="n">topn_ci_level</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span>
+            <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">),</span>
+            <span class="n">output_suffix</span><span class="o">=</span><span class="s1">&#39;_test&#39;</span><span class="p">,</span>
+            <span class="n">n_cpus</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="c1"># ... other required args</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Run complete analysis</span>
+        <span class="n">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="c1"># Verify output files exist</span>
+        <span class="n">output_dirs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;YPD1_test_*&quot;</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_dirs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;all_data_results&quot;</span> <span class="o">/</span> <span class="s2">&quot;confidence_intervals.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;topn_results&quot;</span> <span class="o">/</span> <span class="s2">&quot;confidence_intervals.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s2">&quot;interactor_significance&quot;</span> <span class="o">/</span> <span class="s2">&quot;final_selection.csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_reproducible_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test that results are reproducible with fixed seed.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">create_test_args</span><span class="p">(</span><span class="n">sample_data_files</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+        <span class="c1"># Run twice with same seed</span>
+        <span class="n">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">result1_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;YPD1_*&quot;</span><span class="p">))</span>
+
+        <span class="n">args</span><span class="o">.</span><span class="n">output_suffix</span> <span class="o">=</span> <span class="s1">&#39;_run2&#39;</span>
+        <span class="n">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">result2_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;YPD1_*run2*&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Compare key results</span>
+        <span class="n">ci1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">result1_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;all_data_results&quot;</span> <span class="o">/</span> <span class="s2">&quot;confidence_intervals.csv&quot;</span><span class="p">)</span>
+        <span class="n">ci2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">result2_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;all_data_results&quot;</span> <span class="o">/</span> <span class="s2">&quot;confidence_intervals.csv&quot;</span><span class="p">)</span>
+
+        <span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_frame_equal</span><span class="p">(</span><span class="n">ci1</span><span class="p">,</span> <span class="n">ci2</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="performance-testing">Performance Testing<a class="headerlink" href="#performance-testing" title="Permanent link">&para;</a></h2>
+<h3 id="benchmarking">Benchmarking<a class="headerlink" href="#benchmarking" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPerformance</span><span class="p">:</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Performance benchmarks for key operations.</span><span class="se">\&quot;\&quot;\&quot;</span>
+
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">slow</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bootstrap_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">large_sample_data</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Benchmark bootstrap modeling performance.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">BootstrappedModelingInputData</span><span class="p">(</span>
+            <span class="n">base_data</span><span class="o">=</span><span class="n">large_sample_data</span><span class="p">,</span>
+            <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">1000</span>
+        <span class="p">)</span>
+
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+        <span class="c1"># Performance assertion (adjust thresholds as needed)</span>
+        <span class="k">assert</span> <span class="n">elapsed</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Bootstrap creation took </span><span class="si">{</span><span class="n">elapsed</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s, expected &lt; 60s&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_memory_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_data_files</span><span class="p">):</span>
+        \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test memory usage during analysis.</span><span class="se">\&quot;\&quot;\&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+        <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())</span>
+        <span class="n">initial_memory</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>  <span class="c1"># MB</span>
+
+        <span class="c1"># Run analysis</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">create_test_args</span><span class="p">(</span><span class="n">sample_data_files</span><span class="p">,</span> <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="n">peak_memory</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>  <span class="c1"># MB</span>
+        <span class="n">memory_increase</span> <span class="o">=</span> <span class="n">peak_memory</span> <span class="o">-</span> <span class="n">initial_memory</span>
+
+        <span class="c1"># Memory assertion (adjust threshold as needed)</span>
+        <span class="k">assert</span> <span class="n">memory_increase</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Memory usage increased by </span><span class="si">{</span><span class="n">memory_increase</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">MB&quot;</span>
+</code></pre></div>
+<h2 id="continuous-integration">Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permanent link">&para;</a></h2>
+<h3 id="github-actions">GitHub Actions<a class="headerlink" href="#github-actions" title="Permanent link">&para;</a></h3>
+<p>Tests run automatically on:
+- Pull requests to <code>main</code> and <code>dev</code> branches
+- Pushes to <code>main</code> and <code>dev</code> branches
+- Scheduled runs (daily)</p>
+<h3 id="test-matrix">Test Matrix<a class="headerlink" href="#test-matrix" title="Permanent link">&para;</a></h3>
+<p>Tests run on multiple environments:
+- <strong>Python versions</strong>: 3.11, 3.12
+- <strong>Operating systems</strong>: Ubuntu, macOS, Windows
+- <strong>Dependencies</strong>: Latest and pinned versions</p>
+<h3 id="coverage-requirements">Coverage Requirements<a class="headerlink" href="#coverage-requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Minimum coverage</strong>: 80%</li>
+<li><strong>Coverage reporting</strong>: codecov.io</li>
+<li><strong>Coverage enforcement</strong>: CI fails if coverage drops</li>
+</ul>
+<h2 id="debugging-tests">Debugging Tests<a class="headerlink" href="#debugging-tests" title="Permanent link">&para;</a></h2>
+<h3 id="running-specific-tests">Running Specific Tests<a class="headerlink" href="#running-specific-tests" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Debug specific test with verbose output</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-v<span class="w"> </span>-s<span class="w"> </span>tfbpmodeling/tests/test_interface.py::test_specific_function
+
+<span class="c1"># Run with debugger</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--pdb<span class="w"> </span>tfbpmodeling/tests/test_interface.py::test_specific_function
+
+<span class="c1"># Run last failed tests</span>
+poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--lf
+</code></pre></div>
+<h3 id="test-data-inspection">Test Data Inspection<a class="headerlink" href="#test-data-inspection" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_debug_data_inspection</span><span class="p">(</span><span class="n">sample_data_files</span><span class="p">):</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Template for debugging test data.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="n">response_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;response&#39;</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">predictor_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">sample_data_files</span><span class="p">[</span><span class="s1">&#39;predictors&#39;</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response shape: </span><span class="si">{</span><span class="n">response_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictor shape: </span><span class="si">{</span><span class="n">predictor_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response columns: </span><span class="si">{</span><span class="n">response_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictor columns: </span><span class="si">{</span><span class="n">predictor_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Add your debugging code here</span>
+    <span class="k">assert</span> <span class="kc">False</span>  <span class="c1"># Fail test to see output</span>
+</code></pre></div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="test-organization">Test Organization<a class="headerlink" href="#test-organization" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>One concept per test</strong>: Each test should verify one specific behavior</li>
+<li><strong>Clear test names</strong>: Use descriptive names that explain what is being tested</li>
+<li><strong>Arrange-Act-Assert</strong>: Structure tests with clear setup, execution, and verification</li>
+<li><strong>Independent tests</strong>: Tests should not depend on each other</li>
+</ol>
+<h3 id="test-data">Test Data<a class="headerlink" href="#test-data" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Use fixtures</strong>: Create reusable test data with pytest fixtures</li>
+<li><strong>Minimal data</strong>: Use smallest datasets that demonstrate the behavior</li>
+<li><strong>Reproducible data</strong>: Use fixed seeds for random data generation</li>
+<li><strong>Clean up</strong>: Use temporary directories that are automatically cleaned</li>
+</ol>
+<h3 id="assertions">Assertions<a class="headerlink" href="#assertions" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Specific assertions</strong>: Use specific assertion methods (<code>assert_frame_equal</code> vs <code>assert</code>)</li>
+<li><strong>Meaningful messages</strong>: Include helpful error messages in assertions</li>
+<li><strong>Expected exceptions</strong>: Test error conditions with <code>pytest.raises</code></li>
+<li><strong>Floating point comparisons</strong>: Use appropriate tolerance for numeric comparisons</li>
+</ol>
+<h3 id="mock-and-patch">Mock and Patch<a class="headerlink" href="#mock-and-patch" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>External dependencies</strong>: Mock external API calls, file system operations</li>
+<li><strong>Expensive operations</strong>: Mock slow computations during unit tests</li>
+<li><strong>Isolation</strong>: Use mocks to isolate the unit being tested</li>
+<li><strong>Verification</strong>: Assert that mocked methods were called correctly</li>
+</ol>
+<h2 id="common-testing-patterns">Common Testing Patterns<a class="headerlink" href="#common-testing-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="testing-file-io">Testing File I/O<a class="headerlink" href="#testing-file-io" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_file_loading</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test file loading with temporary files.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="c1"># Create test file</span>
+    <span class="n">test_file</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;test.csv&quot;</span>
+    <span class="n">test_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;col1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;col2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]})</span>
+    <span class="n">test_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">test_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Test loading</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">load_data_function</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">test_file</span><span class="p">))</span>
+
+    <span class="c1"># Verify</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_frame_equal</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">test_data</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="testing-statistical-functions">Testing Statistical Functions<a class="headerlink" href="#testing-statistical-functions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_confidence_interval_calculation</span><span class="p">():</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test confidence interval calculation.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="c1"># Known data with expected results</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+
+    <span class="n">ci_lower</span><span class="p">,</span> <span class="n">ci_upper</span> <span class="o">=</span> <span class="n">calculate_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mi">95</span><span class="p">)</span>
+
+    <span class="c1"># Assert approximate equality for floating point</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ci_lower</span> <span class="o">-</span> <span class="mf">2.5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ci_upper</span> <span class="o">-</span> <span class="mf">7.5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+</code></pre></div>
+<h3 id="testing-error-conditions">Testing Error Conditions<a class="headerlink" href="#testing-error-conditions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_invalid_input_handling</span><span class="p">():</span>
+    \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Test that invalid inputs raise appropriate errors.</span><span class="se">\&quot;\&quot;\&quot;</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">&quot;must be positive&quot;</span><span class="p">):</span>
+        <span class="n">some_function</span><span class="p">(</span><span class="n">negative_parameter</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">):</span>
+        <span class="n">load_data_function</span><span class="p">(</span><span class="s2">&quot;nonexistent_file.csv&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>This testing guide provides comprehensive coverage of testing practices in tfbpmodeling. Regular testing ensures code quality, prevents regressions, and facilitates confident refactoring.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../contributing/" class="btn btn-neutral float-left" title="Contributing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../contributing/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../../js/mermaid-init.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
