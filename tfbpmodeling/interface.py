@@ -327,7 +327,7 @@ def linear_perturbation_binding_modeling(args):
 
     logger.info(
         "Step 5: Test the significance of the interactor terms that survive "
-        "against the corresoponding main effect"
+        "against the corresponding main effect"
     )
 
     if args.stage4_topn:
