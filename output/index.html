@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/output/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Output Structure - tfbpmodeling</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Output Structure";
+        var mkdocs_page_input_path = "output.md";
+        var mkdocs_page_url = "/tfbpmodeling/output/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../getting-started/quickstart/">Quick Start</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">CLI Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/overview/">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Output Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Output Structure</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#directory-structure">Directory Structure</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#directory-naming">Directory Naming</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#stage-2-bootstrap-modeling-results-all-data">Stage 2: Bootstrap Modeling Results (All Data)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#all_data_result_object">all_data_result_object/</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#result_obj_cijson">result_obj_ci.json</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#result_obj_coefs_alphaspkl">result_obj_coefs_alphas.pkl</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#all_data_significant_ci_leveljson">all_data_significant_{ci_level}.json</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#stage-3-best-all-data-model">Stage 3: Best All Data Model</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#best_all_data_modelpkl">best_all_data_model.pkl</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#stage-4-top-n-modeling-results">Stage 4: Top-N Modeling Results</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#topn_result_object">topn_result_object/</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#result_obj_cijson_1">result_obj_ci.json</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#result_obj_coefs_alphaspkl_1">result_obj_coefs_alphas.pkl</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#topn_significant_ci_leveljson">topn_significant_{ci_level}.json</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#stage-5-interactor-significance-results">Stage 5: Interactor Significance Results</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#interactor_vs_main_resultjson">interactor_vs_main_result.json</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#file-formats-summary">File Formats Summary</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#json-files">JSON Files</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pickle-files">Pickle Files</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../tutorials/basic-workflow/">Basic Workflow</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../tutorials/advanced-features/">Advanced Features</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../tutorials/input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../api/interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../api/modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../api/bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../api/bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../api/interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../api/evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../api/evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../api/stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../api/stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../development/contributing/">Contributing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../development/testing/">Testing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Output Reference</li>
+      <li class="breadcrumb-item active">Output Structure</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/output.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="output-structure-and-files">Output Structure and Files<a class="headerlink" href="#output-structure-and-files" title="Permanent link">&para;</a></h1>
+<p>This document describes the complete output structure and file formats generated by the <code>linear_perturbation_binding_modeling</code> command.</p>
+<h2 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h2>
+<p>When you run <code>linear_perturbation_binding_modeling</code>, results are saved in a subdirectory within your specified <code>--output_dir</code>:</p>
+<div class="highlight"><pre><span></span><code>{output_dir}/{perturbed_tf}{output_suffix}/
+├── all_data_result_object/
+│   ├── result_obj_ci.json
+│   └── result_obj_coefs_alphas.pkl
+├── topn_result_object/
+│   ├── result_obj_ci.json
+│   └── result_obj_coefs_alphas.pkl
+├── all_data_significant_{ci_level}.json
+├── topn_significant_{ci_level}.json
+├── best_all_data_model.pkl
+└── interactor_vs_main_result.json
+</code></pre></div>
+<h3 id="directory-naming">Directory Naming<a class="headerlink" href="#directory-naming" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Base directory</strong>: Specified by <code>--output_dir</code> (default: <code>./linear_perturbation_binding_modeling_results</code>)</li>
+<li><strong>Subdirectory</strong>: <code>{perturbed_tf}{output_suffix}</code></li>
+<li><code>perturbed_tf</code>: The name of the transcription factor you're analyzing</li>
+<li><code>output_suffix</code>: Optional suffix specified with <code>--output_suffix</code></li>
+<li>Example: <code>CBF1_experiment1/</code> or just <code>CBF1/</code></li>
+</ul>
+<h2 id="stage-2-bootstrap-modeling-results-all-data">Stage 2: Bootstrap Modeling Results (All Data)<a class="headerlink" href="#stage-2-bootstrap-modeling-results-all-data" title="Permanent link">&para;</a></h2>
+<h3 id="all_data_result_object"><code>all_data_result_object/</code><a class="headerlink" href="#all_data_result_object" title="Permanent link">&para;</a></h3>
+<p>Contains the complete bootstrap modeling results from Stage 2, where all features are used.</p>
+<h4 id="result_obj_cijson"><code>result_obj_ci.json</code><a class="headerlink" href="#result_obj_cijson" title="Permanent link">&para;</a></h4>
+<p>Confidence intervals for all model coefficients across bootstrap iterations.</p>
+<p><strong>Format:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;95.0&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;TF1:TF2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.123</span><span class="p">,</span><span class="w"> </span><span class="mf">0.456</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;TF1:TF3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">-0.012</span><span class="p">,</span><span class="w"> </span><span class="mf">0.089</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;TF1:TF4&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.234</span><span class="p">,</span><span class="w"> </span><span class="mf">0.567</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;99.0&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;TF1:TF2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.089</span><span class="p">,</span><span class="w"> </span><span class="mf">0.501</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;TF1:TF3&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">-0.045</span><span class="p">,</span><span class="w"> </span><span class="mf">0.123</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;TF1:TF4&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.189</span><span class="p">,</span><span class="w"> </span><span class="mf">0.612</span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Structure:</strong>
+- <strong>Keys</strong>: Confidence interval levels (e.g., "95.0", "99.0")
+- <strong>Values</strong>: Dictionaries mapping coefficient names to <code>[lower_bound, upper_bound]</code>
+- <strong>Coefficient names</strong>: Follow the model formula (e.g., interaction terms like "TF1:TF2")</p>
+<p><strong>Usage:</strong>
+- Identify which coefficients have confidence intervals that exclude zero
+- Compare coefficient stability across different CI levels
+- Used internally to extract significant coefficients</p>
+<h4 id="result_obj_coefs_alphaspkl"><code>result_obj_coefs_alphas.pkl</code><a class="headerlink" href="#result_obj_coefs_alphaspkl" title="Permanent link">&para;</a></h4>
+<p>Pickled file containing raw bootstrap results.</p>
+<p><strong>Contents:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">bootstrap_coefs_df</span><span class="p">,</span> <span class="n">alpha_list</span><span class="p">)</span>
+</code></pre></div></p>
+<ul>
+<li><strong><code>bootstrap_coefs_df</code></strong>: pandas DataFrame</li>
+<li>Rows: Bootstrap iterations (e.g., 1000 rows for 1000 bootstraps)</li>
+<li>Columns: Model coefficients (matching the model formula)</li>
+<li>
+<p>Values: Fitted coefficient values from each bootstrap iteration</p>
+</li>
+<li>
+<p><strong><code>alpha_list</code></strong>: list of floats</p>
+</li>
+<li>Length: Number of bootstrap iterations</li>
+<li>Values: Optimal alpha (regularization parameter) selected by LassoCV in each iteration</li>
+</ul>
+<p><strong>Example loading (recommended - using deserialize):</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.bootstrap_model_results</span><span class="w"> </span><span class="kn">import</span> <span class="n">BootstrapModelResults</span>
+
+<span class="c1"># Load using the deserialize class method</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">BootstrapModelResults</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
+    <span class="n">ci_dict_json</span><span class="o">=</span><span class="s1">&#39;all_data_result_object/result_obj_ci.json&#39;</span><span class="p">,</span>
+    <span class="n">coefs_alphas_pkl</span><span class="o">=</span><span class="s1">&#39;all_data_result_object/result_obj_coefs_alphas.pkl&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Access all the data</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (1000, n_coefficients)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean coefficient values:</span><span class="se">\n</span><span class="si">{</span><span class="n">results</span><span class="o">.</span><span class="n">bootstrap_coefs_df</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alpha statistics: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">alpha_list</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">alpha_list</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Extract significant coefficients at a specific CI level</span>
+<span class="n">significant</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">extract_significant_coefficients</span><span class="p">(</span><span class="n">ci_level</span><span class="o">=</span><span class="mf">95.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Significant coefficients: </span><span class="si">{</span><span class="n">significant</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Example loading (alternative - direct pickle loading):</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Load just the coefficients and alphas directly</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;all_data_result_object/result_obj_coefs_alphas.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">bootstrap_coefs_df</span><span class="p">,</span> <span class="n">alpha_list</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">bootstrap_coefs_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (1000, n_coefficients)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean alpha: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">alpha_list</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<h3 id="all_data_significant_ci_leveljson"><code>all_data_significant_{ci_level}.json</code><a class="headerlink" href="#all_data_significant_ci_leveljson" title="Permanent link">&para;</a></h3>
+<p>Coefficients identified as significant at the specified confidence level.</p>
+<p><strong>Filename examples:</strong>
+- <code>all_data_significant_98-0.json</code> (for <code>--all_data_ci_level 98.0</code>)
+- <code>all_data_significant_95-0.json</code> (for <code>--all_data_ci_level 95.0</code>)</p>
+<p><strong>Format:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;TF1:TF2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.123</span><span class="p">,</span><span class="w"> </span><span class="mf">0.456</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;TF1:TF4&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.234</span><span class="p">,</span><span class="w"> </span><span class="mf">0.567</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;I(TF1 ** 2)&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.045</span><span class="p">,</span><span class="w"> </span><span class="mf">0.123</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Structure:</strong>
+- <strong>Keys</strong>: Coefficient names that passed the significance threshold
+- <strong>Values</strong>: <code>[lower_bound, upper_bound]</code> of the confidence interval
+- Only includes coefficients whose CI does not include zero</p>
+<p><strong>Interpretation:</strong>
+- These are the coefficients that survived Stage 2 filtering
+- They will be used as the formula for Stage 4 (top-N modeling)
+- Represents the first level of feature selection</p>
+<h2 id="stage-3-best-all-data-model">Stage 3: Best All Data Model<a class="headerlink" href="#stage-3-best-all-data-model" title="Permanent link">&para;</a></h2>
+<h3 id="best_all_data_modelpkl"><code>best_all_data_model.pkl</code><a class="headerlink" href="#best_all_data_modelpkl" title="Permanent link">&para;</a></h3>
+<p>The single best-fit model trained on all data using only the significant coefficients from Stage 2.</p>
+<p><strong>Type:</strong> Dictionary containing the fitted model and metadata</p>
+<p><strong>Structure:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">sklearn</span><span class="o">.</span><span class="n">linear_model</span><span class="o">.</span><span class="n">LassoCV</span><span class="o">&gt;</span><span class="p">,</span>  <span class="c1"># Fitted estimator</span>
+    <span class="s2">&quot;feature_names&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;TF1:TF2&quot;</span><span class="p">,</span> <span class="s2">&quot;TF1:TF4&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>  <span class="c1"># Column names from design matrix</span>
+    <span class="s2">&quot;formula&quot;</span><span class="p">:</span> <span class="s2">&quot;TF1:TF2 + TF1:TF4 + ...&quot;</span><span class="p">,</span>  <span class="c1"># Model formula used</span>
+    <span class="s2">&quot;perturbed_tf&quot;</span><span class="p">:</span> <span class="s2">&quot;TF1&quot;</span><span class="p">,</span>  <span class="c1"># Name of perturbed TF</span>
+    <span class="s2">&quot;scale_by_std&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># Whether scaling was applied</span>
+    <span class="s2">&quot;drop_intercept&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Whether intercept was dropped from design matrix</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Example loading:</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Load the model bundle</span>
+<span class="n">bundle</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;best_all_data_model.pkl&#39;</span><span class="p">)</span>
+
+<span class="c1"># Access the fitted model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bundle</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">bundle</span><span class="p">[</span><span class="s2">&quot;feature_names&quot;</span><span class="p">]</span>
+
+<span class="c1"># Access model attributes</span>
+<span class="n">coefficients</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span>          <span class="c1"># numpy array of fitted coefficients</span>
+<span class="n">intercept</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">intercept_</span>        <span class="c1"># fitted intercept value</span>
+<span class="n">optimal_alpha</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">alpha_</span>        <span class="c1"># optimal regularization parameter</span>
+<span class="n">n_iterations</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">n_iter_</span>        <span class="c1"># iterations to convergence</span>
+
+<span class="c1"># Create coefficient dictionary with feature names</span>
+<span class="n">coef_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">feature_names</span><span class="p">,</span> <span class="n">coefficients</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">coef_dict</span><span class="p">)</span>
+
+<span class="c1"># Make predictions on new data</span>
+<span class="c1"># Note: You must prepare X_new with the same formula and preprocessing</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_new</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Key differences from bootstrap results:</strong>
+- Single model (not 1000 bootstrap models)
+- Trained without sample weights
+- Uses stratified cross-validation for alpha selection
+- Represents the "final" model on all available data</p>
+<p><strong>Use cases:</strong>
+- Make predictions on new data
+- Extract final coefficient estimates
+- Understand the optimal regularization strength
+- Deploy for production predictions</p>
+<h2 id="stage-4-top-n-modeling-results">Stage 4: Top-N Modeling Results<a class="headerlink" href="#stage-4-top-n-modeling-results" title="Permanent link">&para;</a></h2>
+<h3 id="topn_result_object"><code>topn_result_object/</code><a class="headerlink" href="#topn_result_object" title="Permanent link">&para;</a></h3>
+<p>Similar structure to <code>all_data_result_object/</code> but trained on top-N features only.</p>
+<h4 id="result_obj_cijson_1"><code>result_obj_ci.json</code><a class="headerlink" href="#result_obj_cijson_1" title="Permanent link">&para;</a></h4>
+<p>Confidence intervals for coefficients from top-N data modeling.</p>
+<p><strong>Format:</strong> Same as <code>all_data_result_object/result_obj_ci.json</code></p>
+<p><strong>Differences:</strong>
+- Trained only on genes in the top-N ranking (by perturbed TF binding)
+- May have different coefficient values due to subset of data
+- Provides refined estimates on high-signal genes</p>
+<h4 id="result_obj_coefs_alphaspkl_1"><code>result_obj_coefs_alphas.pkl</code><a class="headerlink" href="#result_obj_coefs_alphaspkl_1" title="Permanent link">&para;</a></h4>
+<p>Bootstrap coefficients and alphas from top-N modeling.</p>
+<p><strong>Format:</strong> Same as <code>all_data_result_object/result_obj_coefs_alphas.pkl</code></p>
+<p><strong>Example loading:</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.bootstrap_model_results</span><span class="w"> </span><span class="kn">import</span> <span class="n">BootstrapModelResults</span>
+
+<span class="c1"># Load top-N results</span>
+<span class="n">topn_results</span> <span class="o">=</span> <span class="n">BootstrapModelResults</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
+    <span class="n">ci_dict_json</span><span class="o">=</span><span class="s1">&#39;topn_result_object/result_obj_ci.json&#39;</span><span class="p">,</span>
+    <span class="n">coefs_alphas_pkl</span><span class="o">=</span><span class="s1">&#39;topn_result_object/result_obj_coefs_alphas.pkl&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Compare with all data results</span>
+<span class="n">all_data_results</span> <span class="o">=</span> <span class="n">BootstrapModelResults</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
+    <span class="n">ci_dict_json</span><span class="o">=</span><span class="s1">&#39;all_data_result_object/result_obj_ci.json&#39;</span><span class="p">,</span>
+    <span class="n">coefs_alphas_pkl</span><span class="o">=</span><span class="s1">&#39;all_data_result_object/result_obj_coefs_alphas.pkl&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Extract significant coefficients from both</span>
+<span class="n">all_data_sig</span> <span class="o">=</span> <span class="n">all_data_results</span><span class="o">.</span><span class="n">extract_significant_coefficients</span><span class="p">(</span><span class="n">ci_level</span><span class="o">=</span><span class="mf">98.0</span><span class="p">)</span>
+<span class="n">topn_sig</span> <span class="o">=</span> <span class="n">topn_results</span><span class="o">.</span><span class="n">extract_significant_coefficients</span><span class="p">(</span><span class="n">ci_level</span><span class="o">=</span><span class="mf">90.0</span><span class="p">)</span>
+
+<span class="c1"># Find coefficients that survived both stages</span>
+<span class="n">survived</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_data_sig</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">topn_sig</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coefficients surviving both stages: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">survived</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<h3 id="topn_significant_ci_leveljson"><code>topn_significant_{ci_level}.json</code><a class="headerlink" href="#topn_significant_ci_leveljson" title="Permanent link">&para;</a></h3>
+<p>Significant coefficients from top-N modeling at the specified confidence level.</p>
+<p><strong>Filename examples:</strong>
+- <code>topn_significant_90-0.json</code> (for <code>--topn_ci_level 90.0</code>)
+- <code>topn_significant_85-0.json</code> (for <code>--topn_ci_level 85.0</code>)</p>
+<p><strong>Format:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;TF1:TF2&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.145</span><span class="p">,</span><span class="w"> </span><span class="mf">0.478</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;TF1:TF4&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.256</span><span class="p">,</span><span class="w"> </span><span class="mf">0.589</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Interpretation:</strong>
+- These coefficients survived both Stage 2 AND Stage 4 filtering
+- Represents high-confidence predictors on high-signal genes
+- These are the features evaluated in Stage 5 (interactor significance)</p>
+<h2 id="stage-5-interactor-significance-results">Stage 5: Interactor Significance Results<a class="headerlink" href="#stage-5-interactor-significance-results" title="Permanent link">&para;</a></h2>
+<h3 id="interactor_vs_main_resultjson"><code>interactor_vs_main_result.json</code><a class="headerlink" href="#interactor_vs_main_resultjson" title="Permanent link">&para;</a></h3>
+<p>Statistical comparison between interaction terms and their corresponding main effects.</p>
+<p><strong>Format:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;interactor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TF1:TF2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TF2&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;avg_r2_interactor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.456</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;avg_r2_main_effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.389</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;delta_r2&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.067</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;interactor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TF1:TF4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TF4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;avg_r2_interactor&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.456</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;avg_r2_main_effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.412</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;delta_r2&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.044</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<p><strong>Fields:</strong>
+- <strong><code>interactor</code></strong>: The interaction term being tested (e.g., "TF1:TF2")
+- <strong><code>variant</code></strong>: The corresponding main effect (e.g., "TF2")
+- <strong><code>avg_r2_interactor</code></strong>: Cross-validated R² with the interaction term
+- <strong><code>avg_r2_main_effect</code></strong>: Cross-validated R² when interaction is replaced by main effect
+- <strong><code>delta_r2</code></strong>: <code>avg_r2_main_effect - avg_r2_interactor</code></p>
+<p><strong>Interpretation:</strong>
+- <strong>Negative delta_r2</strong>: Interaction term performs better than main effect (desirable)
+- <strong>Positive delta_r2</strong>: Main effect performs better than interaction (interaction may not be necessary)
+- <strong>Magnitude</strong>: How much predictive power is gained/lost by using the interaction</p>
+<p><strong>Usage:</strong>
+- Identify which interactions provide genuine predictive value
+- Filter out interactions that could be replaced by simpler main effects
+- Final validation that interaction terms are scientifically meaningful</p>
+<h2 id="file-formats-summary">File Formats Summary<a class="headerlink" href="#file-formats-summary" title="Permanent link">&para;</a></h2>
+<h3 id="json-files">JSON Files<a class="headerlink" href="#json-files" title="Permanent link">&para;</a></h3>
+<p>All JSON files are human-readable and can be loaded with:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Files:</strong>
+- <code>result_obj_ci.json</code> - Nested dictionaries with confidence intervals
+- <code>all_data_significant_{ci}.json</code> - Dictionary of significant coefficients
+- <code>topn_significant_{ci}.json</code> - Dictionary of significant coefficients
+- <code>interactor_vs_main_result.json</code> - List of evaluation dictionaries</p>
+<h3 id="pickle-files">Pickle Files<a class="headerlink" href="#pickle-files" title="Permanent link">&para;</a></h3>
+<p>Pickle files require Python to load and contain Python objects:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.pkl&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Files:</strong>
+- <code>result_obj_coefs_alphas.pkl</code> - Tuple of (DataFrame, list)
+- <code>best_all_data_model.pkl</code> - Dictionary bundle containing fitted sklearn LassoCV model and metadata (use <code>joblib.load()</code>)</p>
+<!--
+## Common Workflows
+
+ TODO -- Describe common workflows for analyzing and interpreting the output files. -->
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../cli/linear-perturbation-binding-modeling/" class="btn btn-neutral float-left" title="linear_perturbation_binding_modeling"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tutorials/basic-workflow/" class="btn btn-neutral float-right" title="Basic Workflow">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../cli/linear-perturbation-binding-modeling/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../tutorials/basic-workflow/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+      <script src="../js/mermaid-init.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
