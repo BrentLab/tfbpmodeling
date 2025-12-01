@@ -345,7 +345,7 @@ with open('file.pkl', 'rb') as f:
 
 **Files:**
 - `result_obj_coefs_alphas.pkl` - Tuple of (DataFrame, list)
-- `best_all_data_model.pkl` - Fitted sklearn LassoCV model (use `joblib.load()`)
+- `best_all_data_model.pkl` - Dictionary bundle containing fitted sklearn LassoCV model and metadata (use `joblib.load()`)
 
 
 <!--
