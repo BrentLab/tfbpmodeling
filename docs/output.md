@@ -139,7 +139,7 @@ Coefficients identified as significant at the specified confidence level.
 
 **Interpretation:**
 - These are the coefficients that survived Stage 2 filtering
-- They will be used as the formula for Stage 3 (top-N modeling)
+- They will be used as the formula for Stage 4 (top-N modeling)
 - Represents the first level of feature selection
 
 ## Stage 3: Best All Data Model
