@@ -356,10 +356,11 @@ batch_effect_gene
 - <strong>Default</strong>: False
 - <strong>Use case</strong>: When sample weights need explicit normalization</p>
 <h4 id="-scale_by_std"><code>--scale_by_std</code><a class="headerlink" href="#-scale_by_std" title="Permanent link">&para;</a></h4>
-<p>Center and scale the model matrix by standard deviation.
+<p>Scale the model matrix by standard deviation (without centering).
 - <strong>Default</strong>: False
-- <strong>Effect</strong>: Sets LassoCV <code>fit_intercept</code> parameter to False
-- <strong>Use case</strong>: When features have very different scales</p>
+- <strong>Implementation</strong>: Uses <code>StandardScaler(with_mean=False, with_std=True)</code>
+- <strong>Effect</strong>: Data is scaled but not centered; estimator still fits intercept (<code>fit_intercept=True</code>)
+- <strong>Use case</strong>: When features have very different scales but you want to preserve the mean structure</p>
 <h3 id="feature-engineering">Feature Engineering<a class="headerlink" href="#feature-engineering" title="Permanent link">&para;</a></h3>
 <h4 id="-row_max"><code>--row_max</code><a class="headerlink" href="#-row_max" title="Permanent link">&para;</a></h4>
 <p>Include row maximum as an additional predictor in all-data modeling.

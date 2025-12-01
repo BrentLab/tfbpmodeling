@@ -282,7 +282,11 @@
 
             <details class="quote">
               <summary>Source code in <code>tfbpmodeling/interface.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">403</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
 <span class="normal">404</span>
 <span class="normal">405</span>
 <span class="normal">406</span>
@@ -363,9 +367,7 @@
 <span class="normal">481</span>
 <span class="normal">482</span>
 <span class="normal">483</span>
-<span class="normal">484</span>
-<span class="normal">485</span>
-<span class="normal">486</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">common_modeling_input_arguments</span><span class="p">(</span>
+<span class="normal">484</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">common_modeling_input_arguments</span><span class="p">(</span>
     <span class="n">parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">_ArgumentGroup</span><span class="p">,</span> <span class="n">top_n_default</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">600</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add common input arguments for modeling commands.&quot;&quot;&quot;</span>
@@ -435,9 +437,11 @@
         <span class="s2">&quot;--scale_by_std&quot;</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Set this to center and scale the model matrix. Note that setting this &quot;</span>
-            <span class="s2">&quot;will set the `fit_intercept` parameter of the LassoCV estimator to &quot;</span>
-            <span class="s2">&quot;False.&quot;</span>
+            <span class="s2">&quot;Set this to scale the model matrix by standard deviation&quot;</span>
+            <span class="s2">&quot;(without centering). The data is scaled using&quot;</span>
+            <span class="s2">&quot;StandardScaler(with_mean=False, with_std=True). The estimator will&quot;</span>
+            <span class="s2">&quot;still fit an intercept (fit_intercept=True) since the &quot;</span>
+            <span class="s2">&quot;data is not centered.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -789,11 +793,7 @@
 <span class="normal">324</span>
 <span class="normal">325</span>
 <span class="normal">326</span>
-<span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<span class="normal">327</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">linear_perturbation_binding_modeling</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param args: Command-line arguments containing input file paths and parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -831,10 +831,6 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output subdirectory created at </span><span class="si">{</span><span class="n">output_subdir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># instantiate a estimator</span>
-    <span class="c1"># `fit_intercept` is set opposite of `scale_by_std`. If `scale_by_std` is `False`,</span>
-    <span class="c1"># the default, then `fit_intercept` is set to True and the estimator will fit the</span>
-    <span class="c1"># intercept. If `scale_by_std` is True, then the estimator will not fit the</span>
-    <span class="c1"># intercept, meaning it assumes the data is centered.</span>
     <span class="n">estimator</span> <span class="o">=</span> <span class="n">LassoCV</span><span class="p">(</span>
         <span class="n">fit_intercept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">selection</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>

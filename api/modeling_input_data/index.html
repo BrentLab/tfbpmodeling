@@ -822,7 +822,8 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 
             <details class="quote">
               <summary>Source code in <code>tfbpmodeling/modeling_input_data.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">440</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
+<span class="normal">440</span>
 <span class="normal">441</span>
 <span class="normal">442</span>
 <span class="normal">443</span>
@@ -874,8 +875,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <span class="normal">489</span>
 <span class="normal">490</span>
 <span class="normal">491</span>
-<span class="normal">492</span>
-<span class="normal">493</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_files</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">response_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -991,7 +991,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 )
               –
               <div class="doc-md-description">
-                <p>If <code>drop_intercept</code> is True, "-1" will be appended to the formula string. This will drop the intercept (constant) term from the model matrix output by patsy.dmatrix. Default is <code>False</code>. Note that if this is <code>False</code>, but <code>scale_by_std</code> is <code>True</code>, then the StandardScaler <code>with_mean = False</code> and the data is only scaled, not centered.</p>
+                <p>If <code>drop_intercept</code> is True, "-1" will be appended to the formula string. This will drop the intercept (constant) term from the model matrix output by patsy.dmatrix. Default is <code>False</code>.</p>
               </div>
             </li>
             <li>
@@ -1001,7 +1001,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 )
               –
               <div class="doc-md-description">
-                <p>If True, apply sklearn StandardScaler after design matrix creation.</p>
+                <p>If True, scale the design matrix by standard deviation using StandardScaler(with_mean=False, with_std=True). The data is NOT centered, so the estimator should still fit an intercept (fit_intercept=True).</p>
               </div>
             </li>
         </ul>
@@ -1128,8 +1128,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_modeling_data</span><span class="p">(</span>
+<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_modeling_data</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">add_row_max</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1143,12 +1142,11 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <span class="sd">    :param add_row_max: Whether to add a row-wise max feature to the predictors.</span>
 <span class="sd">    :param drop_intercept: If `drop_intercept` is True, &quot;-1&quot; will be appended to</span>
 <span class="sd">        the formula string. This will drop the intercept (constant) term from</span>
-<span class="sd">        the model matrix output by patsy.dmatrix. Default is `False`. Note</span>
-<span class="sd">        that if this is `False`, but `scale_by_std` is `True`, then the</span>
-<span class="sd">        StandardScaler `with_mean = False` and the data is only scaled,</span>
-<span class="sd">        not centered.</span>
-<span class="sd">    :param scale_by_std: If True, apply sklearn StandardScaler after design matrix</span>
-<span class="sd">        creation.</span>
+<span class="sd">        the model matrix output by patsy.dmatrix. Default is `False`.</span>
+<span class="sd">    :param scale_by_std: If True, scale the design matrix by standard deviation</span>
+<span class="sd">        using StandardScaler(with_mean=False, with_std=True). The data is NOT</span>
+<span class="sd">        centered, so the estimator should still fit an intercept</span>
+<span class="sd">        (fit_intercept=True).</span>
 <span class="sd">    :return: The design matrix for modeling. self.response_df can be used for the</span>
 <span class="sd">        response variable.</span>
 
