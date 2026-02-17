@@ -45,7 +45,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
     --add_model_variables "batch_id,plate_position,extraction_date" \
-    --exclude_model_variable "batch_id,technical_replicate"
+    --exclude_model_variables "batch_id,technical_replicate"
 ```
 
 ### Row-wise Features

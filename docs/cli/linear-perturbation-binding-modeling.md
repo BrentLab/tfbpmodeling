@@ -139,10 +139,10 @@ Include perturbed transcription factor main effect in modeling formula.
 - **Default**: False
 - **Description**: Adds the pTF binding value as a direct predictor
 
-#### `--exclude_model_variable exclude_model_variable`
+#### `--exclude_model_variables exclude_model_variable`
 Comma-separated list of variables to exclude from interaction terms.
 - **Format**: `var1,var2,var3` or `exclude_all`
-- **Example**: `--exclude_model_variable "red_median,green_median"`
+- **Example**: `--exclude_model_variables "red_median,green_median"`
 
 #### `--add_model_variables ADD_MODEL_VARIABLES`
 Comma-separated list of additional variables for all-data modeling.
@@ -289,7 +289,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
     --cubic_pTF \
     --ptf_main_effect \
     --add_model_variables "red_median" \
-    --exclude_model_variable "red_median" \
+    --exclude_model_variables "red_median" \
     --normalize_sample_weights \
     --scale_by_std \
     --bins "0,5,10,15,np.inf"

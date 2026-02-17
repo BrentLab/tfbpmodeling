@@ -162,7 +162,7 @@ poetry run python -m tfbpmodeling linear_perturbation_binding_modeling \
     --random_state 12345 \
     --row_max \
     --cubic_pTF \
-    --exclude_model_variable "red_median" \
+    --exclude_model_variables "red_median" \
     --add_model_variables "red_median" \
     --bins "0,5,10,15,np.inf" \
     --normalize_sample_weights \

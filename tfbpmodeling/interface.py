@@ -98,9 +98,9 @@ def linear_perturbation_binding_modeling(args):
     # extract a list of predictor variables, which are the columns of the predictors_df
     predictor_variables = input_data.predictors_df.columns.drop(input_data.perturbed_tf)
 
-    # drop any variables which are in args.exclude_model_variable
+    # drop any variables which are in args.exclude_model_variables
     predictor_variables = exclude_predictor_variables(
-        list(predictor_variables), args.exclude_model_variable
+        list(predictor_variables), args.exclude_model_variables
     )
 
     # create a list of interactor terms with the perturbed_tf as the first term

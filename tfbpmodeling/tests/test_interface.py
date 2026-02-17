@@ -126,7 +126,7 @@ def make_args(tmp_path):
         row_max=False,
         squared_pTF=False,
         cubic_pTF=False,
-        exclude_model_variable=[],
+        exclude_model_variables=[],
         add_model_variables=[],
         ptf_main_effect=False,
         # CI & iteration
