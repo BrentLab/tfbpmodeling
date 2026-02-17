@@ -167,12 +167,16 @@ Exclude specific genes or features:
 echo -e "YBR999W\nYCR888X\ncontrol_gene" > blacklist.txt
 
 # Run analysis with exclusions
+# note that we are excluding base_expression from the automatically
+# generated interaction terms in the model formula. However, we are adding
+# it back in as a main effect in the model with --add_model_variables
 python -m tfbpmodeling linear_perturbation_binding_modeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
     --blacklist_file blacklist.txt \
-    --exclude_interactor_variables "batch_effect,technical_replicate"
+    --exclude_model_variables "base_expression"
+    --add_model_variables "base_expression"
 ```
 
 ## Example Workflow
