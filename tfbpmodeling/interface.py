@@ -557,7 +557,7 @@ def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
         type=parse_comma_separated_list,
         default=[],
         help=(
-            "Comma-separated list of variables to exclude from the automatic"
+            "Comma-separated list of variables to exclude from the automatic "
             "formula generation. E.g. red_median,green_median. "
             "To exclude all variables, use 'exclude_all'. If you want to exclude a "
             "variable from the interaction terms, but include it as a main effect, "
