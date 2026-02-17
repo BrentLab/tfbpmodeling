@@ -139,8 +139,8 @@ Include perturbed transcription factor main effect in modeling formula.
 - **Default**: False
 - **Description**: Adds the pTF binding value as a direct predictor
 
-#### `--exclude_model_variables exclude_model_variable`
-Comma-separated list of variables to exclude from interaction terms.
+#### `--exclude_model_variables EXCLUDE_MODEL_VARIABLES`
+Comma-separated list of variables to exclude from automatic formula generation (main effects and interactions); main effects can be added back with `--add_model_variables`.
 - **Format**: `var1,var2,var3` or `exclude_all`
 - **Example**: `--exclude_model_variables "red_median,green_median"`
 
