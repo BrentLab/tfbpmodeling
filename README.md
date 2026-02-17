@@ -83,11 +83,11 @@ This command executes a sequential 4-stage workflow:
 - `--squared_pTF`: Include squared perturbed TF term
 - `--cubic_pTF`: Include cubic perturbed TF term
 - `--ptf_main_effect`: Include perturbed TF main effect
-- `--exclude_model_variable`: comma separated list of column names from the input
+- `--exclude_model_variables`: comma separated list of column names from the input
   predictor data to exclude from the automatic generation of model variables. Eg,
   if you add a column "base_expression" to the predictor data, you can exclude it
   from the automatic generation of interaction terms by including
-  `--exclude_model_variable base_expression`. To add "base_expression" as a model
+  `--exclude_model_variables base_expression`. To add "base_expression" as a model
   variable, you would include `--add_model_variables base_expression`.
 - `--add_model_variables`: A comma separated list of variables to add to the
   model. These must be valid methods of specifying model variables from the
