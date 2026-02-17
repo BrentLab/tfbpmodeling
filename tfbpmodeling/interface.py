@@ -561,7 +561,7 @@ def common_modeling_feature_options(parser: argparse._ArgumentGroup) -> None:
             "formula generation. E.g. red_median,green_median. "
             "To exclude all variables, use 'exclude_all'. If you want to exclude a "
             "variable from the interaction terms, but include it as a main effect, "
-            "you can exclude it with this flag and then add it back in with"
+            "you can exclude it with this flag and then add it back in with "
             "--add_model_variables"
         ),
     )
