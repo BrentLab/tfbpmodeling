@@ -175,7 +175,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
     --blacklist_file blacklist.txt \
-    --exclude_model_variables "base_expression"
+    --exclude_model_variables "base_expression" \
     --add_model_variables "base_expression"
 ```
 
