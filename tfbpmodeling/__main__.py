@@ -3,7 +3,7 @@ import logging
 import time
 from typing import Literal
 
-from configure_logger import LogLevel, configure_logger
+from tfbpmodeling.configure_logger import LogLevel, configure_logger
 from tfbpmodeling.interface import (
     CustomHelpFormatter,
     add_general_arguments_to_subparsers,
