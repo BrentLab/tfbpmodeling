@@ -42,7 +42,7 @@ def configure_logger(
     :param name: Name of the logger
     :type name: str
     :param level: Logging level, must be one of logging.DEBUG,
-        logging.INFO, logging.WARNING, logging.ERROR
+        logging.INFO, logging.WARNING, logging.ERROR, logging.CRITICAL
     :type level: int
     :param format: Logging format
     :type format: str
@@ -65,7 +65,13 @@ def configure_logger(
         raise ValueError("name must be a string")
     if not isinstance(level, int):
         raise ValueError("level must be an integer")
-    if level not in [logging.DEBUG, logging.INFO, logging.WARNING, logging.ERROR]:
+    if level not in [
+        logging.DEBUG,
+        logging.INFO,
+        logging.WARNING,
+        logging.ERROR,
+        logging.CRITICAL,
+    ]:
         raise ValueError("Invalid logging level")
     if not isinstance(format, str):
         raise ValueError("format must be a string")

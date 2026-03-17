@@ -375,7 +375,9 @@ def tfbpmodeling(args):
 
         # Build the formula; union ensures no duplicates if a main-effect term
         # is already present among the surviving interactor keys
-        stage3_terms = list(set(topn_output_res.keys()) | mtf_main_effects)
+        stage3_terms = list(topn_output_res.keys()) + sorted(
+            mtf_main_effects - set(topn_output_res.keys())
+        )
         stage3_formula = " + ".join(stage3_terms)
 
         logger.debug(f"Formula: {stage3_formula}")
@@ -845,7 +847,7 @@ def main() -> None:
         parser.print_help()
         return
 
-    _ = configure_logging(log_level)
+    _ = configure_logging(log_level, handler_type=args.log_handler)
 
     tfbpmodeling(args)
 
