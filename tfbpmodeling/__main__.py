@@ -95,7 +95,7 @@ def tfbpmodeling(args):
     estimator = LassoCV(
         fit_intercept=True,
         selection="random",
-        n_alphas=100,
+        alphas=100,
         random_state=42,
         n_jobs=args.n_cpus,
         max_iter=max_iter,
