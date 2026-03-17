@@ -224,7 +224,7 @@ def tfbpmodeling(args):
         logger.info(f"all_data_sig_coefs: {all_data_sig_coefs}")
 
         if not all_data_sig_coefs:
-            logger.warning(
+            logger.info(
                 f"No significant coefficients found at {args.all_data_ci_level}% "
                 "confidence level. Exiting."
             )
@@ -334,7 +334,7 @@ def tfbpmodeling(args):
     logger.info(f"topn_output_res: {topn_output_res}")
 
     if not topn_output_res:
-        logger.warning(
+        logger.info(
             f"No significant coefficients found at {args.topn_ci_level}% "
             "confidence level. Exiting."
         )
