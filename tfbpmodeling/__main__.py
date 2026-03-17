@@ -373,8 +373,9 @@ def tfbpmodeling(args):
             if ptf == input_data.perturbed_tf:
                 mtf_main_effects.add(mtf)
 
-        # Build the formula
-        stage3_terms = list(topn_output_res.keys()) + list(mtf_main_effects)
+        # Build the formula; union ensures no duplicates if a main-effect term
+        # is already present among the surviving interactor keys
+        stage3_terms = list(set(topn_output_res.keys()) | mtf_main_effects)
         stage3_formula = " + ".join(stage3_terms)
 
         logger.debug(f"Formula: {stage3_formula}")

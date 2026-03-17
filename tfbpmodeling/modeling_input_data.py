@@ -106,6 +106,10 @@ class ModelingInputData:
         response_df = self._response_df.copy()
 
         # Always drop blacklisted features
+        # NOTE: this was updated by zolboo 202603 and the comment is inconsistent with
+        # the code in a way that I'm not quite certain of. This conditionally drops
+        # the blacklisted features if the blacklist_masked flag is True. This needs
+        # to be monitored int he logs to ensure that the behavior is correct
         if self.blacklist_masked:
             response_df = response_df.loc[
                 # Use intersection to ensure we only try to drop what exists
