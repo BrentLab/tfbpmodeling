@@ -32,20 +32,6 @@ Executes the complete TFBP modeling workflow:
 
 ## Data Flow
 
-```mermaid
-graph TD
-    A[CLI Arguments] --> B[Input Validation]
-    B --> C[ModelingInputData]
-    C --> D[BootstrappedModelingInputData]
-    D --> E[bootstrap_stratified_cv_modeling\nStage 1]
-    E --> F[stratified_cv_modeling\nbest all-data model]
-    F --> G[bootstrap_stratified_cv_modeling\nStage 2 — top-n]
-    G --> H{stage3_lassocv?}
-    H -- yes --> I[evaluate_interactor_significance_lassocv]
-    H -- no --> J[evaluate_interactor_significance_linear\nor lassocv]
-    I --> J
-    J --> K[Results Output]
-```
 
 ## Programmatic Usage
 
