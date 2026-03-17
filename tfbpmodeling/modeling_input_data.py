@@ -33,7 +33,7 @@ class ModelingInputData:
         feature_col: str = "target_symbol",
         feature_blacklist: list[str] | None = None,
         top_n: int | None = None,
-        stage2_set_zero: bool = False, 
+        stage2_set_zero: bool = False,
     ):
         """
         Initialize ModelingInputData with response and predictor matrices. Note that the
@@ -115,14 +115,14 @@ class ModelingInputData:
         # Handle Top-N logic
         if self.top_n_masked and self.top_n_features:
             if self.stage2_set_zero:
-                # DO NOTHING to the values. 
-                # Because we didn't use .loc[self.top_n_features], 
+                # DO NOTHING to the values.
+                # Because we didn't use .loc[self.top_n_features],
                 # all rows remain with their original LRR values.
                 pass
             else:
                 # Original behavior: Drop the rows to match the filtered predictors
                 response_df = response_df.loc[self.top_n_features]
-        
+
         # Always ensure the response order matches the predictors order
         response_df = response_df.reindex(self.predictors_df.index)
 
@@ -186,7 +186,7 @@ class ModelingInputData:
             if self.stage2_set_zero:
                 # Set all rows NOT in top_n_features to 0.0
                 mask = ~predictors_df.index.isin(self.top_n_features)
-                predictors_df.loc[mask, :] = 0.0 
+                predictors_df.loc[mask, :] = 0.0
             else:
                 # Original behavior: Drop the rows entirely
                 predictors_df = predictors_df.loc[self.top_n_features, :]
