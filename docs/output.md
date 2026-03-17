@@ -14,11 +14,14 @@ Results are saved in a subdirectory within your specified `--output_dir`:
 ├── topn_result_object/
 │   ├── result_obj_ci.json
 │   └── result_obj_coefs_alphas.pkl
+├── stage3_lassocv_bootstrap_result_object/   # only if --stage3_lassocv_bootstrap
+│   ├── result_obj_ci.json
+│   └── result_obj_coefs_alphas.pkl
 ├── all_data_significant_{ci_level}.json
 ├── topn_significant_{ci_level}.json
-├── stage3_lassocv_significant_{ci_level}.json   # only if --stage3_lassocv
+├── stage3_lassocv_bootstrap_significant_{ci_level}.json   # only if --stage3_lassocv_bootstrap
 ├── best_all_data_model.pkl
-└── interactor_vs_main_result.json
+└── stage3_lassocv_significance_results.json
 ```
 
 ### Directory Naming
@@ -265,16 +268,16 @@ Significant coefficients from top-N modeling at the specified confidence level.
 - Represents high-confidence predictors on high-signal genes
 - These are the features evaluated in Stage 3 - Lasso (interactor significance)
 
-## Stage 3 - LassoCV (optional): Refit Results
+## Stage 3 - LassoCV Bootstrap (optional): Refit Results
 
-### `stage3_lassocv_significant_{ci_level}.json`
+### `stage3_lassocv_bootstrap_significant_{ci_level}.json`
 
-Only produced when `--stage3_lassocv` is passed. Contains significant coefficients from the
+Only produced when `--stage3_lassocv_bootstrap` is passed. Contains significant coefficients from the
 optional refit of surviving interactors together with their independent main effects, using
 the same bootstrap LassoCV protocol as Stage 1 on all data.
 
 **Filename examples:**
-- `stage3_lassocv_significant_98-0.json` (for `--all_data_ci_level 98.0`)
+- `stage3_lassocv_bootstrap_significant_98-0.json` (for `--all_data_ci_level 98.0`)
 
 **Format:** Same as `all_data_significant_{ci_level}.json`
 
@@ -284,7 +287,7 @@ the same bootstrap LassoCV protocol as Stage 1 on all data.
 
 ## Stage 3 - Lasso: Interactor Significance Results
 
-### `interactor_vs_main_result.json`
+### `stage3_lassocv_significance_results.json`
 
 Statistical comparison between interaction terms and their corresponding main effects.
 
@@ -342,8 +345,8 @@ with open('file.json', 'r') as f:
 - `result_obj_ci.json` - Nested dictionaries with confidence intervals
 - `all_data_significant_{ci}.json` - Dictionary of significant coefficients
 - `topn_significant_{ci}.json` - Dictionary of significant coefficients
-- `stage3_lassocv_significant_{ci}.json` - Dictionary of significant coefficients (optional)
-- `interactor_vs_main_result.json` - List of evaluation dictionaries
+- `stage3_lassocv_bootstrap_significant_{ci}.json` - Dictionary of significant coefficients (optional)
+- `stage3_lassocv_significance_results.json` - List of evaluation dictionaries
 
 ### Pickle Files
 

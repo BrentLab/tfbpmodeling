@@ -29,7 +29,7 @@ Bootstrap LassoCV on the top-N data subset (genes ranked by perturbed TF binding
 
 Tests each surviving interactor term against its corresponding main effect to determine whether the interaction provides genuine predictive value beyond the main effect alone.
 
-##### Stage 3 - LassoCV (`--stage3_lassocv`, optional)
+##### Stage 3 - LassoCV Bootstrap (`--stage3_lassocv_bootstrap`, optional)
 
 Before the significance test, refits the surviving interactors together with their independent main effects on all data using the same bootstrap LassoCV protocol as Stage 1. Use this when you want a regularized refit of the surviving terms before testing.
 

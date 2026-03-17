@@ -45,7 +45,7 @@ which runs the full sequential workflow:
   best all-data model on the significant predictors
 - **Stage 2**: Bootstrap LassoCV on the top-N data subset using Stage 1's significant
   predictors
-- **Stage 3 - LassoCV** (optional, `--stage3_lassocv`): Refits surviving interactors
+- **Stage 3 - LassoCV Bootstrap** (optional, `--stage3_lassocv_bootstrap`): Refits surviving interactors
   with their independent main effects on all data using the Stage 1 protocol
 - **Stage 3 - Lasso** (always runs): Tests significance of each surviving interactor
   term against its corresponding main effect

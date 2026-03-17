@@ -139,7 +139,7 @@ def make_args(tmp_path):
         stage3_lasso_topn=False,
         stage2_set_zero=False,
         skip_1st_stage=False,
-        stage3_lassocv=False,
+        stage3_lassocv_bootstrap=False,
         # system
         n_cpus=1,
         output_dir=str(tmp_path / "out_dir"),
@@ -147,17 +147,17 @@ def make_args(tmp_path):
     )
 
 
-def test_stage3_lassocv(caplog, tmp_path):
+def test_stage3_lassocv_bootstrap(caplog, tmp_path):
     caplog.set_level(logging.INFO)
     args = make_args(tmp_path)
-    args.stage3_lassocv = True
+    args.stage3_lassocv_bootstrap = True
     iface.tfbpmodeling(args)
 
     assert (
-        "Stage 3 - LassoCV: Refit with surviving interactors and their main effects"
-        in caplog.text
+        "Stage 3 - LassoCV Bootstrap: Refit with surviving "
+        "interactors and their main effects" in caplog.text
     )
-    assert "stage3_lassocv" in caplog.text
+    assert "stage3_lassocv_bootstrap" in caplog.text
 
 
 def test_linear_workflow_logs(caplog, tmp_path):

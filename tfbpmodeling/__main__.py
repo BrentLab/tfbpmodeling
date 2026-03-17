@@ -349,11 +349,13 @@ def tfbpmodeling(args):
     with open(topn_output_file, "w") as f:
         json.dump(topn_output_res, f, indent=4)
 
-    # Stage 3 - LassoCV (optional): refit surviving interactors with their main effects
-    # on all data, using the same bootstrap LassoCV protocol as Stage 1.
-    if args.stage3_lassocv:
+    # Stage 3 - LassoCV Bootstrap (optional): refit surviving interactors
+    # with their main effects on all data, using the same bootstrap LassoCV
+    # protocol as Stage 1.
+    if args.stage3_lassocv_bootstrap:
         logger.info(
-            "Stage 3 - LassoCV: Refit with surviving interactors and their main effects"
+            "Stage 3 - LassoCV Bootstrap: Refit with surviving interactors "
+            "and their main effects"
         )
 
         # unmask data
@@ -397,13 +399,14 @@ def tfbpmodeling(args):
         )
 
         logger.info(
-            f"Stage 3 - LassoCV: Refitting surviving interactors with main effects "
-            f"on all data ({args.n_bootstraps} bootstraps)"
+            f"Stage 3 - LassoCV Bootstrap: Refitting surviving "
+            "interactors with main effects on all data "
+            f"({args.n_bootstraps} bootstraps)"
         )
 
         # Run bootstrap LassoCV using Stage 1 configuration
         if args.iterative_dropout:
-            stage3_results = bootstrap_stratified_cv_loop(
+            stage3_lassocv_bootstrap_results = bootstrap_stratified_cv_loop(
                 bootstrapped_data=bootstrapped_data_stage3,
                 perturbed_tf_series=input_data.predictors_df[input_data.perturbed_tf],
                 estimator=estimator,
@@ -413,7 +416,7 @@ def tfbpmodeling(args):
                 output_dir=output_subdir,
             )
         else:
-            stage3_results = bootstrap_stratified_cv_modeling(
+            stage3_lassocv_bootstrap_results = bootstrap_stratified_cv_modeling(
                 bootstrapped_data=bootstrapped_data_stage3,
                 perturbed_tf_series=input_data.predictors_df[input_data.perturbed_tf],
                 estimator=estimator,
@@ -422,25 +425,36 @@ def tfbpmodeling(args):
             )
 
         # Serialize and save results
-        stage3_output_dir = os.path.join(output_subdir, "stage3_result_object")
-        os.makedirs(stage3_output_dir, exist_ok=True)
-        stage3_results.serialize("result_obj", stage3_output_dir)
+        stage3_lassocv_bootstrap_output_dir = os.path.join(
+            output_subdir, "stage3_lassocv_bootstrap_result_object"
+        )
+        os.makedirs(stage3_lassocv_bootstrap_output_dir, exist_ok=True)
+        stage3_lassocv_bootstrap_results.serialize(
+            "result_obj", stage3_lassocv_bootstrap_output_dir
+        )
 
-        stage3_sig_coefs = stage3_results.extract_significant_coefficients(
-            ci_level=args.all_data_ci_level,
+        stage3_lassocv_bootstrap_sig_coefs = (
+            stage3_lassocv_bootstrap_results.extract_significant_coefficients(
+                ci_level=args.all_data_ci_level,
+            )
         )
 
         stage3_ci_str = str(args.all_data_ci_level).replace(".", "-")
         stage3_output_file = os.path.join(
             output_subdir,
-            f"stage3_lassocv_significant_{stage3_ci_str}.json",
+            f"stage3_lassocv_bootstrap_significant_{stage3_ci_str}.json",
         )
+
         logger.info(
-            f"Stage 3 - LassoCV: Writing significant results to {stage3_output_file}"
+            "Stage 3 - LassoCV Bootstrap: "
+            f"Writing significant results to {stage3_output_file}"
         )
         with open(stage3_output_file, "w") as f:
-            json.dump(stage3_sig_coefs, f, indent=4)
+            json.dump(stage3_lassocv_bootstrap_sig_coefs, f, indent=4)
 
+    # This is the Stage 3 before the Stage3 lassocv bootstrap variant was added
+    # it may or may not be replaced entirely, but is kept here for now.
+    # this runs LassoCV on the surviving terms from Stage2 plus the main effects
     logger.info(
         "Stage 3 - Lasso: Test significance of surviving interactor terms "
         "against their corresponding main effects"
@@ -468,16 +482,12 @@ def tfbpmodeling(args):
     results = evaluate_interactor_significance(
         input_data,
         stratification_classes=stage3_classes,
-        model_variables=list(
-            topn_results.extract_significant_coefficients(
-                ci_level=args.topn_ci_level
-            ).keys()
-        ),
+        model_variables=list(topn_output_res.keys()),
         estimator=estimator,
     )
 
     output_significance_file = os.path.join(
-        output_subdir, "interactor_vs_main_result.json"
+        output_subdir, "stage3_lassocv_significance_results.json"
     )
     logger.info(
         "Writing the final interactor significance "
@@ -547,7 +557,7 @@ def main() -> None:
             "then extracts the significant predictors and does the same thing on "
             "the `top n` data (Stage 2). Finally it evaluates the surviving "
             "interactor terms against the corresponding main effect "
-            "(Stage 3 - Lasso). Optionally, Stage 3 - LassoCV "
+            "(Stage 3 - Lasso). Optionally, Stage 3 - LassoCV Bootstrap "
             "refits the surviving interactors with their main effects before "
             "the final test."
         ),
@@ -768,13 +778,14 @@ def main() -> None:
         help="Starting confidence interval for iterative dropout stabilization",
     )
     parameters_group.add_argument(
-        "--stage3_lassocv",
+        "--stage3_lassocv_bootstrap",
         action="store_true",
         help=(
-            "Run an optional Stage 3 - LassoCV step: refit surviving interactors and "
-            "their independent main effects on all data using the same "
-            "bootstrap LassoCV protocol as Stage 1. This runs in addition to "
-            "the always-present Stage 3 - Lasso significance test."
+            "Run an optional Stage 3 - LassoCV Bootstrap step: refit"
+            "surviving interactors and their independent main effects on all "
+            "data using the same  bootstrap LassoCV protocol as Stage 1. "
+            "This runs in addition to the always-present Stage 3 - "
+            "Lasso significance test."
         ),
     )
     parameters_group.add_argument(

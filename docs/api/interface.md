@@ -23,7 +23,7 @@ Executes the complete TFBP modeling workflow:
 1. **Stage 0 — Preprocessing**: Load and validate input files
 2. **Stage 1 — All Data Modeling**: Bootstrap LassoCV on the complete dataset; fit best all-data model on significant predictors
 3. **Stage 2 — Top-N Modeling**: Bootstrap LassoCV on top-N data subset using Stage 1 significant predictors
-4. **Stage 3 - LassoCV** *(optional)*: Refit surviving interactors with their main effects on all data
+4. **Stage 3 - LassoCV Bootstrap** *(optional)*: Refit surviving interactors with their main effects on all data
 5. **Stage 3 - Lasso**: Test significance of each surviving interactor against its main effect
 
 **Parameters**: `args` — `argparse.Namespace` containing all configuration options (see CLI reference)
@@ -64,7 +64,7 @@ args = argparse.Namespace(
     add_model_variables=[],
     iterative_dropout=False,
     stabilization_ci_start=50.0,
-    stage3_lassocv=False,
+    stage3_lassocv_bootstrap=False,
     stage3_lasso=False,
     stage3_lasso_topn=False,
 )
