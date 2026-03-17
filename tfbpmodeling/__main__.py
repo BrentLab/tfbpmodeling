@@ -717,7 +717,7 @@ def main() -> None:
     binning_group.add_argument(
         "--bins",
         type=parse_bins,
-        default="0,8,64,512,np.inf",
+        default=parse_bins("0,8,64,512,np.inf"),
         help=(
             "Comma-separated list of bin edges (integers or 'np.inf'). "
             "Default is --bins 0,8,64,512,np.inf"
@@ -805,7 +805,7 @@ def main() -> None:
     output_group.add_argument(
         "--output_dir",
         type=str,
-        default="./linear_perturbation_binding_modeling_results",
+        default="./tfbpmodeling_results",
         help=(
             "Directory where model results will be saved. A new subdirectory "
             "is created per run."

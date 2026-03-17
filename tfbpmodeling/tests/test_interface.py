@@ -1,4 +1,4 @@
-# tfbpmodeling/tests/test_main.py
+# tfbpmodeling/tests/test_interface.py
 
 import logging
 import os
