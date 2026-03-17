@@ -305,7 +305,7 @@ def tfbpmodeling(args):
         n_bootstraps=args.n_bootstraps,
         normalize_sample_weights=args.normalize_sample_weights,
         random_state=(
-            args.random_state + 10 if args.random_state else args.random_state
+            args.random_state + 10 if args.random_state is not None else None
         ),
     )
 
