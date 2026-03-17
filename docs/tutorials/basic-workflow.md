@@ -72,7 +72,7 @@ print(f"Predictor data: {predictor_data.shape}")
 Start with the simplest possible command:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file tutorial_expression.csv \
     --predictors_file tutorial_binding.csv \
     --perturbed_tf YPD1
@@ -82,7 +82,7 @@ This command will:
 - Use 1000 bootstrap samples
 - Apply 98% confidence interval for feature selection
 - Process top 600 features in second round
-- Save results to `./linear_perturbation_binding_modeling_results/YPD1_{timestamp}/`
+- Save results to `./tfbpmodeling_results/YPD1_{timestamp}/`
 
 ### Monitor Progress
 
@@ -101,7 +101,7 @@ The command provides real-time progress information:
 2024-01-15 14:32:15 - INFO - Starting Stage 2: Top-N modeling
 2024-01-15 14:33:45 - INFO - Stage 2 complete. Refined features: 78
 2024-01-15 14:33:45 - INFO - Starting Stage 3: Interactor significance testing
-2024-01-15 14:34:20 - INFO - Analysis complete. Results saved to: ./linear_perturbation_binding_modeling_results/YPD1_20240115_143022/
+2024-01-15 14:34:20 - INFO - Analysis complete. Results saved to: ./tfbpmodeling_results/YPD1_20240115_143022/
 ```
 
 ## Step 2: Understanding Results
@@ -111,7 +111,7 @@ The command provides real-time progress information:
 After completion, examine the results directory:
 
 ```bash
-ls -la linear_perturbation_binding_modeling_results/YPD1_*/
+ls -la tfbpmodeling_results/YPD1_*/
 ```
 
 ```
@@ -222,7 +222,7 @@ From our results:
 For more robust results, increase bootstrap samples:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file tutorial_expression.csv \
     --predictors_file tutorial_binding.csv \
     --perturbed_tf YPD1 \
@@ -235,7 +235,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 For more sensitive detection, lower confidence thresholds:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file tutorial_expression.csv \
     --predictors_file tutorial_binding.csv \
     --perturbed_tf YPD1 \
@@ -249,7 +249,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 Include polynomial terms for non-linear relationships:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file tutorial_expression.csv \
     --predictors_file tutorial_binding.csv \
     --perturbed_tf YPD1 \
@@ -264,7 +264,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 For reproducible results, set random seed:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file tutorial_expression.csv \
     --predictors_file tutorial_binding.csv \
     --perturbed_tf YPD1 \
@@ -334,7 +334,7 @@ plt.show()
 
 - **[Advanced Features Tutorial](advanced-features.md)**: Feature engineering and model tuning
 - **[Input Formats Guide](input-formats.md)**: Detailed data preparation instructions
-- **[CLI Reference](../cli/linear-perturbation-binding-modeling.md)**: Complete parameter documentation
+- Run `python -m tfbpmodeling --help` for a full list of options
 
 ### Common Issues
 

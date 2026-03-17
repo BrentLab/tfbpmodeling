@@ -51,7 +51,7 @@ YCR456X,0.12,0.78,0.34,0.90
 Run a basic analysis with default parameters:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1
@@ -63,12 +63,12 @@ This command will:
 - Apply 98% confidence interval for initial feature selection
 - Use 90% confidence interval for second-round modeling
 - Process top 600 features in the second round
-- Save results to `./linear_perturbation_binding_modeling_results/YPD1/`
+- Save results to `./tfbpmodeling_results/YPD1/`
 
 ### With Custom Parameters
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -133,7 +133,7 @@ Overall model performance metrics:
 Add polynomial terms and custom variables:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -149,7 +149,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 Control data preprocessing:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -170,7 +170,7 @@ echo -e "YBR999W\nYCR888X\ncontrol_gene" > blacklist.txt
 # note that we are excluding base_expression from the automatically
 # generated interaction terms in the model formula. However, we are adding
 # it back in as a main effect in the model with --add_model_variables
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -194,7 +194,7 @@ mkdir -p example_data
 
 ### 2. Run Basic Analysis
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file example_data/expression.csv \
     --predictors_file example_data/binding.csv \
     --perturbed_tf YPD1 \
@@ -205,7 +205,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 
 ### 3. Run Advanced Analysis
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file example_data/expression.csv \
     --predictors_file example_data/binding.csv \
     --perturbed_tf YPD1 \
@@ -213,7 +213,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
     --squared_pTF \
     --ptf_main_effect \
     --iterative_dropout \
-    --stage4_lasso \
+    --stage3_lasso \
     --random_state 12345 \
     --output_dir ./results \
     --output_suffix _advanced_analysis
@@ -227,7 +227,7 @@ ls -la results/YPD1_*_analysis_*/
 
 ## Next Steps
 
-- **[CLI Reference](../cli/overview.md)**: Complete documentation of all command-line options
+- Run `python -m tfbpmodeling --help` for a full description of all options
 - **[Tutorials](../tutorials/basic-workflow.md)**: Detailed tutorials with real examples
 - **[API Reference](../api/interface.md)**: Documentation for programmatic usage
 - **[Input Formats](../tutorials/input-formats.md)**: Detailed specifications for input data
@@ -260,4 +260,4 @@ ls -la data/expression.csv data/binding.csv
 --all_data_ci_level 90.0 --topn_ci_level 80.0
 ```
 
-For more help, see the [troubleshooting section](../development/testing.md) or open an issue on GitHub.
+For more help, open an issue on GitHub.

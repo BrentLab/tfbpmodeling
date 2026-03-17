@@ -26,8 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `poetry run mkdocs gh-deploy` - Deploy documentation to GitHub Pages
 
 ### Running the Application
-- `poetry run python -m tfbpmodeling --help` - Show main help
-- `poetry run python -m tfbpmodeling linear_perturbation_binding_modeling --help` - Show modeling command help
+- `poetry run python -m tfbpmodeling --help` - Show full help and all options
 
 ## Project Architecture
 
@@ -36,33 +35,38 @@ This package provides tools for transcription factor binding and perturbation (T
 
 ### Main Components
 
-#### Entry Point (`__main__.py`)
-- Primary CLI interface using argparse
-- Main command: `linear_perturbation_binding_modeling`
-- Configurable logging with console/file handlers
-- Extensible subcommand structure
+#### Entry Point and Workflow (`__main__.py`)
+All CLI argument definitions and the modeling workflow live in a single file. The
+`main()` function builds the argparse parser and dispatches to `tfbpmodeling(args)`,
+which runs the full sequential workflow:
 
-#### Core Workflow (`interface.py`)
-The main modeling workflow consists of 4 stages:
-1. **Preprocessing**: Data validation and preparation
-2. **Bootstrap Modeling**: LassoCV modeling with bootstrap resampling on all data
-3. **Top-N Modeling**: Secondary modeling on significant predictors from top-performing data
-4. **Interactor Significance**: Evaluation of interaction terms vs main effects
+- **Stage 0**: Preprocessing — input validation and output directory setup
+- **Stage 1**: Bootstrap LassoCV on all data with the full interactor model; fits a
+  best all-data model on the significant predictors
+- **Stage 2**: Bootstrap LassoCV on the top-N data subset using Stage 1's significant
+  predictors
+- **Stage 3 - LassoCV** (optional, `--stage3_lassocv`): Refits surviving interactors
+  with their independent main effects on all data using the Stage 1 protocol
+- **Stage 3 - Lasso** (always runs): Tests significance of each surviving interactor
+  term against its corresponding main effect
 
 #### Key Modules
 - `modeling_input_data.py` - Core data structures and preprocessing
 - `bootstrapped_input_data.py` - Bootstrap resampling functionality
 - `bootstrap_stratified_cv.py` - Cross-validation with stratification
-- `evaluate_interactor_significance_*.py` - Statistical significance testing (LassoCV and linear methods)
+- `bootstrap_stratified_cv_loop.py` - Iterative dropout variant of bootstrap CV
+- `evaluate_interactor_significance_lassocv.py` - LassoCV-based significance testing
+- `evaluate_interactor_significance_linear.py` - Linear regression significance testing
 - `stratification_classification.py` - Data stratification logic
+- `configure_logger.py` - Logger configuration utilities
 - `utils/` - Utility functions for data manipulation
 
 #### Data Flow
 1. Input files: response data (gene expression) and predictors (binding data)
 2. Data preprocessing with optional feature selection and binning
 3. Bootstrap resampling with stratified cross-validation
-4. Model fitting using LassoCV or linear regression
-5. Significance testing of interaction terms
+4. Model fitting using LassoCV
+5. Significance testing of surviving interaction terms against main effects
 6. Output generation with confidence intervals and model statistics
 
 ### Development Patterns

@@ -1,85 +1,58 @@
-# interface
+# __main__
 
-The main interface module provides the core workflow functions and command-line interface components for tfbpmodeling.
+The `__main__` module is the single entry point for the tfbpmodeling package. It contains
+the CLI argument definitions, logging setup, and the complete modeling workflow.
 
-::: tfbpmodeling.interface
+::: tfbpmodeling.__main__
 
 ## Overview
 
-The interface module serves as the primary entry point for the tfbpmodeling workflow. It contains:
+The module contains:
 
-- **Main workflow function**: `linear_perturbation_binding_modeling()`
-- **CLI helper functions**: Argument parsing utilities for the command-line interface
-- **Custom formatters**: Enhanced help formatting for better user experience
+- **`tfbpmodeling(args)`**: The main workflow function
+- **`main()`**: CLI entry point — parses arguments and calls `tfbpmodeling(args)`
+- **`configure_logging()`**: Sets up console or file logging
+- **Parse helpers**: `parse_bins`, `parse_comma_separated_list`, `parse_json_dict`
 
-## Main Functions
+## Main Workflow Function
 
-### linear_perturbation_binding_modeling
+### tfbpmodeling(args)
 
-The core function that executes the complete 4-stage TFBP modeling workflow:
+Executes the complete TFBP modeling workflow:
 
-1. **Data Preprocessing**: Load and validate input files, handle missing data
-2. **Bootstrap Modeling**: All-data analysis with bootstrap resampling and LassoCV
-3. **Top-N Modeling**: Refined analysis on significant predictors from top-performing data
-4. **Interactor Significance**: Statistical evaluation of interaction terms vs main effects
+1. **Stage 0 — Preprocessing**: Load and validate input files
+2. **Stage 1 — All Data Modeling**: Bootstrap LassoCV on the complete dataset; fit best all-data model on significant predictors
+3. **Stage 2 — Top-N Modeling**: Bootstrap LassoCV on top-N data subset using Stage 1 significant predictors
+4. **Stage 3 - LassoCV** *(optional)*: Refit surviving interactors with their main effects on all data
+5. **Stage 3 - Lasso**: Test significance of each surviving interactor against its main effect
 
-**Parameters**: Command-line arguments object containing all configuration options
+**Parameters**: `args` — `argparse.Namespace` containing all configuration options (see CLI reference)
 
 **Returns**: None (results saved to output directory)
-
-**Key Features**:
-- Comprehensive input validation
-- Automatic output directory creation with timestamps
-- Detailed logging of all processing steps
-- Error handling with informative messages
-
-### CLI Helper Functions
-
-#### common_modeling_input_arguments
-Adds standard input arguments to argument parsers:
-- File paths for response and predictor data
-- Perturbed TF specification
-- Bootstrap and sampling parameters
-
-#### common_modeling_feature_options
-Configures feature engineering options:
-- Polynomial terms (squared, cubic)
-- Row maximum inclusion
-- Custom variable additions and exclusions
-
-#### common_modeling_binning_arguments
-Sets up data stratification parameters:
-- Bin edge specifications
-- Stratification methods
-
-#### add_general_arguments_to_subparsers
-Propagates global arguments to subcommand parsers:
-- Logging configuration
-- System-wide options
 
 ## Data Flow
 
 ```mermaid
 graph TD
     A[CLI Arguments] --> B[Input Validation]
-    B --> C[Data Loading]
-    C --> D[ModelingInputData]
-    D --> E[BootstrappedModelingInputData]
-    E --> F[Bootstrap CV Loop]
-    F --> G[Top-N Selection]
-    G --> H[Interactor Significance]
-    H --> I[Results Output]
+    B --> C[ModelingInputData]
+    C --> D[BootstrappedModelingInputData]
+    D --> E[bootstrap_stratified_cv_modeling\nStage 1]
+    E --> F[stratified_cv_modeling\nbest all-data model]
+    F --> G[bootstrap_stratified_cv_modeling\nStage 2 — top-n]
+    G --> H{stage3_lassocv?}
+    H -- yes --> I[evaluate_interactor_significance_lassocv]
+    H -- no --> J[evaluate_interactor_significance_linear\nor lassocv]
+    I --> J
+    J --> K[Results Output]
 ```
 
-## Usage Examples
-
-### Programmatic Usage
+## Programmatic Usage
 
 ```python
 import argparse
-from tfbpmodeling.interface import linear_perturbation_binding_modeling
+from tfbpmodeling.__main__ import tfbpmodeling
 
-# Create arguments object
 args = argparse.Namespace(
     response_file='data/expression.csv',
     predictors_file='data/binding.csv',
@@ -92,105 +65,26 @@ args = argparse.Namespace(
     output_dir='./results',
     output_suffix='',
     n_cpus=4,
-    # ... other parameters
+    blacklist_file='',
+    normalize_sample_weights=False,
+    random_state=None,
+    scale_by_std=False,
+    bins=[0, 8, 64, float('inf')],
+    row_max=False,
+    squared_pTF=False,
+    cubic_pTF=False,
+    ptf_main_effect=False,
+    exclude_model_variables=[],
+    add_model_variables=[],
+    iterative_dropout=False,
+    stabilization_ci_start=50.0,
+    stage3_lassocv=False,
+    stage3_lasso=False,
+    stage3_lasso_topn=False,
 )
 
-# Run analysis
-linear_perturbation_binding_modeling(args)
+tfbpmodeling(args)
 ```
-
-### Custom Argument Parser
-
-```python
-import argparse
-from tfbpmodeling.interface import (
-    common_modeling_input_arguments,
-    common_modeling_feature_options,
-    CustomHelpFormatter
-)
-
-# Create custom parser
-parser = argparse.ArgumentParser(
-    formatter_class=CustomHelpFormatter,
-    description="Custom TFBP Analysis"
-)
-
-# Add standard arguments
-input_group = parser.add_argument_group("Input")
-common_modeling_input_arguments(input_group)
-
-feature_group = parser.add_argument_group("Features")
-common_modeling_feature_options(feature_group)
-
-# Parse and use
-args = parser.parse_args()
-linear_perturbation_binding_modeling(args)
-```
-
-## Error Handling
-
-The interface module includes comprehensive error handling:
-
-### Input Validation Errors
-```python
-# File existence checks
-FileNotFoundError: "File data/missing.csv does not exist."
-
-# Parameter validation
-ValueError: "The `max_iter` parameter must be a positive integer."
-
-# Data format validation
-ValueError: "Perturbed TF 'INVALID' not found in response file columns"
-```
-
-### Runtime Errors
-```python
-# Convergence issues
-RuntimeWarning: "LassoCV failed to converge for 15/1000 bootstrap samples"
-
-# Insufficient data
-ValueError: "Insufficient data after filtering. Found 5 samples, minimum required: 10"
-```
-
-## Configuration Options
-
-The interface supports extensive configuration through command-line arguments:
-
-### Core Parameters
-- **Input files**: Response data, predictor data, optional blacklist
-- **TF specification**: Name of perturbed transcription factor
-- **Bootstrap settings**: Sample count, random seed, weight normalization
-
-### Feature Engineering
-- **Polynomial terms**: Squared and cubic pTF terms
-- **Additional predictors**: Row max, custom variables
-- **Interaction control**: Variable exclusions, main effects
-
-### Model Configuration
-- **Confidence intervals**: Separate thresholds for each stage
-- **Convergence**: Maximum iterations, dropout options
-- **Performance**: CPU cores, memory management
-
-### Output Control
-- **Directory structure**: Base directory, custom suffixes
-- **Logging**: Verbosity levels, file vs console output
-
-## Performance Considerations
-
-### Memory Management
-- Bootstrap samples stored efficiently using sparse representations
-- Automatic garbage collection between stages
-- Memory usage monitoring and warnings
-
-### Parallel Processing
-- LassoCV uses specified CPU cores for cross-validation
-- Bootstrap samples processed in batches
-- I/O operations optimized for large datasets
-
-### Runtime Optimization
-- Early stopping for non-convergent models
-- Adaptive batch sizing based on available memory
-- Progress reporting for long-running analyses
 
 ## Related Modules
 

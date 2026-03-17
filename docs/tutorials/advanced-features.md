@@ -20,7 +20,7 @@ Add non-linear relationships to capture complex binding-expression dynamics:
 
 ```bash
 # Add squared and cubic terms for the perturbed TF
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -40,7 +40,7 @@ Include additional experimental variables in the model:
 
 ```bash
 # Add batch effects and technical variables
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -54,7 +54,7 @@ Include summary statistics as predictors:
 
 ```bash
 # Add maximum binding strength across all TFs
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -69,7 +69,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 Use iterative variable selection for feature-rich datasets:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -90,15 +90,15 @@ Choose between linear and LassoCV approaches for final significance testing:
 
 ```bash
 # Conservative LassoCV approach
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
-    --stage4_lasso \
-    --stage4_topn
+    --stage3_lasso \
+    --stage3_lasso_topn
 
 # Sensitive linear regression approach (default)
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1
@@ -109,7 +109,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 Advanced data handling options:
 
 ```bash
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -126,7 +126,7 @@ Optimize for multi-core systems:
 
 ```bash
 # Use all available cores
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -141,7 +141,7 @@ For large datasets:
 
 ```bash
 # Reduce memory usage
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -166,7 +166,7 @@ Example SLURM script for HPC environments:
 module load python/3.11
 source venv/bin/activate
 
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file $SCRATCH/data/expression.csv \
     --predictors_file $SCRATCH/data/binding.csv \
     --perturbed_tf $1 \
@@ -184,7 +184,7 @@ Use tfbpmodeling programmatically:
 
 ```python
 import argparse
-from tfbpmodeling.interface import linear_perturbation_binding_modeling
+from tfbpmodeling.__main__ import tfbpmodeling
 
 # Create arguments programmatically
 args = argparse.Namespace(
@@ -197,7 +197,7 @@ args = argparse.Namespace(
     topn_ci_level=85.0,
     max_iter=15000,
     iterative_dropout=True,
-    stage4_lasso=True,
+    stage3_lasso=True,
     squared_pTF=True,
     ptf_main_effect=True,
     output_dir='./results',
@@ -208,7 +208,7 @@ args = argparse.Namespace(
 )
 
 # Run analysis
-linear_perturbation_binding_modeling(args)
+tfbpmodeling(args)
 ```
 
 ### Batch Processing
@@ -238,7 +238,7 @@ for tf in tfs_to_analyze:
     )
 
     try:
-        linear_perturbation_binding_modeling(args)
+        tfbpmodeling(args)
         print(f"✓ {tf} completed successfully")
     except Exception as e:
         print(f"✗ {tf} failed: {e}")
@@ -252,18 +252,18 @@ Compare different parameter settings:
 
 ```bash
 # Conservative analysis
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
     --all_data_ci_level 99.0 \
     --topn_ci_level 95.0 \
-    --stage4_lasso \
+    --stage3_lasso \
     --output_suffix _conservative \
     --random_state 42
 
 # Sensitive analysis
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -310,7 +310,7 @@ for fold, (train_idx, test_idx) in enumerate(kf.split(response_df.columns[:-1]))
 
 ```bash
 # Increase iterations and adjust tolerance
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -322,7 +322,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 
 ```bash
 # Reduce computational load
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -335,7 +335,7 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 
 ```bash
 # More lenient thresholds
-python -m tfbpmodeling linear_perturbation_binding_modeling \
+python -m tfbpmodeling \
     --response_file data/expression.csv \
     --predictors_file data/binding.csv \
     --perturbed_tf YPD1 \
@@ -346,5 +346,5 @@ python -m tfbpmodeling linear_perturbation_binding_modeling \
 ## Next Steps
 
 - **[Input Formats](input-formats.md)**: Detailed data preparation
-- **[CLI Reference](../cli/linear-perturbation-binding-modeling.md)**: Complete parameter documentation
+- Run `python -m tfbpmodeling --help` for a full list of options
 - **[API Reference](../api/interface.md)**: Programmatic usage details

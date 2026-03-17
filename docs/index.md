@@ -5,77 +5,37 @@
 [![Pytest](https://github.com/BrentLab/tfbpmodeling/actions/workflows/ci.yml/badge.svg)](https://github.com/BrentLab/tfbpmodeling/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/BrentLab/tfbpmodeling/graph/badge.svg?token=7zBsImRmjC)](https://codecov.io/gh/BrentLab/tfbpmodeling)
 
-A Python package for **Transcription Factor Binding and Perturbation (TFBP) modeling** that analyzes relationships between transcription factor binding and gene expression perturbations using machine learning techniques.
+A Python package for **Transcription Factor Binding and Perturbation (TFBP) modeling** that analyzes relationships between transcription factor binding and gene expression perturbations using LASSO.
 
 ## What is tfbpmodeling?
 
-tfbpmodeling provides a comprehensive workflow for modeling the relationship between transcription factor binding data and gene expression perturbation data. The package uses bootstrap resampling and regularized regression (LassoCV) to identify significant binding-perturbation relationships while controlling for confounding factors.
-
-### Key Features
-
-- **Bootstrap Resampling**: Robust statistical inference through bootstrap confidence intervals
-- **Regularized Regression**: LassoCV for feature selection and model fitting
-- **Multi-stage Workflow**: Sequential modeling with increasing specificity
-- **Interaction Analysis**: Statistical evaluation of interaction terms vs main effects
-- **Flexible Input**: Support for various data formats and feature engineering options
-- **Comprehensive Output**: Detailed results with confidence intervals and diagnostics
+tfbpmodeling provides a workflow for modeling the relationship between transcription factor binding data and gene expression perturbation data. The package uses bootstrap resampling and regularized regression (LassoCV) to identify significant binding-perturbation relationships while controlling for confounding factors.
 
 ### Workflow Overview
 
-The package implements a 4-stage sequential workflow:
+#### Stage 0 — Preprocessing
 
-```mermaid
-graph TD
-    A[Input Data] --> B[Stage 1: All Data Modeling]
-    B --> C[Stage 2: Top-N Modeling]
-    C --> D[Stage 3: Interactor Significance]
-    D --> E[Stage 4: Final Results]
+Data validation and preparation: load response and predictor files, apply blacklist, construct the model formula.
 
-    B --> F[Bootstrap Resampling<br/>LassoCV Fitting<br/>Confidence Intervals]
-    C --> G[Significant Predictors<br/>Top-N Data Subset<br/>Refined Modeling]
-    D --> H[Interaction vs Main Effects<br/>Statistical Significance<br/>Final Selection]
-```
+#### Stage 1 — All Data Modeling
 
-1. **All Data Modeling**: Bootstrap resampling with LassoCV on complete dataset
-2. **Top-N Modeling**: Secondary modeling on most significant predictors from top-performing data
-3. **Interactor Significance**: Evaluation of interaction terms against main effects
-4. **Results Generation**: Comprehensive output with confidence intervals and statistics
+Bootstrap LassoCV on the complete dataset using the full interactor model. Significant predictors are extracted at the specified confidence level (`--all_data_ci_level`). A best all-data model is then fit on those predictors.
 
-## Quick Start
+#### Stage 2 — Top-N Modeling
 
-### Installation
+Bootstrap LassoCV on the top-N data subset (genes ranked by perturbed TF binding) using the significant predictors from Stage 1. Surviving predictors are extracted at `--topn_ci_level`.
 
-```bash
-git clone https://github.com/BrentLab/tfbpmodeling.git
-cd tfbpmodeling
-poetry install
-```
+#### Stage 3 — Surviving interactor significance test
 
-### Basic Usage
+Tests each surviving interactor term against its corresponding main effect to determine whether the interaction provides genuine predictive value beyond the main effect alone.
 
-```bash
-poetry run python -m tfbpmodeling linear_perturbation_binding_modeling \
-    --response_file expression_data.csv \
-    --predictors_file binding_data.csv \
-    --perturbed_tf YourTF
-```
+##### Stage 3 - LassoCV (`--stage3_lassocv`, optional)
 
-## Documentation Structure
+Before the significance test, refits the surviving interactors together with their independent main effects on all data using the same bootstrap LassoCV protocol as Stage 1. Use this when you want a regularized refit of the surviving terms before testing.
 
-- **[Getting Started](getting-started/installation.md)**: Installation and setup instructions
-- **[CLI Reference](cli/overview.md)**: Complete command-line interface documentation
-- **[Tutorials](tutorials/basic-workflow.md)**: Step-by-step guides and examples
-- **[API Reference](api/interface.md)**: Detailed API documentation for all modules
-- **[Development](development/contributing.md)**: Contributing guidelines and development setup
+##### Stage 3 - Lasso
 
-## Use Cases
-
-tfbpmodeling is designed for researchers working with:
-
-- **Transcription Factor Studies**: Analyzing TF binding patterns and their effects on gene expression
-- **Gene Expression Analysis**: Understanding perturbation effects in transcriptional networks
-- **Regulatory Network Modeling**: Building predictive models of transcriptional regulation
-- **Functional Genomics**: Integrating binding and expression data for biological insights
+The significance test itself. For each surviving interactor, compares model fit with the interaction term against model fit with the corresponding main effect substituted in. Uses linear regression by default; pass `--stage3_lasso` to use LassoCV instead. Pass `--stage3_lasso_topn` to run the test on the top-N data subset rather than all data.
 
 ## Citation
 
@@ -84,9 +44,9 @@ If you use tfbpmodeling in your research, please cite:
 ```bibtex
 @software{tfbpmodeling,
   title = {tfbpmodeling: Transcription Factor Binding and Perturbation Modeling},
-  author = {Mateusiak, Chase and Eric Jia and Erdenebaatar, Zolboo and Mueller, Ben and Liu, Chenxing and Brent, Michael},
+  author = {Mateusiak, Chase and Erdenebaatar, Zolboo and Eric Jia and Mueller, Ben and Liu, Chenxing and Brent, Michael},
   url = {https://github.com/BrentLab/tfbpmodeling},
-  year = {2024}
+  year = {2025}
 }
 ```
 
