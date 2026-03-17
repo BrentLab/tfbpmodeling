@@ -280,7 +280,7 @@ the same bootstrap LassoCV protocol as Stage 1 on all data.
 
 **Interpretation:**
 - These are the interactors (and any retained main effects) that survive the refit
-- If present, these predictors feed into Stage 3 - Lasso instead of `topn_significant_*.json`
+- Stage 3 - Lasso always uses `topn_significant_*.json` as its input; this output is independent and parallel to that test
 
 ## Stage 3 - Lasso: Interactor Significance Results
 
