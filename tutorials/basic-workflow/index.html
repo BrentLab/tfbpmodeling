@@ -51,13 +51,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">CLI Reference</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
-                  </li>
-              </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../output/">Output Structure</a>
@@ -195,8 +188,6 @@
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -244,7 +235,7 @@
 - <strong>Response data</strong>: Gene expression changes after YPD1 knockout
 - <strong>Predictor data</strong>: Transcription factor binding probabilities from ChIP-seq</p>
 <h3 id="creating-sample-data">Creating Sample Data<a class="headerlink" href="#creating-sample-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Set random seed for reproducibility</span>
@@ -282,41 +273,45 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response data: </span><span class="si">{</span><span class="n">response_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictor data: </span><span class="si">{</span><span class="n">predictor_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+
 <h2 id="step-1-basic-analysis">Step 1: Basic Analysis<a class="headerlink" href="#step-1-basic-analysis" title="Permanent link">&para;</a></h2>
 <h3 id="run-default-analysis">Run Default Analysis<a class="headerlink" href="#run-default-analysis" title="Permanent link">&para;</a></h3>
 <p>Start with the simplest possible command:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1
 </code></pre></div>
+
 <p>This command will:
 - Use 1000 bootstrap samples
 - Apply 98% confidence interval for feature selection
 - Process top 600 features in second round
-- Save results to <code>./linear_perturbation_binding_modeling_results/YPD1_{timestamp}/</code></p>
+- Save results to <code>./tfbpmodeling_results/YPD1_{timestamp}/</code></p>
 <h3 id="monitor-progress">Monitor Progress<a class="headerlink" href="#monitor-progress" title="Permanent link">&para;</a></h3>
 <p>The command provides real-time progress information:</p>
-<div class="highlight"><pre><span></span><code>2024-01-15 14:30:22 - INFO - Starting linear perturbation binding modeling
-2024-01-15 14:30:22 - INFO - Loading response data from: tutorial_expression.csv
-2024-01-15 14:30:23 - INFO - Loading predictor data from: tutorial_binding.csv
-2024-01-15 14:30:23 - INFO - Perturbed TF: YPD1
-2024-01-15 14:30:23 - INFO - Data preprocessing complete
-2024-01-15 14:30:23 - INFO - Features: 1000, Samples: 100
-2024-01-15 14:30:24 - INFO - Starting Stage 1: Bootstrap modeling on all data
-2024-01-15 14:30:24 - INFO - Bootstrap parameters: n_bootstraps=1000, random_state=None
-2024-01-15 14:32:15 - INFO - Stage 1 complete. Significant features: 156
-2024-01-15 14:32:15 - INFO - Starting Stage 2: Top-N modeling
-2024-01-15 14:33:45 - INFO - Stage 2 complete. Refined features: 78
-2024-01-15 14:33:45 - INFO - Starting Stage 3: Interactor significance testing
-2024-01-15 14:34:20 - INFO - Analysis complete. Results saved to: ./linear_perturbation_binding_modeling_results/YPD1_20240115_143022/
+<div class="codehilite"><pre><span></span><code><span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">22</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="n">linear</span><span class="w"> </span><span class="n">perturbation</span><span class="w"> </span><span class="n">binding</span><span class="w"> </span><span class="n">modeling</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">22</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="kr">Load</span><span class="n">ing</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="kd">data</span><span class="w"> </span><span class="n">from</span><span class="p">:</span><span class="w"> </span><span class="n">tutorial_expression</span><span class="mf">.</span><span class="n">csv</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">23</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="kr">Load</span><span class="n">ing</span><span class="w"> </span><span class="n">predictor</span><span class="w"> </span><span class="kd">data</span><span class="w"> </span><span class="n">from</span><span class="p">:</span><span class="w"> </span><span class="n">tutorial_binding</span><span class="mf">.</span><span class="n">csv</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">23</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Perturbed</span><span class="w"> </span><span class="n">TF</span><span class="p">:</span><span class="w"> </span><span class="n">YPD1</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">23</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="kd">Data</span><span class="w"> </span><span class="n">preprocessing</span><span class="w"> </span><span class="n">complete</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">23</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Features</span><span class="p">:</span><span class="w"> </span><span class="mf">1000</span><span class="p">,</span><span class="w"> </span><span class="n">Samples</span><span class="p">:</span><span class="w"> </span><span class="mf">100</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">24</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="n">Stage</span><span class="w"> </span><span class="mf">1</span><span class="p">:</span><span class="w"> </span><span class="n">Bootstrap</span><span class="w"> </span><span class="n">modeling</span><span class="w"> </span><span class="kr">on</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="kd">data</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">30</span><span class="p">:</span><span class="mf">24</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Bootstrap</span><span class="w"> </span><span class="n">parameters</span><span class="p">:</span><span class="w"> </span><span class="n">n_bootstraps</span><span class="o">=</span><span class="mf">1000</span><span class="p">,</span><span class="w"> </span><span class="n">random_state</span><span class="o">=</span><span class="n">None</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">32</span><span class="p">:</span><span class="mf">15</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Stage</span><span class="w"> </span><span class="mf">1</span><span class="w"> </span><span class="n">complete</span><span class="mf">.</span><span class="w"> </span><span class="n">Significant</span><span class="w"> </span><span class="n">features</span><span class="p">:</span><span class="w"> </span><span class="mf">156</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">32</span><span class="p">:</span><span class="mf">15</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="n">Stage</span><span class="w"> </span><span class="mf">2</span><span class="p">:</span><span class="w"> </span><span class="kr">To</span><span class="n">p</span><span class="o">-</span><span class="n">N</span><span class="w"> </span><span class="n">modeling</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">33</span><span class="p">:</span><span class="mf">45</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Stage</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="n">complete</span><span class="mf">.</span><span class="w"> </span><span class="n">Refined</span><span class="w"> </span><span class="n">features</span><span class="p">:</span><span class="w"> </span><span class="mf">78</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">33</span><span class="p">:</span><span class="mf">45</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Starting</span><span class="w"> </span><span class="n">Stage</span><span class="w"> </span><span class="mf">3</span><span class="p">:</span><span class="w"> </span><span class="nb">Int</span><span class="n">eractor</span><span class="w"> </span><span class="n">significance</span><span class="w"> </span><span class="n">testing</span>
+<span class="mf">2024</span><span class="o">-</span><span class="mf">01</span><span class="o">-</span><span class="mf">15</span><span class="w"> </span><span class="mf">14</span><span class="p">:</span><span class="mf">34</span><span class="p">:</span><span class="mf">20</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">INFO</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Analysis</span><span class="w"> </span><span class="n">complete</span><span class="mf">.</span><span class="w"> </span><span class="n">Results</span><span class="w"> </span><span class="kr">save</span><span class="n">d</span><span class="w"> </span><span class="kr">to</span><span class="p">:</span><span class="w"> </span><span class="mf">.</span><span class="o">/</span><span class="n">tfbpmodeling_results</span><span class="o">/</span><span class="n">YPD1_20240115_143022</span><span class="o">/</span>
 </code></pre></div>
+
 <h2 id="step-2-understanding-results">Step 2: Understanding Results<a class="headerlink" href="#step-2-understanding-results" title="Permanent link">&para;</a></h2>
 <h3 id="output-directory-structure">Output Directory Structure<a class="headerlink" href="#output-directory-structure" title="Permanent link">&para;</a></h3>
 <p>After completion, examine the results directory:</p>
-<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-la<span class="w"> </span>linear_perturbation_binding_modeling_results/YPD1_*/
+<div class="codehilite"><pre><span></span><code>ls<span class="w"> </span>-la<span class="w"> </span>tfbpmodeling_results/YPD1_*/
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>YPD1_20240115_143022/
+
+<div class="codehilite"><pre><span></span><code>YPD1_20240115_143022/
 ├── all_data_results/
 │   ├── bootstrap_coefficients.csv
 │   ├── confidence_intervals.csv
@@ -337,41 +332,48 @@
 │   └── data_summary.json
 └── tfbpmodeling_20240115_143022.log
 </code></pre></div>
+
 <h3 id="key-result-files">Key Result Files<a class="headerlink" href="#key-result-files" title="Permanent link">&para;</a></h3>
 <h4 id="1-confidence-intervals-most-important">1. Confidence Intervals (most important)<a class="headerlink" href="#1-confidence-intervals-most-important" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>head<span class="w"> </span>-10<span class="w"> </span>YPD1_*/all_data_results/confidence_intervals.csv
+<div class="codehilite"><pre><span></span><code>head<span class="w"> </span>-10<span class="w"> </span>YPD1_*/all_data_results/confidence_intervals.csv
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>feature,mean_coef,std_coef,ci_lower,ci_upper,significant,abs_mean_coef
+
+<div class="codehilite"><pre><span></span><code>feature,mean_coef,std_coef,ci_lower,ci_upper,significant,abs_mean_coef
 TF_1,0.023,0.008,0.007,0.039,True,0.023
 TF_2,-0.045,0.012,-0.069,-0.021,True,0.045
 TF_3,0.001,0.006,-0.011,0.013,False,0.001
 </code></pre></div>
+
 <p><strong>Key columns</strong>:
 - <code>feature</code>: Transcription factor name
 - <code>mean_coef</code>: Average effect size across bootstrap samples
 - <code>ci_lower/ci_upper</code>: Confidence interval bounds
 - <code>significant</code>: Whether the effect is statistically significant</p>
 <h4 id="2-model-statistics">2. Model Statistics<a class="headerlink" href="#2-model-statistics" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>cat<span class="w"> </span>YPD1_*/all_data_results/model_statistics.csv
+<div class="codehilite"><pre><span></span><code>cat<span class="w"> </span>YPD1_*/all_data_results/model_statistics.csv
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>metric,value
+
+<div class="codehilite"><pre><span></span><code>metric,value
 mean_r2,0.234
 std_r2,0.023
 mean_cv_score,0.198
 n_significant_features,156
 total_features,1000
 </code></pre></div>
+
 <p><strong>Key metrics</strong>:
 - <code>mean_r2</code>: Model explanatory power
 - <code>mean_cv_score</code>: Cross-validation performance
 - <code>n_significant_features</code>: Count of statistically significant predictors</p>
 <h4 id="3-final-significant-interactions">3. Final Significant Interactions<a class="headerlink" href="#3-final-significant-interactions" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code>head<span class="w"> </span>-10<span class="w"> </span>YPD1_*/interactor_significance/final_selection.csv
+<div class="codehilite"><pre><span></span><code>head<span class="w"> </span>-10<span class="w"> </span>YPD1_*/interactor_significance/final_selection.csv
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>feature,interaction_coef,main_effect_coef,p_value,significant,effect_size
+
+<div class="codehilite"><pre><span></span><code>feature,interaction_coef,main_effect_coef,p_value,significant,effect_size
 TF_1:binding_strength,0.034,0.012,0.003,True,0.022
 TF_2:binding_strength,-0.028,-0.008,0.012,True,0.020
 </code></pre></div>
+
 <p>This shows transcription factors with significant interaction effects beyond their main effects.</p>
 <h2 id="step-3-interpreting-results">Step 3: Interpreting Results<a class="headerlink" href="#step-3-interpreting-results" title="Permanent link">&para;</a></h2>
 <h3 id="biological-interpretation">Biological Interpretation<a class="headerlink" href="#biological-interpretation" title="Permanent link">&para;</a></h3>
@@ -396,16 +398,17 @@ TF_2:binding_strength,-0.028,-0.008,0.012,True,0.020
 <h2 id="step-4-parameter-optimization">Step 4: Parameter Optimization<a class="headerlink" href="#step-4-parameter-optimization" title="Permanent link">&para;</a></h2>
 <h3 id="increasing-statistical-power">Increasing Statistical Power<a class="headerlink" href="#increasing-statistical-power" title="Permanent link">&para;</a></h3>
 <p>For more robust results, increase bootstrap samples:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--n_bootstraps<span class="w"> </span><span class="m">2000</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--output_suffix<span class="w"> </span>_high_power
 </code></pre></div>
+
 <h3 id="adjusting-sensitivity">Adjusting Sensitivity<a class="headerlink" href="#adjusting-sensitivity" title="Permanent link">&para;</a></h3>
 <p>For more sensitive detection, lower confidence thresholds:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
@@ -413,9 +416,10 @@ TF_2:binding_strength,-0.028,-0.008,0.012,True,0.020
 <span class="w">    </span>--topn_ci_level<span class="w"> </span><span class="m">85</span>.0<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--output_suffix<span class="w"> </span>_sensitive
 </code></pre></div>
+
 <h3 id="adding-feature-engineering">Adding Feature Engineering<a class="headerlink" href="#adding-feature-engineering" title="Permanent link">&para;</a></h3>
 <p>Include polynomial terms for non-linear relationships:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
@@ -424,18 +428,20 @@ TF_2:binding_strength,-0.028,-0.008,0.012,True,0.020
 <span class="w">    </span>--row_max<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--output_suffix<span class="w"> </span>_engineered
 </code></pre></div>
+
 <h3 id="reproducible-analysis">Reproducible Analysis<a class="headerlink" href="#reproducible-analysis" title="Permanent link">&para;</a></h3>
 <p>For reproducible results, set random seed:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span><span class="se">\</span>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--response_file<span class="w"> </span>tutorial_expression.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--predictors_file<span class="w"> </span>tutorial_binding.csv<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--perturbed_tf<span class="w"> </span>YPD1<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--random_state<span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--output_suffix<span class="w"> </span>_reproducible
 </code></pre></div>
+
 <h2 id="step-5-comparing-results">Step 5: Comparing Results<a class="headerlink" href="#step-5-comparing-results" title="Permanent link">&para;</a></h2>
 <h3 id="compare-different-analyses">Compare Different Analyses<a class="headerlink" href="#compare-different-analyses" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># List all result directories</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># List all result directories</span>
 ls<span class="w"> </span>-d<span class="w"> </span>YPD1_*/
 
 <span class="c1"># Compare significant feature counts</span>
@@ -445,8 +451,9 @@ ls<span class="w"> </span>-d<span class="w"> </span>YPD1_*/
 <span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">,</span><span class="nv">$count</span><span class="s2">&quot;</span>
 <span class="k">done</span>
 </code></pre></div>
+
 <h3 id="visualize-results">Visualize Results<a class="headerlink" href="#visualize-results" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <span class="c1"># Load confidence intervals from different analyses</span>
@@ -474,6 +481,7 @@ ls<span class="w"> </span>-d<span class="w"> </span>YPD1_*/
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;effect_size_comparison.png&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
+
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <h3 id="for-your-own-data">For Your Own Data<a class="headerlink" href="#for-your-own-data" title="Permanent link">&para;</a></h3>
 <ol>
@@ -487,7 +495,7 @@ ls<span class="w"> </span>-d<span class="w"> </span>YPD1_*/
 <ul>
 <li><strong><a href="../advanced-features/">Advanced Features Tutorial</a></strong>: Feature engineering and model tuning</li>
 <li><strong><a href="../input-formats/">Input Formats Guide</a></strong>: Detailed data preparation instructions</li>
-<li><strong><a href="../../cli/linear-perturbation-binding-modeling/">CLI Reference</a></strong>: Complete parameter documentation</li>
+<li>Run <code>python -m tfbpmodeling --help</code> for a full list of options</li>
 </ul>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <h4 id="low-r2-scores">Low R² Scores<a class="headerlink" href="#low-r2-scores" title="Permanent link">&para;</a></h4>
@@ -557,8 +565,6 @@ ls<span class="w"> </span>-d<span class="w"> </span>YPD1_*/
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-      <script src="../../js/mermaid-init.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

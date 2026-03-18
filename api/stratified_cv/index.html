@@ -51,13 +51,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">CLI Reference</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
-                  </li>
-              </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../output/">Output Structure</a>
@@ -138,8 +131,6 @@
               <p class="caption"><span class="caption-text">Development</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
                   </li>
               </ul>
       </div>
@@ -523,7 +514,7 @@ While it defaults to <code>LassoCV</code>, any estimator with a <code>cv</code> 
 </ul>
 <h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
 <h3 id="basic-stratified-cv">Basic Stratified CV<a class="headerlink" href="#basic-stratified-cv" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedCV</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedCV</span>
 
 <span class="c1"># Create stratified CV object</span>
 <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedCV</span><span class="p">(</span>
@@ -537,8 +528,9 @@ While it defaults to <code>LassoCV</code>, any estimator with a <code>cv</code> 
     <span class="c1"># Train and evaluate model</span>
     <span class="k">pass</span>
 </code></pre></div>
+
 <h3 id="bootstrap-integration">Bootstrap Integration<a class="headerlink" href="#bootstrap-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap_stratified_cv</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap_stratified_cv</span>
 
 <span class="c1"># Perform bootstrap with stratified CV</span>
 <span class="n">cv_scores</span> <span class="o">=</span> <span class="n">bootstrap_stratified_cv</span><span class="p">(</span>
@@ -550,10 +542,11 @@ While it defaults to <code>LassoCV</code>, any estimator with a <code>cv</code> 
     <span class="n">stratification_bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h2 id="stratification-methods">Stratification Methods<a class="headerlink" href="#stratification-methods" title="Permanent link">&para;</a></h2>
 <h3 id="binding-strength-bins">Binding Strength Bins<a class="headerlink" href="#binding-strength-bins" title="Permanent link">&para;</a></h3>
 <p>Stratifies data based on transcription factor binding strength:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Define binding strength bins</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Define binding strength bins</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>  <span class="c1"># Low, medium, high binding</span>
 
 <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedCV</span><span class="p">(</span>
@@ -562,15 +555,17 @@ While it defaults to <code>LassoCV</code>, any estimator with a <code>cv</code> 
     <span class="n">bins</span><span class="o">=</span><span class="n">bins</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h3 id="expression-level-bins">Expression Level Bins<a class="headerlink" href="#expression-level-bins" title="Permanent link">&para;</a></h3>
 <p>Stratifies based on expression level ranges:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Expression-based stratification</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Expression-based stratification</span>
 <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedCV</span><span class="p">(</span>
     <span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">stratification_method</span><span class="o">=</span><span class="s1">&#39;expression_bins&#39;</span><span class="p">,</span>
     <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h2 id="related-modules">Related Modules<a class="headerlink" href="#related-modules" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong><a href="../stratified_cv_r2/">stratified_cv_r2</a></strong>: R² calculation with stratification</li>
@@ -620,8 +615,6 @@ While it defaults to <code>LassoCV</code>, any estimator with a <code>cv</code> 
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-      <script src="../../js/mermaid-init.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

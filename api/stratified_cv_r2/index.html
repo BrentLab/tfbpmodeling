@@ -51,13 +51,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">CLI Reference</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
-                  </li>
-              </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../output/">Output Structure</a>
@@ -138,8 +131,6 @@
               <p class="caption"><span class="caption-text">Development</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
                   </li>
               </ul>
       </div>
@@ -449,7 +440,7 @@ expected to be centered and there should not be a constant column in X.</p>
 </ul>
 <h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
 <h3 id="basic-r2-calculation">Basic R² Calculation<a class="headerlink" href="#basic-r2-calculation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv_r2</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_stratified_r2</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv_r2</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_stratified_r2</span>
 
 <span class="c1"># Calculate stratified R² scores</span>
 <span class="n">r2_scores</span> <span class="o">=</span> <span class="n">calculate_stratified_r2</span><span class="p">(</span>
@@ -463,8 +454,9 @@ expected to be centered and there should not be a constant column in X.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean R²: </span><span class="si">{</span><span class="n">r2_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Std R²: </span><span class="si">{</span><span class="n">r2_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+
 <h3 id="bootstrap-integration">Bootstrap Integration<a class="headerlink" href="#bootstrap-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv_r2</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap_stratified_r2</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.stratified_cv_r2</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap_stratified_r2</span>
 
 <span class="c1"># Bootstrap R² with stratification</span>
 <span class="n">bootstrap_r2</span> <span class="o">=</span> <span class="n">bootstrap_stratified_r2</span><span class="p">(</span>
@@ -480,10 +472,11 @@ expected to be centered and there should not be a constant column in X.</p>
 <span class="n">r2_ci</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">bootstrap_r2</span><span class="p">,</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² 95% CI: [</span><span class="si">{</span><span class="n">r2_ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">r2_ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
 </code></pre></div>
+
 <h2 id="performance-metrics">Performance Metrics<a class="headerlink" href="#performance-metrics" title="Permanent link">&para;</a></h2>
 <h3 id="stratified-r2">Stratified R²<a class="headerlink" href="#stratified-r2" title="Permanent link">&para;</a></h3>
 <p>Calculates R² separately for each stratum and then aggregates:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Per-stratum R² calculation</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Per-stratum R² calculation</span>
 <span class="n">stratum_r2</span> <span class="o">=</span> <span class="n">calculate_per_stratum_r2</span><span class="p">(</span>
     <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">X</span><span class="o">=</span><span class="n">X_test</span><span class="p">,</span>
@@ -491,14 +484,16 @@ expected to be centered and there should not be a constant column in X.</p>
     <span class="n">strata</span><span class="o">=</span><span class="n">test_strata</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h3 id="weighted-aggregation">Weighted Aggregation<a class="headerlink" href="#weighted-aggregation" title="Permanent link">&para;</a></h3>
 <p>Combines R² scores across strata with appropriate weighting:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Weighted average R²</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Weighted average R²</span>
 <span class="n">weighted_r2</span> <span class="o">=</span> <span class="n">calculate_weighted_r2</span><span class="p">(</span>
     <span class="n">stratum_r2_scores</span><span class="o">=</span><span class="n">stratum_scores</span><span class="p">,</span>
     <span class="n">stratum_weights</span><span class="o">=</span><span class="n">stratum_sizes</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h2 id="related-modules">Related Modules<a class="headerlink" href="#related-modules" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong><a href="../stratified_cv/">stratified_cv</a></strong>: Stratified cross-validation</li>
@@ -548,8 +543,6 @@ expected to be centered and there should not be a constant column in X.</p>
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-      <script src="../../js/mermaid-init.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

@@ -51,13 +51,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">CLI Reference</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
-                  </li>
-              </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../output/">Output Structure</a>
@@ -173,8 +166,6 @@
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -253,6 +244,7 @@
     <span class="n">feature_col</span><span class="o">=</span><span class="s2">&quot;target_symbol&quot;</span><span class="p">,</span>
     <span class="n">feature_blacklist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">stage2_set_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -427,7 +419,8 @@ that they match, again by index.</p>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">101</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">response_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">predictors_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
@@ -435,6 +428,7 @@ that they match, again by index.</p>
     <span class="n">feature_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;target_symbol&quot;</span><span class="p">,</span>
     <span class="n">feature_blacklist</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">stage2_set_zero</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initialize ModelingInputData with response and predictor matrices. Note that the</span>
@@ -498,7 +492,7 @@ that they match, again by index.</p>
     <span class="c1"># Ensure the response and predictors only contain common features</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">response_df</span> <span class="o">=</span> <span class="n">response_df</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">predictors_df</span> <span class="o">=</span> <span class="n">predictors_df</span>
-
+    <span class="bp">self</span><span class="o">.</span><span class="n">stage2_set_zero</span> <span class="o">=</span> <span class="n">stage2_set_zero</span>
     <span class="c1"># Assign top_n value</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">top_n</span> <span class="o">=</span> <span class="n">top_n</span>
 </code></pre></div></td></tr></table></div>
@@ -513,84 +507,6 @@ that they match, again by index.</p>
 
 
 
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="tfbpmodeling.modeling_input_data.ModelingInputData.predictors_df" class="doc doc-heading">
-            <span class="doc doc-object-name doc-attribute-name">predictors_df</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-writable"><code>writable</code></small>
-  </span>
-
-<a href="#tfbpmodeling.modeling_input_data.ModelingInputData.predictors_df" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature codehilite"><pre><span></span><code><span class="n">predictors_df</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Get the predictors DataFrame with feature masks applied.</p>
-<p>The returned DataFrame reflects any active blacklist or top-N filtering.</p>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h4 id="tfbpmodeling.modeling_input_data.ModelingInputData.response_df" class="doc doc-heading">
-            <span class="doc doc-object-name doc-attribute-name">response_df</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-      <small class="doc doc-label doc-label-writable"><code>writable</code></small>
-  </span>
-
-<a href="#tfbpmodeling.modeling_input_data.ModelingInputData.response_df" class="headerlink" title="Permanent link">&para;</a></h4>
-<div class="doc-signature codehilite"><pre><span></span><code><span class="n">response_df</span>
-</code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Get the response DataFrame with feature masks applied.</p>
-<p>Returns a version of the response matrix filtered by:
-- Feature blacklist (if <code>blacklist_masked</code> is True)
-- Top-N feature selection (if <code>top_n_masked</code> is True)</p>
-<p>The final DataFrame will be aligned in index order with the predictors matrix.</p>
-
-
-<table class="field-list">
-  <colgroup>
-    <col class="field-name" />
-    <col class="field-body" />
-  </colgroup>
-  <tbody valign="top">
-    <tr class="field">
-      <th class="field-name">Returns:</th>
-      <td class="field-body">
-        <ul class="first simple">
-            <li>
-                  <code><span title="pandas.DataFrame">DataFrame</span></code>
-              –
-              <div class="doc-md-description">
-                <p>Filtered and ordered response DataFrame.</p>
-              </div>
-            </li>
-        </ul>
-      </td>
-    </tr>
-  </tbody>
-</table>
-    </div>
-
-</div>
 
 <div class="doc doc-object doc-attribute">
 
@@ -699,6 +615,7 @@ the top-n feature selection is applied to the predictors and response</p>
     <span class="n">feature_col</span><span class="o">=</span><span class="s2">&quot;target_symbol&quot;</span><span class="p">,</span>
     <span class="n">feature_blacklist_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">top_n</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+    <span class="n">stage2_set_zero</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 
@@ -827,10 +744,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 
             <details class="quote">
               <summary>Source code in <code>tfbpmodeling/modeling_input_data.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">442</span>
 <span class="normal">443</span>
 <span class="normal">444</span>
 <span class="normal">445</span>
@@ -880,7 +794,12 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <span class="normal">489</span>
 <span class="normal">490</span>
 <span class="normal">491</span>
-<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_files</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span>
     <span class="n">response_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -889,6 +808,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
     <span class="n">feature_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;target_symbol&quot;</span><span class="p">,</span>
     <span class="n">feature_blacklist_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
+    <span class="n">stage2_set_zero</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ModelingInputData&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load response and predictor data from files. This would be considered an</span>
@@ -933,6 +853,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
         <span class="n">feature_col</span><span class="p">,</span>
         <span class="n">feature_blacklist</span><span class="p">,</span>
         <span class="n">top_n</span><span class="p">,</span>
+        <span class="n">stage2_set_zero</span><span class="p">,</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1070,10 +991,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 
             <details class="quote">
               <summary>Source code in <code>tfbpmodeling/modeling_input_data.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">377</span>
 <span class="normal">378</span>
 <span class="normal">379</span>
 <span class="normal">380</span>
@@ -1133,7 +1051,10 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
-<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_modeling_data</span><span class="p">(</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_modeling_data</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">add_row_max</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1238,7 +1159,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <li><strong>Data integration</strong>: Combines multiple data sources into modeling-ready format</li>
 </ul>
 <h4 id="initialization">Initialization<a class="headerlink" href="#initialization" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.modeling_input_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelingInputData</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.modeling_input_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelingInputData</span>
 
 <span class="c1"># Basic initialization</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
@@ -1257,6 +1178,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
     <span class="n">scale_by_std</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h4 id="key-methods">Key Methods<a class="headerlink" href="#key-methods" title="Permanent link">&para;</a></h4>
 <h5 id="data-loading-and-validation">Data Loading and Validation<a class="headerlink" href="#data-loading-and-validation" title="Permanent link">&para;</a></h5>
 <ul>
@@ -1280,11 +1202,12 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <h2 id="data-format-requirements">Data Format Requirements<a class="headerlink" href="#data-format-requirements" title="Permanent link">&para;</a></h2>
 <h3 id="response-file-format">Response File Format<a class="headerlink" href="#response-file-format" title="Permanent link">&para;</a></h3>
 <p>The response file must be a CSV with specific structure:</p>
-<div class="highlight"><pre><span></span><code>gene_id,sample1,sample2,sample3,sample4
+<div class="codehilite"><pre><span></span><code>gene_id,sample1,sample2,sample3,sample4
 YPD1,0.23,-1.45,0.87,-0.12
 YBR123W,1.34,0.56,-0.23,0.78
 YCR456X,-0.45,0.12,1.23,-0.56
 </code></pre></div>
+
 <p><strong>Requirements</strong>:
 - First column: Gene identifiers (must match predictor file)
 - Subsequent columns: Numeric expression values
@@ -1292,11 +1215,12 @@ YCR456X,-0.45,0.12,1.23,-0.56
 - Must contain column matching <code>perturbed_tf</code> parameter</p>
 <h3 id="predictor-file-format">Predictor File Format<a class="headerlink" href="#predictor-file-format" title="Permanent link">&para;</a></h3>
 <p>The predictor file structure:</p>
-<div class="highlight"><pre><span></span><code>gene_id,TF1,TF2,TF3,TF4
+<div class="codehilite"><pre><span></span><code>gene_id,TF1,TF2,TF3,TF4
 YPD1,0.34,0.12,0.78,0.01
 YBR123W,0.89,0.45,0.23,0.67
 YCR456X,0.12,0.78,0.34,0.90
 </code></pre></div>
+
 <p><strong>Requirements</strong>:
 - First column: Gene identifiers (must match response file)
 - Subsequent columns: Numeric binding values
@@ -1304,11 +1228,12 @@ YCR456X,0.12,0.78,0.34,0.90
 - All values must be numeric (no missing values in binding data)</p>
 <h3 id="blacklist-file-format">Blacklist File Format<a class="headerlink" href="#blacklist-file-format" title="Permanent link">&para;</a></h3>
 <p>Optional exclusion file:</p>
-<div class="highlight"><pre><span></span><code>YBR999W
+<div class="codehilite"><pre><span></span><code>YBR999W
 YCR888X
 control_gene
 technical_artifact
 </code></pre></div>
+
 <p><strong>Requirements</strong>:
 - Plain text file
 - One gene identifier per line
@@ -1316,7 +1241,7 @@ technical_artifact
 - Comments not supported</p>
 <h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
 <h3 id="basic-data-loading">Basic Data Loading<a class="headerlink" href="#basic-data-loading" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.modeling_input_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelingInputData</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.modeling_input_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelingInputData</span>
 
 <span class="c1"># Load data with minimal configuration</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
@@ -1334,8 +1259,9 @@ technical_artifact
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response data shape: </span><span class="si">{</span><span class="n">response_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictor data shape: </span><span class="si">{</span><span class="n">predictor_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+
 <h3 id="data-preprocessing-options">Data Preprocessing Options<a class="headerlink" href="#data-preprocessing-options" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Advanced preprocessing</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Advanced preprocessing</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;data/expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;data/binding.csv&#39;</span><span class="p">,</span>
@@ -1351,8 +1277,9 @@ technical_artifact
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtered features: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excluded features: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">excluded_feature_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+
 <h3 id="integration-with-modeling-pipeline">Integration with Modeling Pipeline<a class="headerlink" href="#integration-with-modeling-pipeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Prepare data for bootstrap modeling</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Prepare data for bootstrap modeling</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.bootstrapped_input_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">BootstrappedModelingInputData</span>
 
 <span class="c1"># Base data</span>
@@ -1369,10 +1296,11 @@ technical_artifact
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h2 id="data-validation">Data Validation<a class="headerlink" href="#data-validation" title="Permanent link">&para;</a></h2>
 <h3 id="automatic-checks">Automatic Checks<a class="headerlink" href="#automatic-checks" title="Permanent link">&para;</a></h3>
 <p>The class performs comprehensive validation:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># File existence and readability</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># File existence and readability</span>
 <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">response_file</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Response file not found: </span><span class="si">{</span><span class="n">response_file</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">predictors_file</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Predictor file not found: </span><span class="si">{</span><span class="n">predictors_file</span><span class="si">}</span><span class="s2">&quot;</span>
 
@@ -1384,8 +1312,9 @@ technical_artifact
 <span class="k">assert</span> <span class="n">response_df</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 <span class="k">assert</span> <span class="n">predictor_df</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </code></pre></div>
+
 <h3 id="custom-validation">Custom Validation<a class="headerlink" href="#custom-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Add custom validation rules</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Add custom validation rules</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_expression_range</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span><span class="s2">Ensure expression values are in reasonable range</span><span class="se">\&quot;\&quot;\&quot;</span>
     <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;Expression values seem too large&quot;</span>
@@ -1403,18 +1332,20 @@ technical_artifact
     <span class="n">custom_validators</span><span class="o">=</span><span class="p">[</span><span class="n">validate_expression_range</span><span class="p">,</span> <span class="n">validate_binding_range</span><span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <h3 id="common-errors-and-solutions">Common Errors and Solutions<a class="headerlink" href="#common-errors-and-solutions" title="Permanent link">&para;</a></h3>
 <h4 id="file-format-errors">File Format Errors<a class="headerlink" href="#file-format-errors" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># CSV parsing errors</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># CSV parsing errors</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span><span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;malformed.csv&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">pd</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">ParserError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CSV format error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="c1"># Solution: Check file encoding, delimiters, quotes</span>
 </code></pre></div>
+
 <h4 id="data-consistency-errors">Data Consistency Errors<a class="headerlink" href="#data-consistency-errors" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Mismatched gene indices</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Mismatched gene indices</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1422,14 +1353,16 @@ technical_artifact
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Response and predictor files have different gene sets&quot;</span><span class="p">)</span>
         <span class="c1"># Solution: Align gene lists or use intersection</span>
 </code></pre></div>
+
 <h4 id="missing-data-errors">Missing Data Errors<a class="headerlink" href="#missing-data-errors" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Perturbed TF not found</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Perturbed TF not found</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span><span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;MISSING_TF&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Perturbed TF not found in response data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="c1"># Solution: Check TF name spelling, verify column names</span>
 </code></pre></div>
+
 <h2 id="performance-considerations">Performance Considerations<a class="headerlink" href="#performance-considerations" title="Permanent link">&para;</a></h2>
 <h3 id="memory-management">Memory Management<a class="headerlink" href="#memory-management" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1507,8 +1440,6 @@ technical_artifact
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-      <script src="../../js/mermaid-init.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

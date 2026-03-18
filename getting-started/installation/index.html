@@ -61,39 +61,12 @@
     <li class="toctree-l2"><a class="reference internal" href="#verify-installation">Verify Installation</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#development-installation">Development Installation</a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#1-clone-the-repository">1. Clone the Repository</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#2-install-poetry">2. Install Poetry</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#3-install-dependencies">3. Install Dependencies</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#4-install-pre-commit-hooks">4. Install Pre-commit Hooks</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#development-tools">Development Tools</a>
-        <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#running-tests">Running Tests</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#code-quality">Code Quality</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#documentation">Documentation</a>
-    </li>
-        </ul>
-    </li>
-        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a>
     </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quick Start</a>
-                  </li>
-              </ul>
-              <p class="caption"><span class="caption-text">CLI Reference</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
@@ -146,8 +119,6 @@
               <p class="caption"><span class="caption-text">Development</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
                   </li>
               </ul>
       </div>
@@ -204,7 +175,7 @@ python -m pip install git+https://github.com/BrentLab/tfbpmodeling.git
 
 <h3 id="virtual-environment-recommended">Virtual Environment (Recommended)<a class="headerlink" href="#virtual-environment-recommended" title="Permanent link">&para;</a></h3>
 <p>It's recommended to install tfbpmodeling in a virtual environment:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create virtual environment</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Create virtual environment</span>
 python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>tfbp-env
 
 <span class="c1"># Activate virtual environment</span>
@@ -219,104 +190,18 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 <span class="c1"># Upgrade existing installation</span>
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>git+https://github.com/BrentLab/tfbpmodeling.git
 </code></pre></div>
+
 <h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
 <p>Test that the installation was successful:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Show help for the main command</span>
-python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>--help
-
-<span class="c1"># Show help for the modeling command</span>
-python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>linear_perturbation_binding_modeling<span class="w"> </span>--help
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling<span class="w"> </span>--help
 </code></pre></div>
+
 <h2 id="development-installation">Development Installation<a class="headerlink" href="#development-installation" title="Permanent link">&para;</a></h2>
-<p>For development work, you'll need to clone the repository and install with Poetry.</p>
-<h3 id="1-clone-the-repository">1. Clone the Repository<a class="headerlink" href="#1-clone-the-repository" title="Permanent link">&para;</a></h3>
-<p>=== "Fork for Development"</p>
-<div class="codehilite"><pre><span></span><code>If you plan to contribute:
-
-1. Fork the repository on GitHub
-2. Clone your fork:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/tfbpmodeling.git
-cd tfbpmodeling
-<span class="s">```</span>
-
-3. Add the upstream remote:
-
-```bash
-git remote add upstream https://github.com/BrentLab/tfbpmodeling.git
-<span class="s">```</span>
-</code></pre></div>
-
-<p>=== "Direct Clone"</p>
-<div class="codehilite"><pre><span></span><code>```bash
-git clone https://github.com/BrentLab/tfbpmodeling.git
-cd tfbpmodeling
-```
-</code></pre></div>
-
-<h3 id="2-install-poetry">2. Install Poetry<a class="headerlink" href="#2-install-poetry" title="Permanent link">&para;</a></h3>
-<p>If you don't have Poetry installed, follow the <a href="https://python-poetry.org/docs/#installation">official installation instructions</a>.</p>
-<div class="admonition tip">
-<p class="admonition-title">Poetry Configuration</p>
-<p>We recommend configuring Poetry to create virtual environments in the project directory:</p>
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>config<span class="w"> </span>virtualenvs.in-project<span class="w"> </span><span class="nb">true</span>
-</code></pre></div>
-<p>This creates the virtual environment as <code>.venv</code> in the project directory.</p>
-</div>
-<h3 id="3-install-dependencies">3. Install Dependencies<a class="headerlink" href="#3-install-dependencies" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>install
-</code></pre></div>
-<p>This installs all dependencies, including development tools for testing and documentation.</p>
-<h3 id="4-install-pre-commit-hooks">4. Install Pre-commit Hooks<a class="headerlink" href="#4-install-pre-commit-hooks" title="Permanent link">&para;</a></h3>
-<p>For development work, install pre-commit hooks to ensure code quality:</p>
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
-</code></pre></div>
-<p>You can run pre-commit manually at any time:</p>
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
-</code></pre></div>
-<h3 id="development-tools">Development Tools<a class="headerlink" href="#development-tools" title="Permanent link">&para;</a></h3>
-<h4 id="running-tests">Running Tests<a class="headerlink" href="#running-tests" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run all tests</span>
-poetry<span class="w"> </span>run<span class="w"> </span>pytest
-
-<span class="c1"># Run with coverage</span>
-poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--cov<span class="w"> </span>--cov-branch<span class="w"> </span>--cov-report<span class="o">=</span>xml
-
-<span class="c1"># Run specific test file</span>
-poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tfbpmodeling/tests/test_interface.py
-
-<span class="c1"># Run specific test by name</span>
-poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;test_function_name&quot;</span>
-</code></pre></div>
-<h4 id="code-quality">Code Quality<a class="headerlink" href="#code-quality" title="Permanent link">&para;</a></h4>
-<p>The project uses several tools to maintain code quality:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Format code with Black</span>
-poetry<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>.
-
-<span class="c1"># Check code style with Flake8</span>
-poetry<span class="w"> </span>run<span class="w"> </span>flake8
-
-<span class="c1"># Type checking with MyPy</span>
-poetry<span class="w"> </span>run<span class="w"> </span>mypy<span class="w"> </span>tfbpmodeling
-</code></pre></div>
-<h4 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h4>
-<p>Build and serve documentation locally:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Serve documentation with live reload</span>
-mkdocs<span class="w"> </span>serve
-
-<span class="c1"># Build documentation</span>
-mkdocs<span class="w"> </span>build
-
-<span class="c1"># Deploy to GitHub Pages (maintainers only)</span>
-poetry<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>gh-deploy
-</code></pre></div>
+<p>See <a href="../../development/contributing/">Contributing</a> for development setup instructions.</p>
 <h2 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>GitHub Issues</strong>: <a href="https://github.com/BrentLab/tfbpmodeling/issues">Report bugs or request features</a></li>
 <li><strong>GitHub Discussions</strong>: <a href="https://github.com/BrentLab/tfbpmodeling/discussions">Ask questions or discuss usage</a></li>
-<li><strong>Documentation</strong>: Browse the complete documentation for detailed usage examples</li>
-<li><strong>Development Guide</strong>: See <a href="../../development/contributing/">Contributing</a> for development setup and troubleshooting</li>
 </ul>
               
             </div>
@@ -361,8 +246,6 @@ poetry<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> 
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-      <script src="../../js/mermaid-init.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

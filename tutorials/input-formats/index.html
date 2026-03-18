@@ -51,13 +51,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">CLI Reference</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
-                  </li>
-              </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../output/">Output Structure</a>
@@ -177,8 +170,6 @@
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
-                  </li>
               </ul>
       </div>
     </div>
@@ -217,12 +208,13 @@
 <h2 id="response-file-format">Response File Format<a class="headerlink" href="#response-file-format" title="Permanent link">&para;</a></h2>
 <h3 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">&para;</a></h3>
 <p>The response file contains gene expression measurements:</p>
-<div class="highlight"><pre><span></span><code>gene_id,sample_1,sample_2,sample_3,sample_4,YPD1
+<div class="codehilite"><pre><span></span><code>gene_id,sample_1,sample_2,sample_3,sample_4,YPD1
 YBR001C,0.234,-1.456,0.876,-0.123,0.543
 YBR002W,-0.456,0.123,1.234,-0.567,-0.234
 YBR003W,1.234,0.567,-0.234,0.876,0.123
 YBR004C,-0.123,-0.876,0.456,0.234,-0.456
 </code></pre></div>
+
 <h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -267,7 +259,7 @@ YBR004C,-0.123,-0.876,0.456,0.234,-0.456
 - Raw expression values (will be normalized if needed)
 - Differential expression statistics</p>
 <p><strong>Example expression data preparation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Load raw expression data</span>
@@ -292,15 +284,17 @@ YBR004C,-0.123,-0.876,0.456,0.234,-0.456
 <span class="n">response_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gene_id&#39;</span>
 <span class="n">response_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;response_data.csv&#39;</span><span class="p">)</span>
 </code></pre></div>
+
 <h2 id="predictors-file-format">Predictors File Format<a class="headerlink" href="#predictors-file-format" title="Permanent link">&para;</a></h2>
 <h3 id="structure_1">Structure<a class="headerlink" href="#structure_1" title="Permanent link">&para;</a></h3>
 <p>The predictors file contains transcription factor binding data:</p>
-<div class="highlight"><pre><span></span><code>gene_id,TF_1,TF_2,TF_3,TF_4,YPD1_binding
+<div class="codehilite"><pre><span></span><code>gene_id,TF_1,TF_2,TF_3,TF_4,YPD1_binding
 YBR001C,0.123,0.456,0.789,0.012,0.345
 YBR002W,0.234,0.567,0.890,0.123,0.456
 YBR003W,0.345,0.678,0.901,0.234,0.567
 YBR004C,0.456,0.789,0.012,0.345,0.678
 </code></pre></div>
+
 <h3 id="requirements_1">Requirements<a class="headerlink" href="#requirements_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -345,7 +339,7 @@ YBR004C,0.456,0.789,0.012,0.345,0.678
 - Peak presence indicators (0/1)
 - Binding strength quantiles (0-1)</p>
 <p><strong>Example binding data preparation</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MinMaxScaler</span>
 
@@ -364,10 +358,11 @@ YBR004C,0.456,0.789,0.012,0.345,0.678
 <span class="n">normalized_binding</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;gene_id&#39;</span>
 <span class="n">normalized_binding</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;binding_data.csv&#39;</span><span class="p">)</span>
 </code></pre></div>
+
 <h2 id="gene-identifier-consistency">Gene Identifier Consistency<a class="headerlink" href="#gene-identifier-consistency" title="Permanent link">&para;</a></h2>
 <h3 id="critical-requirements">Critical Requirements<a class="headerlink" href="#critical-requirements" title="Permanent link">&para;</a></h3>
 <p>Both files <strong>must</strong> use identical gene identifiers:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Verify gene ID consistency</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Verify gene ID consistency</span>
 <span class="n">response_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;response.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">predictor_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;predictors.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -380,6 +375,7 @@ YBR004C,0.456,0.789,0.012,0.345,0.678
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response only: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">response_only</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predictor only: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">predictor_only</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+
 <h3 id="common-gene-id-formats">Common Gene ID Formats<a class="headerlink" href="#common-gene-id-formats" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -413,7 +409,7 @@ YBR004C,0.456,0.789,0.012,0.345,0.678
 </tbody>
 </table>
 <h3 id="handling-id-mismatches">Handling ID Mismatches<a class="headerlink" href="#handling-id-mismatches" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Align gene IDs between files</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Align gene IDs between files</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">align_gene_ids</span><span class="p">(</span><span class="n">response_df</span><span class="p">,</span> <span class="n">predictor_df</span><span class="p">):</span>
     <span class="c1"># Find common genes</span>
     <span class="n">common_genes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">response_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">predictor_df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
@@ -431,15 +427,17 @@ YBR004C,0.456,0.789,0.012,0.345,0.678
 <span class="n">aligned_response</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;aligned_response.csv&#39;</span><span class="p">)</span>
 <span class="n">aligned_predictor</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;aligned_predictors.csv&#39;</span><span class="p">)</span>
 </code></pre></div>
+
 <h2 id="blacklist-file-format">Blacklist File Format<a class="headerlink" href="#blacklist-file-format" title="Permanent link">&para;</a></h2>
 <h3 id="structure_2">Structure<a class="headerlink" href="#structure_2" title="Permanent link">&para;</a></h3>
 <p>Simple text file with one gene identifier per line:</p>
-<div class="highlight"><pre><span></span><code>YBR999W
+<div class="codehilite"><pre><span></span><code>YBR999W
 YCR888X
 ribosomal_protein_L1
 housekeeping_gene_1
 batch_effect_gene
 </code></pre></div>
+
 <h3 id="use-cases">Use Cases<a class="headerlink" href="#use-cases" title="Permanent link">&para;</a></h3>
 <p><strong>Common genes to blacklist</strong>:
 - Housekeeping genes with stable expression
@@ -448,7 +446,7 @@ batch_effect_gene
 - Known batch effect genes
 - Genes with technical artifacts</p>
 <h3 id="creating-blacklist-files">Creating Blacklist Files<a class="headerlink" href="#creating-blacklist-files" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Identify housekeeping genes</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Identify housekeeping genes</span>
 <span class="n">housekeeping_genes</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;ACT1&#39;</span><span class="p">,</span> <span class="s1">&#39;TUB1&#39;</span><span class="p">,</span> <span class="s1">&#39;TUB2&#39;</span><span class="p">,</span> <span class="s1">&#39;RDN18-1&#39;</span><span class="p">,</span> <span class="s1">&#39;RDN25-1&#39;</span>
 <span class="p">]</span>
@@ -464,9 +462,10 @@ batch_effect_gene
     <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">blacklist_genes</span><span class="p">):</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gene</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+
 <h2 id="data-quality-checks">Data Quality Checks<a class="headerlink" href="#data-quality-checks" title="Permanent link">&para;</a></h2>
 <h3 id="automated-validation">Automated Validation<a class="headerlink" href="#automated-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_input_data</span><span class="p">(</span><span class="n">response_file</span><span class="p">,</span> <span class="n">predictor_file</span><span class="p">,</span> <span class="n">perturbed_tf</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_input_data</span><span class="p">(</span><span class="n">response_file</span><span class="p">,</span> <span class="n">predictor_file</span><span class="p">,</span> <span class="n">perturbed_tf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate input data format and consistency.&quot;&quot;&quot;</span>
 
     <span class="c1"># Load data</span>
@@ -504,8 +503,9 @@ batch_effect_gene
 <span class="c1"># Run validation</span>
 <span class="n">validate_input_data</span><span class="p">(</span><span class="s1">&#39;response.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;predictors.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;YPD1&#39;</span><span class="p">)</span>
 </code></pre></div>
+
 <h3 id="manual-quality-assessment">Manual Quality Assessment<a class="headerlink" href="#manual-quality-assessment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Data exploration</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Data exploration</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">explore_data</span><span class="p">(</span><span class="n">response_file</span><span class="p">,</span> <span class="n">predictor_file</span><span class="p">):</span>
     <span class="n">response_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">response_file</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">predictor_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">predictor_file</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -544,9 +544,10 @@ batch_effect_gene
 <span class="c1"># Explore your data</span>
 <span class="n">explore_data</span><span class="p">(</span><span class="s1">&#39;response.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;predictors.csv&#39;</span><span class="p">)</span>
 </code></pre></div>
+
 <h2 id="example-data-preparation-workflow">Example Data Preparation Workflow<a class="headerlink" href="#example-data-preparation-workflow" title="Permanent link">&para;</a></h2>
 <h3 id="complete-pipeline">Complete Pipeline<a class="headerlink" href="#complete-pipeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
 
@@ -620,21 +621,23 @@ batch_effect_gene
     <span class="n">output_prefix</span><span class="o">=</span><span class="s1">&#39;processed&#39;</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h2 id="common-issues-and-solutions">Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Permanent link">&para;</a></h2>
 <h3 id="issue-1-gene-id-mismatches">Issue 1: Gene ID Mismatches<a class="headerlink" href="#issue-1-gene-id-mismatches" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Gene IDs don't match between files</p>
 <p><strong>Solution</strong>: Use gene ID mapping:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Load ID mapping</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Load ID mapping</span>
 <span class="n">id_mapping</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;gene_id_mapping.csv&#39;</span><span class="p">)</span>  <span class="c1"># old_id, new_id</span>
 <span class="n">mapping_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;old_id&#39;</span><span class="p">],</span> <span class="n">id_mapping</span><span class="p">[</span><span class="s1">&#39;new_id&#39;</span><span class="p">]))</span>
 
 <span class="c1"># Apply mapping</span>
 <span class="n">response_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">response_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapping_dict</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">response_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 </code></pre></div>
+
 <h3 id="issue-2-missing-values">Issue 2: Missing Values<a class="headerlink" href="#issue-2-missing-values" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Missing data in binding matrix</p>
 <p><strong>Solution</strong>: Impute or filter:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Option 1: Remove genes with missing binding data</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Option 1: Remove genes with missing binding data</span>
 <span class="n">complete_genes</span> <span class="o">=</span> <span class="n">binding_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">index</span>
 <span class="n">response_df</span> <span class="o">=</span> <span class="n">response_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">complete_genes</span><span class="p">]</span>
 <span class="n">binding_df</span> <span class="o">=</span> <span class="n">binding_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">complete_genes</span><span class="p">]</span>
@@ -648,10 +651,11 @@ batch_effect_gene
     <span class="n">columns</span><span class="o">=</span><span class="n">binding_df</span><span class="o">.</span><span class="n">columns</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h3 id="issue-3-scale-differences">Issue 3: Scale Differences<a class="headerlink" href="#issue-3-scale-differences" title="Permanent link">&para;</a></h3>
 <p><strong>Problem</strong>: Binding values not in 0-1 range</p>
 <p><strong>Solution</strong>: Normalize appropriately:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># For ChIP-seq peak heights</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># For ChIP-seq peak heights</span>
 <span class="n">binding_normalized</span> <span class="o">=</span> <span class="n">binding_df</span> <span class="o">/</span> <span class="n">binding_df</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
 <span class="c1"># For count data</span>
@@ -660,6 +664,7 @@ batch_effect_gene
 <span class="c1"># For already-processed scores</span>
 <span class="n">binding_clipped</span> <span class="o">=</span> <span class="n">binding_df</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
+
 <p>This comprehensive guide should help you prepare properly formatted input data for tfbpmodeling analysis.</p>
               
             </div>
@@ -704,8 +709,6 @@ batch_effect_gene
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-      <script src="../../js/mermaid-init.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {

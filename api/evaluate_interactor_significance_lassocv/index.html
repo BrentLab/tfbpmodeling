@@ -51,13 +51,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">CLI Reference</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/overview/">Overview</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../cli/linear-perturbation-binding-modeling/">linear_perturbation_binding_modeling</a>
-                  </li>
-              </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../output/">Output Structure</a>
@@ -140,8 +133,6 @@
               <p class="caption"><span class="caption-text">Development</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../development/testing/">Testing</a>
                   </li>
               </ul>
       </div>
@@ -335,7 +326,9 @@
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_interactor_significance_lassocv</span><span class="p">(</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_interactor_significance_lassocv</span><span class="p">(</span>
     <span class="n">input_data</span><span class="p">:</span> <span class="n">ModelingInputData</span><span class="p">,</span>
     <span class="n">stratification_classes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">model_variables</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -361,7 +354,9 @@
     <span class="n">interactors</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model_variables</span> <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span>
     <span class="n">modifier_main_effects</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">interactors</span><span class="p">}</span>
 
-    <span class="n">augmented_vars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">model_variables</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">modifier_main_effects</span><span class="p">)))</span>
+    <span class="n">augmented_vars</span> <span class="o">=</span> <span class="n">model_variables</span> <span class="o">+</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">modifier_main_effects</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">model_variables</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;Model includes interaction terms and their main effects: </span><span class="si">{</span><span class="n">augmented_vars</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
@@ -434,7 +429,7 @@
 </ul>
 <h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
 <h3 id="basic-significance-testing">Basic Significance Testing<a class="headerlink" href="#basic-significance-testing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.evaluate_interactor_significance_lassocv</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tfbpmodeling.evaluate_interactor_significance_lassocv</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">evaluate_interactor_significance_lassocv</span>
 <span class="p">)</span>
 
@@ -451,8 +446,9 @@
 <span class="n">significant_interactions</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;significant_features&#39;</span><span class="p">]</span>
 <span class="n">p_values</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;p_values&#39;</span><span class="p">]</span>
 </code></pre></div>
+
 <h3 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Custom LassoCV parameters</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Custom LassoCV parameters</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">evaluate_interactor_significance_lassocv</span><span class="p">(</span>
     <span class="n">X_main</span><span class="o">=</span><span class="n">main_effects_data</span><span class="p">,</span>
     <span class="n">X_interaction</span><span class="o">=</span><span class="n">interaction_data</span><span class="p">,</span>
@@ -463,6 +459,7 @@
     <span class="n">tol</span><span class="o">=</span><span class="mf">1e-6</span>
 <span class="p">)</span>
 </code></pre></div>
+
 <h2 id="method-details">Method Details<a class="headerlink" href="#method-details" title="Permanent link">&para;</a></h2>
 <h3 id="statistical-approach">Statistical Approach<a class="headerlink" href="#statistical-approach" title="Permanent link">&para;</a></h3>
 <ol>
@@ -533,8 +530,6 @@
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-      <script src="../../js/mermaid-init.js"></script>
       <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {
