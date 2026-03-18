@@ -6,6 +6,7 @@
         "astype",
         "dtype",
         "interactor",
+        "interactors",
         "issubdtype",
         "ndarray",
         "ndim",
@@ -14,8 +15,8 @@
         "pvalues",
         "randperm",
         "rankdata",
-        "topn",
-        "tfbpmodeling"
+        "tfbpmodeling",
+        "topn"
     ],
     "[markdown]": {
         "editor.formatOnSave": false

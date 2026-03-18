@@ -6,7 +6,10 @@ LassoCV-based interactor significance testing for tfbpmodeling.
 
 ## Overview
 
-The `evaluate_interactor_significance_lassocv` module provides functions for evaluating the significance of interaction terms using LassoCV regularization. This approach uses regularized regression to compare models with and without interaction terms, providing a conservative approach to interaction significance testing.
+The `evaluate_interactor_significance_lassocv` module provides functions for evaluating
+the significance of interaction terms using LassoCV regularization. This approach uses
+regularized regression to compare models with and without interaction terms, providing
+a conservative approach to interaction significance testing.
 
 ## Key Features
 
@@ -77,6 +80,8 @@ results = evaluate_interactor_significance_lassocv(
 
 ## Related Modules
 
-- **[evaluate_interactor_significance_linear](evaluate_interactor_significance_linear.md)**: Linear regression alternative
-- **[interactor_significance_results](interactor_significance_results.md)**: Results handling
+- **[evaluate_interactor_significance_linear](evaluate_interactor_significance_linear.md)**:
+  Linear regression alternative
+- **[interactor_significance_results](interactor_significance_results.md)**:
+  Results handling
 - **[interface](interface.md)**: Workflow integration
