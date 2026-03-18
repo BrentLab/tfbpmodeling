@@ -6,7 +6,10 @@ Linear regression-based interactor significance testing for tfbpmodeling.
 
 ## Overview
 
-The `evaluate_interactor_significance_linear` module provides functions for evaluating the significance of interaction terms using standard linear regression methods. This approach uses classical statistical tests to compare models with and without interaction terms.
+The `evaluate_interactor_significance_linear` module provides functions for evaluating
+the significance of interaction terms using standard linear regression methods. This
+approach uses classical statistical tests to compare models with and without interaction
+terms.
 
 ## Key Features
 
@@ -92,6 +95,8 @@ results = evaluate_interactor_significance_linear(
 
 ## Related Modules
 
-- **[evaluate_interactor_significance_lassocv](evaluate_interactor_significance_lassocv.md)**: Regularized alternative
-- **[interactor_significance_results](interactor_significance_results.md)**: Results handling
+- **[evaluate_interactor_significance_lassocv](evaluate_interactor_significance_lassocv.md)**:
+  Regularized alternative
+- **[interactor_significance_results](interactor_significance_results.md)**:
+  Results handling
 - **[interface](interface.md)**: Workflow integration

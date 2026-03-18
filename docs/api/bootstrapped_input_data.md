@@ -6,12 +6,16 @@ Bootstrap resampling functionality for tfbpmodeling input data.
 
 ## Overview
 
-The `bootstrapped_input_data` module provides the `BootstrappedModelingInputData` class that extends the base `ModelingInputData` with bootstrap resampling capabilities. This is essential for the statistical inference approach used in tfbpmodeling.
+The `bootstrapped_input_data` module provides the `BootstrappedModelingInputData` class
+that extends the base `ModelingInputData` with bootstrap resampling capabilities. This
+is essential for the statistical inference approach used in tfbpmodeling.
 
 ## Key Features
 
-- **Bootstrap Sample Generation**: Creates multiple resampled datasets from the original data
-- **Stratified Sampling**: Maintains data distribution characteristics across bootstrap samples
+- **Bootstrap Sample Generation**: Creates multiple resampled datasets from the original
+  data
+- **Stratified Sampling**: Maintains data distribution characteristics across bootstrap
+  samples
 - **Reproducible Results**: Supports random seed setting for consistent results
 - **Memory Efficient**: Optimized storage and access patterns for large bootstrap sets
 
@@ -27,7 +31,7 @@ from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
 base_data = ModelingInputData(
     response_file='expression.csv',
     predictors_file='binding.csv',
-    perturbed_tf='YPD1'
+    perturbed_tf='pTF1'
 )
 
 # Create bootstrap version

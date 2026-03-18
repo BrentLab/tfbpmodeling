@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
-import tfbpmodeling.interface as iface
+import tfbpmodeling.__main__ as iface
 
 
 class DummyResults:
@@ -135,8 +135,11 @@ def make_args(tmp_path):
         max_iter=100,
         iterative_dropout=False,
         stabilization_ci_start=50.0,
-        stage4_lasso=False,
-        stage4_topn=False,
+        stage3_lasso=False,
+        stage3_lasso_topn=False,
+        stage2_set_zero=False,
+        skip_1st_stage=False,
+        stage3_lassocv_bootstrap=False,
         # system
         n_cpus=1,
         output_dir=str(tmp_path / "out_dir"),
@@ -144,17 +147,33 @@ def make_args(tmp_path):
     )
 
 
+def test_stage3_lassocv_bootstrap(caplog, tmp_path):
+    caplog.set_level(logging.INFO)
+    args = make_args(tmp_path)
+    args.stage3_lassocv_bootstrap = True
+    iface.tfbpmodeling(args)
+
+    assert (
+        "Stage 3 - LassoCV Bootstrap: Refit with surviving "
+        "interactors and their main effects" in caplog.text
+    )
+    assert "stage3_lassocv_bootstrap" in caplog.text
+
+
 def test_linear_workflow_logs(caplog, tmp_path):
     caplog.set_level(logging.INFO)
     args = make_args(tmp_path)
-    iface.linear_perturbation_binding_modeling(args)
+    iface.tfbpmodeling(args)
 
     log = caplog.text
     assert "estimator max_iter: 100." in log
-    assert "Step 1: Preprocessing" in log
+    assert "Stage 0: Preprocessing" in log
     assert "Output directory created at" in log
-    assert "Step 2: Bootstrap LassoCV on all data" in log
-    assert "Step 3: Bootstrap LassoCV on the significant coefficients" in log
+    assert "Stage 1: Bootstrap LassoCV on all data, full interactor model" in log
+    assert "Stage 1: Fitting best all-data model on significant predictors" in log
     assert "Saving the best all data model to" in log
-    assert "Step 4: Running LassoCV on topn data" in log
-    assert "Step 5: Test the significance of the interactor terms" in log
+    assert (
+        "Stage 2: Bootstrap LassoCV on top-n data with significant "
+        "predictors from Stage 1" in log
+    )
+    assert "Stage 3 - Lasso: Test significance of surviving interactor terms" in log
