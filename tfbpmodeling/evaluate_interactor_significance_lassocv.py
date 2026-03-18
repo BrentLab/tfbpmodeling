@@ -40,7 +40,9 @@ def evaluate_interactor_significance_lassocv(
     interactors = [v for v in model_variables if ":" in v]
     modifier_main_effects = {i.split(":")[1] for i in interactors}
 
-    augmented_vars = list(set(model_variables + list(modifier_main_effects)))
+    augmented_vars = model_variables + sorted(
+        modifier_main_effects - set(model_variables)
+    )
     logger.info(
         f"Model includes interaction terms and their main effects: {augmented_vars}"
     )

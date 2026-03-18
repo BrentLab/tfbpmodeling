@@ -6,7 +6,10 @@ Stratified cross-validation for tfbpmodeling.
 
 ## Overview
 
-The `stratified_cv` module provides cross-validation functionality that maintains the distribution of data characteristics across folds. This is particularly important for tfbpmodeling where data may have natural groupings or strata that should be preserved during validation.
+The `stratified_cv` module provides cross-validation functionality that maintains the
+distribution of data characteristics across folds. This is particularly important for
+tfbpmodeling where data may have natural groupings or strata that should be preserved
+during validation.
 
 ## Key Features
 

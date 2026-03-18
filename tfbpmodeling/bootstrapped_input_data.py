@@ -34,6 +34,9 @@ class BootstrappedModelingInputData:
         :param response_df: Response variable.
         :param model_df: Predictor matrix.
         :param n_bootstraps: Number of bootstrap replicates to generate.
+        :param normalize_sample_weights: If True, sample weights are normalized to
+            sum to 1. If False, sample weights are raw counts of occurrences in the
+            bootstrap sample.
         :param random_state: Random state for reproducibility. Can be an integer or a
             numpy RandomState object, or None. If None (default), then a random
             random state is chosen.
