@@ -36,12 +36,11 @@ nav:
 - Getting Started:
   - Installation: getting-started/installation.md
   - Quick Start: getting-started/quickstart.md
+  - Input Data Formats: getting-started/input-formats.md
 - Output Reference:
   - Output Structure: output.md
 - Tutorials:
-  - Basic Workflow: tutorials/basic-workflow.md
-  - Advanced Features: tutorials/advanced-features.md
-  - Input Data Formats: tutorials/input-formats.md
+  - Cluster Usage: tutorials/cluster-usage.md
 - API Reference:
   - Core Modules:
     - interface: api/interface.md

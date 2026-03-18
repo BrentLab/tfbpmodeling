@@ -37,14 +37,14 @@ from tfbpmodeling.modeling_input_data import ModelingInputData
 data = ModelingInputData(
     response_file='expression.csv',
     predictors_file='binding.csv',
-    perturbed_tf='YPD1'
+    perturbed_tf='pTF1'
 )
 
 # With optional parameters
 data = ModelingInputData(
     response_file='expression.csv',
     predictors_file='binding.csv',
-    perturbed_tf='YPD1',
+    perturbed_tf='pTF1',
     blacklist_file='exclude_genes.txt',
     normalize_weights=True,
     scale_by_std=True
@@ -77,7 +77,7 @@ The response file must be a CSV with specific structure:
 
 ```csv
 gene_id,sample1,sample2,sample3,sample4
-YPD1,0.23,-1.45,0.87,-0.12
+pTF1,0.23,-1.45,0.87,-0.12
 YBR123W,1.34,0.56,-0.23,0.78
 YCR456X,-0.45,0.12,1.23,-0.56
 ```
@@ -94,7 +94,7 @@ The predictor file structure:
 
 ```csv
 gene_id,TF1,TF2,TF3,TF4
-YPD1,0.34,0.12,0.78,0.01
+pTF1,0.34,0.12,0.78,0.01
 YBR123W,0.89,0.45,0.23,0.67
 YCR456X,0.12,0.78,0.34,0.90
 ```
@@ -133,7 +133,7 @@ from tfbpmodeling.modeling_input_data import ModelingInputData
 data = ModelingInputData(
     response_file='data/expression.csv',
     predictors_file='data/binding.csv',
-    perturbed_tf='YPD1'
+    perturbed_tf='pTF1'
 )
 
 # Access processed data
@@ -153,7 +153,7 @@ print(f"Predictor data shape: {predictor_data.shape}")
 data = ModelingInputData(
     response_file='data/expression.csv',
     predictors_file='data/binding.csv',
-    perturbed_tf='YPD1',
+    perturbed_tf='pTF1',
     blacklist_file='data/exclude_genes.txt',
     normalize_weights=True,
     scale_by_std=True,
@@ -176,7 +176,7 @@ from tfbpmodeling.bootstrapped_input_data import BootstrappedModelingInputData
 base_data = ModelingInputData(
     response_file='expression.csv',
     predictors_file='binding.csv',
-    perturbed_tf='YPD1'
+    perturbed_tf='pTF1'
 )
 
 # Create bootstrap version
@@ -224,7 +224,7 @@ def validate_binding_range(data):
 data = ModelingInputData(
     response_file='expression.csv',
     predictors_file='binding.csv',
-    perturbed_tf='YPD1',
+    perturbed_tf='pTF1',
     custom_validators=[validate_expression_range, validate_binding_range]
 )
 ```

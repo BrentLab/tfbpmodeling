@@ -6,7 +6,9 @@ Results aggregation and statistical analysis for bootstrap modeling.
 
 ## Overview
 
-The `bootstrap_model_results` module provides classes and functions for aggregating and analyzing results from bootstrap modeling. It handles the statistical analysis of coefficient distributions, confidence intervals, and significance testing.
+The `bootstrap_model_results` module provides classes and functions for aggregating and
+analyzing results from bootstrap modeling. It handles the statistical analysis of
+coefficient distributions, confidence intervals, and significance testing.
 
 ## Key Features
 
@@ -53,4 +55,5 @@ results.plot_coefficient_distributions()
 
 - **[bootstrapped_input_data](bootstrapped_input_data.md)**: Bootstrap data generation
 - **[interface](interface.md)**: Main workflow integration
-- **[interactor_significance_results](interactor_significance_results.md)**: Interaction analysis
+- **[interactor_significance_results](interactor_significance_results.md)**:
+  Interaction analysis

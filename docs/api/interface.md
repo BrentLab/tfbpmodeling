@@ -42,7 +42,7 @@ from tfbpmodeling.__main__ import tfbpmodeling
 args = argparse.Namespace(
     response_file='data/expression.csv',
     predictors_file='data/binding.csv',
-    perturbed_tf='YPD1',
+    perturbed_tf='pTF1',
     n_bootstraps=1000,
     top_n=600,
     all_data_ci_level=98.0,

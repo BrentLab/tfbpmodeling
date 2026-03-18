@@ -7,7 +7,8 @@
 
 ## Standard Installation
 
-tfbpmodeling is available for installation directly from GitHub using pip. PyPI distribution is planned for future releases.
+tfbpmodeling is available for installation directly from GitHub using pip. PyPI
+distribution is planned for future releases.
 
 ### Install from GitHub
 

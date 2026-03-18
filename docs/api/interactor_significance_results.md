@@ -6,11 +6,15 @@ Results and analysis for transcription factor interaction significance testing.
 
 ## Overview
 
-The `interactor_significance_results` module provides classes for storing, analyzing, and reporting the results of interaction significance testing. This is used in Stage 4 of the tfbpmodeling workflow to evaluate whether interaction terms provide significant explanatory power beyond main effects.
+The `interactor_significance_results` module provides classes for storing, analyzing,
+and reporting the results of interaction significance testing. This is used in Stage 4
+of the tfbpmodeling workflow to evaluate whether interaction terms provide significant
+explanatory power beyond main effects.
 
 ## Key Features
 
-- **Interaction vs Main Effect Comparison**: Statistical comparison of interaction and main effect models
+- **Interaction vs Main Effect Comparison**: Statistical comparison of interaction and
+  main effect models
 - **Significance Testing**: P-value calculation and hypothesis testing
 - **Effect Size Analysis**: Quantification of interaction effect magnitudes
 - **Result Summarization**: Comprehensive reporting of significant interactions
@@ -52,6 +56,9 @@ comparison_table = results.create_comparison_table()
 
 ## Related Modules
 
-- **[evaluate_interactor_significance_lassocv](evaluate_interactor_significance_lassocv.md)**: LassoCV-based testing
-- **[evaluate_interactor_significance_linear](evaluate_interactor_significance_linear.md)**: Linear regression-based testing
-- **[bootstrap_model_results](bootstrap_model_results.md)**: Bootstrap result aggregation
+- **[evaluate_interactor_significance_lassocv](evaluate_interactor_significance_lassocv.md)**:
+  LassoCV-based testing
+- **[evaluate_interactor_significance_linear](evaluate_interactor_significance_linear.md)**:
+  Linear regression-based testing
+- **[bootstrap_model_results](bootstrap_model_results.md)**: Bootstrap result
+  aggregation
