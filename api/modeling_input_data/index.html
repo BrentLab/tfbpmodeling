@@ -50,6 +50,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/input-formats/">Input Data Formats</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
@@ -58,11 +60,7 @@
               </ul>
               <p class="caption"><span class="caption-text">Tutorials</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/basic-workflow/">Basic Workflow</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/advanced-features/">Advanced Features</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/input-formats/">Input Data Formats</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/cluster-usage/">Cluster Usage</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -1165,14 +1163,14 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;binding.csv&#39;</span><span class="p">,</span>
-    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;pTF1&#39;</span>
 <span class="p">)</span>
 
 <span class="c1"># With optional parameters</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;binding.csv&#39;</span><span class="p">,</span>
-    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;pTF1&#39;</span><span class="p">,</span>
     <span class="n">blacklist_file</span><span class="o">=</span><span class="s1">&#39;exclude_genes.txt&#39;</span><span class="p">,</span>
     <span class="n">normalize_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">scale_by_std</span><span class="o">=</span><span class="kc">True</span>
@@ -1203,7 +1201,7 @@ read into objects that satisfy the <strong>init</strong> method -- see <strong>i
 <h3 id="response-file-format">Response File Format<a class="headerlink" href="#response-file-format" title="Permanent link">&para;</a></h3>
 <p>The response file must be a CSV with specific structure:</p>
 <div class="codehilite"><pre><span></span><code>gene_id,sample1,sample2,sample3,sample4
-YPD1,0.23,-1.45,0.87,-0.12
+pTF1,0.23,-1.45,0.87,-0.12
 YBR123W,1.34,0.56,-0.23,0.78
 YCR456X,-0.45,0.12,1.23,-0.56
 </code></pre></div>
@@ -1216,7 +1214,7 @@ YCR456X,-0.45,0.12,1.23,-0.56
 <h3 id="predictor-file-format">Predictor File Format<a class="headerlink" href="#predictor-file-format" title="Permanent link">&para;</a></h3>
 <p>The predictor file structure:</p>
 <div class="codehilite"><pre><span></span><code>gene_id,TF1,TF2,TF3,TF4
-YPD1,0.34,0.12,0.78,0.01
+pTF1,0.34,0.12,0.78,0.01
 YBR123W,0.89,0.45,0.23,0.67
 YCR456X,0.12,0.78,0.34,0.90
 </code></pre></div>
@@ -1247,7 +1245,7 @@ technical_artifact
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;data/expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;data/binding.csv&#39;</span><span class="p">,</span>
-    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;pTF1&#39;</span>
 <span class="p">)</span>
 
 <span class="c1"># Access processed data</span>
@@ -1265,7 +1263,7 @@ technical_artifact
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;data/expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;data/binding.csv&#39;</span><span class="p">,</span>
-    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;pTF1&#39;</span><span class="p">,</span>
     <span class="n">blacklist_file</span><span class="o">=</span><span class="s1">&#39;data/exclude_genes.txt&#39;</span><span class="p">,</span>
     <span class="n">normalize_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">scale_by_std</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1286,7 +1284,7 @@ technical_artifact
 <span class="n">base_data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;binding.csv&#39;</span><span class="p">,</span>
-    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;pTF1&#39;</span>
 <span class="p">)</span>
 
 <span class="c1"># Create bootstrap version</span>
@@ -1328,7 +1326,7 @@ technical_artifact
 <span class="n">data</span> <span class="o">=</span> <span class="n">ModelingInputData</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;binding.csv&#39;</span><span class="p">,</span>
-    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;pTF1&#39;</span><span class="p">,</span>
     <span class="n">custom_validators</span><span class="o">=</span><span class="p">[</span><span class="n">validate_expression_range</span><span class="p">,</span> <span class="n">validate_binding_range</span><span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>

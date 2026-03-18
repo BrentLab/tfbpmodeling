@@ -50,6 +50,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/input-formats/">Input Data Formats</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
@@ -58,11 +60,7 @@
               </ul>
               <p class="caption"><span class="caption-text">Tutorials</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/basic-workflow/">Basic Workflow</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/advanced-features/">Advanced Features</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/input-formats/">Input Data Formats</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tutorials/cluster-usage/">Cluster Usage</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -656,7 +654,8 @@ the CLI argument definitions, logging setup, and the complete modeling workflow.
 <span class="normal">860</span>
 <span class="normal">861</span>
 <span class="normal">862</span>
-<span class="normal">863</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">863</span>
+<span class="normal">864</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Main entry point for the tfbpmodeling application.&quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
         <span class="n">prog</span><span class="o">=</span><span class="s2">&quot;tfbpmodeling&quot;</span><span class="p">,</span>
@@ -930,8 +929,9 @@ the CLI argument definitions, logging setup, and the complete modeling workflow.
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./tfbpmodeling_results&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Directory where model results will be saved. A new subdirectory &quot;</span>
-            <span class="s2">&quot;is created per run.&quot;</span>
+            <span class="s2">&quot;Base directory where model results will be saved. A subdirectory &quot;</span>
+            <span class="s2">&quot;named </span><span class="si">{perturbed_tf}{output_suffix}</span><span class="s2"> will be created inside it. &quot;</span>
+            <span class="s2">&quot;The run will fail if that subdirectory already exists.&quot;</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">output_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -1936,7 +1936,7 @@ the CLI argument definitions, logging setup, and the complete modeling workflow.
 <span class="n">args</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span>
     <span class="n">response_file</span><span class="o">=</span><span class="s1">&#39;data/expression.csv&#39;</span><span class="p">,</span>
     <span class="n">predictors_file</span><span class="o">=</span><span class="s1">&#39;data/binding.csv&#39;</span><span class="p">,</span>
-    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;YPD1&#39;</span><span class="p">,</span>
+    <span class="n">perturbed_tf</span><span class="o">=</span><span class="s1">&#39;pTF1&#39;</span><span class="p">,</span>
     <span class="n">n_bootstraps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
     <span class="n">top_n</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
     <span class="n">all_data_ci_level</span><span class="o">=</span><span class="mf">98.0</span><span class="p">,</span>
@@ -1978,7 +1978,7 @@ the CLI argument definitions, logging setup, and the complete modeling workflow.
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../tutorials/input-formats/" class="btn btn-neutral float-left" title="Input Data Formats"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../tutorials/cluster-usage/" class="btn btn-neutral float-left" title="Cluster Usage"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../modeling_input_data/" class="btn btn-neutral float-right" title="modeling_input_data">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -2006,7 +2006,7 @@ the CLI argument definitions, logging setup, and the complete modeling workflow.
         </span>
     
     
-      <span><a href="../../tutorials/input-formats/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../tutorials/cluster-usage/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../modeling_input_data/" style="color: #fcfcfc">Next &raquo;</a></span>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="chase mateusiak <chasem@wustl.edu>, michael brent <brent@wustl.edu>" /><link rel="canonical" href="https://brentlab.github.io/tfbpmodeling/tutorials/cluster-usage/" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Cluster Usage - tfbpmodeling</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Cluster Usage";
+        var mkdocs_page_input_path = "tutorials/cluster-usage.md";
+        var mkdocs_page_url = "/tfbpmodeling/tutorials/cluster-usage/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> tfbpmodeling
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/installation/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/quickstart/">Quick Start</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../getting-started/input-formats/">Input Data Formats</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Output Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../output/">Output Structure</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tutorials</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Cluster Usage</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#lookup-file">Lookup File</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#job-script">Job Script</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#submission-script">Submission Script</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Core Modules</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interface/">interface</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/modeling_input_data/">modeling_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrapped_input_data/">bootstrapped_input_data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/bootstrap_model_results/">bootstrap_model_results</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Evaluation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/interactor_significance_results/">interactor_significance_results</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_lassocv/">evaluate_interactor_significance_lassocv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/evaluate_interactor_significance_linear/">evaluate_interactor_significance_linear</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Cross-Validation</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv/">stratified_cv</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../api/stratified_cv_r2/">stratified_cv_r2</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Development</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../development/contributing/">Contributing</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">tfbpmodeling</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Tutorials</li>
+      <li class="breadcrumb-item active">Cluster Usage</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/brentlab/tfbpmodeling/edit/main/docs/tutorials/cluster-usage.md">Edit on tfbpmodeling</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="cluster-usage">Cluster Usage<a class="headerlink" href="#cluster-usage" title="Permanent link">&para;</a></h1>
+<p>For large-scale analyses (many perturbed TFs), the workflow is designed to run
+as a SLURM job array where each array task processes one TF.</p>
+<h2 id="lookup-file">Lookup File<a class="headerlink" href="#lookup-file" title="Permanent link">&para;</a></h2>
+<p>Create a TSV with one row per TF. Only the first two columns are required:</p>
+<div class="codehilite"><pre><span></span><code><span class="gh">#</span> response_file              perturbed_tf    suffix (opt)    predictors_file (opt)
+/data/response/GAT2.csv      GAT2
+/data/response/pTF1.csv      pTF1            ypd1_run2       /data/predictors_v2.csv
+</code></pre></div>
+
+<ul>
+<li><strong><code>response_file</code></strong>: path to the response CSV for this TF</li>
+<li><strong><code>perturbed_tf</code></strong>: the TF name (must match a column in both files)</li>
+<li><strong><code>suffix</code></strong> (optional): appended to the output subdirectory name</li>
+<li><strong><code>predictors_file</code></strong> (optional): overrides the global <code>--predictors_file</code>
+  for this row</li>
+</ul>
+<h2 id="job-script">Job Script<a class="headerlink" href="#job-script" title="Permanent link">&para;</a></h2>
+<p>Save the following as <code>perturbation_binding_modeling.sh</code>. It is submitted as a
+SLURM array; each task reads one line from the lookup file.</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --output=logs/%A_%a.out</span>
+<span class="c1">#SBATCH --open-mode=append</span>
+<span class="c1">#SBATCH --cpus-per-task=4</span>
+<span class="c1">#SBATCH --mem=1G</span>
+
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+
+log<span class="o">()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;[INFO] </span><span class="nv">$*</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+
+print_usage<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>cat<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<span class="s">Usage:</span>
+<span class="s">  sbatch --array=1-N perturbation_binding_modeling.sh \</span>
+<span class="s">      --venv=PATH_TO_VENV_ACTIVATE \</span>
+<span class="s">      --lookup=LOOKUP_FILE \</span>
+<span class="s">      --output_dir=OUTPUT_DIR \</span>
+<span class="s">      [--predictors=PREDICTORS_CSV] \</span>
+<span class="s">      [--all_data_ci_level=98.0] \</span>
+<span class="s">      [--topn_ci_level=90.0] \</span>
+<span class="s">      [--n_bootstraps=1000] \</span>
+<span class="s">      [--random_state=42] \</span>
+<span class="s">      [--stage3_lasso] \</span>
+<span class="s">      [--stage3_lasso_topn] \</span>
+<span class="s">      [--stage3_lassocv_bootstrap] \</span>
+<span class="s">      [--iterative_dropout] \</span>
+<span class="s">      [--scale_by_std] \</span>
+<span class="s">      [--bins=0,64,512,np.inf] \</span>
+<span class="s">      [--exclude_model_variables=VARNAME]</span>
+
+<span class="s">NOTE: --predictors is required unless provided in the lookup file.</span>
+<span class="s">EOF</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="o">}</span>
+
+parse_lookup_line<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">line</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span>num_fields
+<span class="w">    </span><span class="nv">num_fields</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;{print NF}&#39;</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">RESPONSE_FILE</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">PERTURBED_TF</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">SUFFIX</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="w">    </span><span class="nv">PREDICTORS_FILE_OVERRIDE</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$num_fields</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">SUFFIX</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="k">)</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$num_fields</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span><span class="nv">PREDICTORS_FILE_OVERRIDE</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$line</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;{print $4}&#39;</span><span class="k">)</span>
+<span class="o">}</span>
+
+<span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$#</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;--help&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;-h&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>print_usage
+
+<span class="c1"># Defaults</span>
+<span class="nv">MAX_ITER</span><span class="o">=</span><span class="m">10000</span>
+<span class="nv">N_BOOTSTRAPS</span><span class="o">=</span><span class="m">1000</span>
+<span class="nv">ALL_DATA_CI_LEVEL</span><span class="o">=</span><span class="m">98</span>.0
+<span class="nv">TOPN_CI_LEVEL</span><span class="o">=</span><span class="m">90</span>.0
+<span class="nv">VENV</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">LOOKUP</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">PREDICTORS_FILE</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">OUTPUT_OUTER</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="nv">RANDOM_STATE</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">STAGE3_LASSO_FLAG</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">STAGE3_LASSO_TOPN_FLAG</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="nv">STAGE3_LASSOCV_BOOTSTRAP_FLAG</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">BINS_FLAG</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">EXCLUDE_MODEL_VARIABLES</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="nv">ADD_MODEL_VARIABLES</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">SCALE_BY_STD</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="nv">ITERATIVE_DROPOUT</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="nv">STABILIZATION_CI_START</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="k">while</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$#</span><span class="s2">&quot;</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">in</span>
+<span class="w">        </span>--venv<span class="o">=</span>*<span class="o">)</span><span class="w">              </span><span class="nv">VENV</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--lookup<span class="o">=</span>*<span class="o">)</span><span class="w">            </span><span class="nv">LOOKUP</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--predictors<span class="o">=</span>*<span class="o">)</span><span class="w">        </span><span class="nv">PREDICTORS_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--output_dir<span class="o">=</span>*<span class="o">)</span><span class="w">        </span><span class="nv">OUTPUT_OUTER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--all_data_ci_level<span class="o">=</span>*<span class="o">)</span><span class="w"> </span><span class="nv">ALL_DATA_CI_LEVEL</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--topn_ci_level<span class="o">=</span>*<span class="o">)</span><span class="w">     </span><span class="nv">TOPN_CI_LEVEL</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--n_bootstraps<span class="o">=</span>*<span class="o">)</span><span class="w">      </span><span class="nv">N_BOOTSTRAPS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--random_state<span class="o">=</span>*<span class="o">)</span><span class="w">      </span><span class="nv">RANDOM_STATE</span><span class="o">=</span><span class="s2">&quot;--random_state </span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--stage3_lasso<span class="o">)</span><span class="w">        </span><span class="nv">STAGE3_LASSO_FLAG</span><span class="o">=</span><span class="s2">&quot;--stage3_lasso&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--stage3_lasso_topn<span class="o">)</span><span class="w">   </span><span class="nv">STAGE3_LASSO_TOPN_FLAG</span><span class="o">=</span><span class="s2">&quot;--stage3_lasso_topn&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--stage3_lassocv_bootstrap<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">                               </span><span class="nv">STAGE3_LASSOCV_BOOTSTRAP_FLAG</span><span class="o">=</span><span class="s2">&quot;--stage3_lassocv_bootstrap&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--bins<span class="o">=</span>*<span class="o">)</span><span class="w">              </span><span class="nv">BINS_FLAG</span><span class="o">=</span><span class="s2">&quot;--bins </span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--exclude_model_variables<span class="o">=</span>*<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">                               </span><span class="nv">EXCLUDE_MODEL_VARIABLES</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--add_model_variables<span class="o">=</span>*<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">                               </span><span class="nv">ADD_MODEL_VARIABLES</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--scale_by_std<span class="o">)</span><span class="w">        </span><span class="nv">SCALE_BY_STD</span><span class="o">=</span><span class="s2">&quot;--scale_by_std&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--iterative_dropout<span class="o">)</span><span class="w">   </span><span class="nv">ITERATIVE_DROPOUT</span><span class="o">=</span><span class="s2">&quot;--iterative_dropout&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>--stabilization_ci_start<span class="o">=</span>*<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">                               </span><span class="nv">STABILIZATION_CI_START</span><span class="o">=</span><span class="s2">&quot;--stabilization_ci_start </span><span class="si">${</span><span class="nv">1</span><span class="p">#*=</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>-h<span class="p">|</span>--help<span class="o">)</span><span class="w"> </span>print_usage<span class="w"> </span><span class="p">;;</span>
+<span class="w">        </span>*<span class="o">)</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[ERROR] Unknown argument: </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span>print_usage<span class="w"> </span><span class="p">;;</span>
+<span class="w">    </span><span class="k">esac</span>
+<span class="w">    </span><span class="nb">shift</span>
+<span class="k">done</span>
+
+log<span class="w"> </span><span class="s2">&quot;Activating environment...&quot;</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VENV</span><span class="s2">&quot;</span>
+
+<span class="nv">LINE</span><span class="o">=</span><span class="k">$(</span>sed<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SLURM_ARRAY_TASK_ID</span><span class="si">}</span><span class="s2">p&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOOKUP</span><span class="s2">&quot;</span><span class="k">)</span>
+parse_lookup_line<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LINE</span><span class="s2">&quot;</span>
+
+<span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PREDICTORS_FILE_OVERRIDE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">PREDICTORS_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PREDICTORS_FILE_OVERRIDE</span><span class="s2">&quot;</span>
+
+<span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VENV</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOOKUP</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PREDICTORS_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_OUTER</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[ERROR] Missing required argument.&quot;</span><span class="p">;</span><span class="w"> </span>print_usage
+<span class="o">}</span>
+
+<span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SUFFIX</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">OUTPUT_SUFFIX_FLAG</span><span class="o">=</span><span class="s2">&quot;--output_suffix </span><span class="nv">$SUFFIX</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">                   </span><span class="o">||</span><span class="w"> </span><span class="nv">OUTPUT_SUFFIX_FLAG</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXCLUDE_MODEL_VARIABLES</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">EXCLUDE_FLAG</span><span class="o">=</span><span class="s2">&quot;--exclude_model_variables=</span><span class="nv">$EXCLUDE_MODEL_VARIABLES</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">||</span><span class="w"> </span><span class="nv">EXCLUDE_FLAG</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="o">[[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ADD_MODEL_VARIABLES</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">ADD_VAR_FLAG</span><span class="o">=</span><span class="s2">&quot;--add_model_variables=</span><span class="nv">$ADD_MODEL_VARIABLES</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">||</span><span class="w"> </span><span class="nv">ADD_VAR_FLAG</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="nv">CMD</span><span class="o">=(</span>
+<span class="w">    </span>python<span class="w"> </span>-m<span class="w"> </span>tfbpmodeling
+<span class="w">    </span>--response_file<span class="w">  </span><span class="s2">&quot;</span><span class="nv">$RESPONSE_FILE</span><span class="s2">&quot;</span>
+<span class="w">    </span>--predictors_file<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$PREDICTORS_FILE</span><span class="s2">&quot;</span>
+<span class="w">    </span>--perturbed_tf<span class="w">   </span><span class="s2">&quot;</span><span class="nv">$PERTURBED_TF</span><span class="s2">&quot;</span>
+<span class="w">    </span>--n_bootstraps<span class="w">   </span><span class="s2">&quot;</span><span class="nv">$N_BOOTSTRAPS</span><span class="s2">&quot;</span>
+<span class="w">    </span>--output_dir<span class="w">     </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_OUTER</span><span class="s2">&quot;</span>
+<span class="w">    </span>--max_iter<span class="w">       </span><span class="s2">&quot;</span><span class="nv">$MAX_ITER</span><span class="s2">&quot;</span>
+<span class="w">    </span>--all_data_ci_level<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ALL_DATA_CI_LEVEL</span><span class="s2">&quot;</span>
+<span class="w">    </span>--topn_ci_level<span class="w">  </span><span class="s2">&quot;</span><span class="nv">$TOPN_CI_LEVEL</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nv">$STAGE3_LASSO_FLAG</span>
+<span class="w">    </span><span class="nv">$STAGE3_LASSO_TOPN_FLAG</span>
+<span class="w">    </span><span class="nv">$STAGE3_LASSOCV_BOOTSTRAP_FLAG</span>
+<span class="w">    </span><span class="nv">$RANDOM_STATE</span>
+<span class="w">    </span><span class="nv">$OUTPUT_SUFFIX_FLAG</span>
+<span class="w">    </span><span class="nv">$BINS_FLAG</span>
+<span class="w">    </span><span class="nv">$EXCLUDE_FLAG</span>
+<span class="w">    </span><span class="nv">$ADD_VAR_FLAG</span>
+<span class="w">    </span><span class="nv">$ITERATIVE_DROPOUT</span>
+<span class="w">    </span><span class="nv">$SCALE_BY_STD</span>
+<span class="w">    </span><span class="nv">$STABILIZATION_CI_START</span>
+<span class="o">)</span>
+
+log<span class="w"> </span><span class="s2">&quot;Launching:&quot;</span>
+<span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%q &quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CMD</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">echo</span>
+<span class="s2">&quot;</span><span class="si">${</span><span class="nv">CMD</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<h2 id="submission-script">Submission Script<a class="headerlink" href="#submission-script" title="Permanent link">&para;</a></h2>
+<p>Save the following as <code>submit_jobs.sh</code> alongside the job script:</p>
+<div class="codehilite"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="c1"># Usage:</span>
+<span class="c1">#   ./submit_jobs.sh OUTPUT_DIR LOOKUP VENV_ACTIVATE [ARRAY_LENGTH]</span>
+<span class="c1">#</span>
+<span class="c1"># ARRAY_LENGTH defaults to the number of lines in LOOKUP.</span>
+
+<span class="nv">OUTPUT_DIR</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">LOOKUP</span><span class="o">=</span><span class="nv">$2</span>
+<span class="nv">ACTIVATE</span><span class="o">=</span><span class="nv">$3</span>
+<span class="nv">ARRAY_LENGTH</span><span class="o">=</span><span class="si">${</span><span class="nv">4</span><span class="k">:-$(</span>wc<span class="w"> </span>-l<span class="w"> </span>&lt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOOKUP</span><span class="s2">&quot;</span><span class="k">)</span><span class="si">}</span>
+
+sbatch<span class="w"> </span>--array<span class="o">=</span><span class="m">1</span>-<span class="si">${</span><span class="nv">ARRAY_LENGTH</span><span class="si">}</span><span class="w"> </span>perturbation_binding_modeling.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--venv<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$ACTIVATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--lookup<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$LOOKUP</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output_dir<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OUTPUT_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bins<span class="o">=</span><span class="s2">&quot;0,64,512,np.inf&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--scale_by_std<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage3_lasso<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage3_lasso_topn<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--stage3_lassocv_bootstrap<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--iterative_dropout<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--random_state<span class="o">=</span><span class="m">42</span>
+</code></pre></div>
+
+<p>Submit with:</p>
+<div class="codehilite"><pre><span></span><code>./submit_jobs.sh<span class="w"> </span>/path/to/results<span class="w"> </span>lookup.tsv<span class="w"> </span>/path/to/venv/bin/activate
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../output/" class="btn btn-neutral float-left" title="Output Structure"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../api/interface/" class="btn btn-neutral float-right" title="interface">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/brentlab/tfbpmodeling" class="fa fa-code-fork" style="color: #fcfcfc"> tfbpmodeling</a>
+        </span>
+    
+    
+      <span><a href="../../output/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../api/interface/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

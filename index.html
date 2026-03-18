@@ -72,6 +72,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="getting-started/quickstart/">Quick Start</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="getting-started/input-formats/">Input Data Formats</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Output Reference</span></p>
               <ul>
@@ -80,11 +82,7 @@
               </ul>
               <p class="caption"><span class="caption-text">Tutorials</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="tutorials/basic-workflow/">Basic Workflow</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="tutorials/advanced-features/">Advanced Features</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="tutorials/input-formats/">Input Data Formats</a>
+                  <li class="toctree-l1"><a class="reference internal" href="tutorials/cluster-usage/">Cluster Usage</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">API Reference</span></p>
@@ -154,22 +152,35 @@
 <a href="https://www.sphinx-doc.org/en/master/usage/index.html"><img alt="style" src="https://img.shields.io/badge/%20style-sphinx-0a507a.svg" /></a>
 <a href="https://github.com/BrentLab/tfbpmodeling/actions/workflows/ci.yml"><img alt="Pytest" src="https://github.com/BrentLab/tfbpmodeling/actions/workflows/ci.yml/badge.svg" /></a>
 <a href="https://codecov.io/gh/BrentLab/tfbpmodeling"><img alt="codecov" src="https://codecov.io/gh/BrentLab/tfbpmodeling/graph/badge.svg?token=7zBsImRmjC" /></a></p>
-<p>A Python package for <strong>Transcription Factor Binding and Perturbation (TFBP) modeling</strong> that analyzes relationships between transcription factor binding and gene expression perturbations using LASSO.</p>
+<p>A Python package for <strong>Transcription Factor Binding and Perturbation (TFBP) modeling</strong>
+that analyzes relationships between transcription factor binding and gene expression
+perturbations using LASSO.</p>
 <h2 id="what-is-tfbpmodeling">What is tfbpmodeling?<a class="headerlink" href="#what-is-tfbpmodeling" title="Permanent link">&para;</a></h2>
-<p>tfbpmodeling provides a workflow for modeling the relationship between transcription factor binding data and gene expression perturbation data. The package uses bootstrap resampling and regularized regression (LassoCV) to identify significant binding-perturbation relationships while controlling for confounding factors.</p>
+<p>tfbpmodeling provides a workflow for modeling the relationship between transcription
+factor binding data and gene expression perturbation data. The package uses bootstrap
+resampling and regularized regression (LassoCV) to identify significant
+binding-perturbation relationships while controlling for confounding factors.</p>
 <h3 id="workflow-overview">Workflow Overview<a class="headerlink" href="#workflow-overview" title="Permanent link">&para;</a></h3>
 <h4 id="stage-0-preprocessing">Stage 0 — Preprocessing<a class="headerlink" href="#stage-0-preprocessing" title="Permanent link">&para;</a></h4>
-<p>Data validation and preparation: load response and predictor files, apply blacklist, construct the model formula.</p>
+<p>Data validation and preparation: load response and predictor files, apply blacklist,
+construct the model formula.</p>
 <h4 id="stage-1-all-data-modeling">Stage 1 — All Data Modeling<a class="headerlink" href="#stage-1-all-data-modeling" title="Permanent link">&para;</a></h4>
-<p>Bootstrap LassoCV on the complete dataset using the full interactor model. Significant predictors are extracted at the specified confidence level (<code>--all_data_ci_level</code>). A best all-data model is then fit on those predictors.</p>
+<p>Bootstrap LassoCV on the complete dataset using the full interactor model. Significant
+predictors are extracted at the specified confidence level (<code>--all_data_ci_level</code>). A
+best all-data model is then fit on those predictors.</p>
 <h4 id="stage-2-top-n-modeling">Stage 2 — Top-N Modeling<a class="headerlink" href="#stage-2-top-n-modeling" title="Permanent link">&para;</a></h4>
-<p>Bootstrap LassoCV on the top-N data subset (genes ranked by perturbed TF binding) using the significant predictors from Stage 1. Surviving predictors are extracted at <code>--topn_ci_level</code>.</p>
+<p>Bootstrap LassoCV on the top-N data subset (genes ranked by perturbed TF binding) using
+the significant predictors from Stage 1. Surviving predictors are extracted at
+<code>--topn_ci_level</code>.</p>
 <h4 id="stage-3-surviving-interactor-significance-test">Stage 3 — Surviving interactor significance test<a class="headerlink" href="#stage-3-surviving-interactor-significance-test" title="Permanent link">&para;</a></h4>
-<p>Tests each surviving interactor term against its corresponding main effect to determine whether the interaction provides genuine predictive value beyond the main effect alone.</p>
+<p>Tests each surviving interactor term against its corresponding main effect to determine
+whether the interaction provides genuine predictive value beyond the main effect alone.
+Uses linear regression by default; pass <code>--stage3_lasso</code> to use LassoCV instead. Pass
+<code>--stage3_lasso_topn</code> to run the test on the top-N data subset rather than all data.</p>
 <h5 id="stage-3-lassocv-bootstrap-stage3_lassocv_bootstrap-optional">Stage 3 - LassoCV Bootstrap (<code>--stage3_lassocv_bootstrap</code>, optional)<a class="headerlink" href="#stage-3-lassocv-bootstrap-stage3_lassocv_bootstrap-optional" title="Permanent link">&para;</a></h5>
-<p>Before the significance test, refits the surviving interactors together with their independent main effects on all data using the same bootstrap LassoCV protocol as Stage 1. Use this when you want a regularized refit of the surviving terms before testing.</p>
-<h5 id="stage-3-lasso">Stage 3 - Lasso<a class="headerlink" href="#stage-3-lasso" title="Permanent link">&para;</a></h5>
-<p>The significance test itself. For each surviving interactor, compares model fit with the interaction term against model fit with the corresponding main effect substituted in. Uses linear regression by default; pass <code>--stage3_lasso</code> to use LassoCV instead. Pass <code>--stage3_lasso_topn</code> to run the test on the top-N data subset rather than all data.</p>
+<p>Independently of the significance test, refits the surviving interactors together
+with their independent main effects on all data using the same bootstrap LassoCV
+protocol as Stage 1.</p>
 <h2 id="citation">Citation<a class="headerlink" href="#citation" title="Permanent link">&para;</a></h2>
 <p>If you use tfbpmodeling in your research, please cite:</p>
 <div class="codehilite"><pre><span></span><code><span class="nc">@software</span><span class="p">{</span><span class="nl">tfbpmodeling</span><span class="p">,</span>
@@ -182,8 +193,10 @@
 
 <h2 id="support">Support<a class="headerlink" href="#support" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Issues</strong>: Report bugs and request features on <a href="https://github.com/BrentLab/tfbpmodeling/issues">GitHub Issues</a></li>
-<li><strong>Discussions</strong>: Ask questions on <a href="https://github.com/BrentLab/tfbpmodeling/discussions">GitHub Discussions</a></li>
+<li><strong>Issues</strong>: Report bugs and request features on
+  <a href="https://github.com/BrentLab/tfbpmodeling/issues">GitHub Issues</a></li>
+<li><strong>Discussions</strong>: Ask questions on
+  <a href="https://github.com/BrentLab/tfbpmodeling/discussions">GitHub Discussions</a></li>
 <li><strong>Documentation</strong>: Browse the complete documentation at <a href="https://brentlab.github.io/tfbpmodeling/">https://brentlab.github.io/tfbpmodeling/</a></li>
 </ul>
               
@@ -238,5 +251,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-03-18 14:49:50.763849+00:00
+Build Date UTC : 2026-03-18 17:28:12.593885+00:00
 -->

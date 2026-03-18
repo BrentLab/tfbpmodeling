@@ -49,6 +49,10 @@
          <lastmod>2026-03-18</lastmod>
     </url>
     <url>
+         <loc>https://brentlab.github.io/tfbpmodeling/getting-started/input-formats/</loc>
+         <lastmod>2026-03-18</lastmod>
+    </url>
+    <url>
          <loc>https://brentlab.github.io/tfbpmodeling/getting-started/installation/</loc>
          <lastmod>2026-03-18</lastmod>
     </url>
@@ -57,15 +61,7 @@
          <lastmod>2026-03-18</lastmod>
     </url>
     <url>
-         <loc>https://brentlab.github.io/tfbpmodeling/tutorials/advanced-features/</loc>
-         <lastmod>2026-03-18</lastmod>
-    </url>
-    <url>
-         <loc>https://brentlab.github.io/tfbpmodeling/tutorials/basic-workflow/</loc>
-         <lastmod>2026-03-18</lastmod>
-    </url>
-    <url>
-         <loc>https://brentlab.github.io/tfbpmodeling/tutorials/input-formats/</loc>
+         <loc>https://brentlab.github.io/tfbpmodeling/tutorials/cluster-usage/</loc>
          <lastmod>2026-03-18</lastmod>
     </url>
 </urlset>
