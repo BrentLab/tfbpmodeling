@@ -821,8 +821,9 @@ def main() -> None:
         type=str,
         default="./tfbpmodeling_results",
         help=(
-            "Directory where model results will be saved. A new subdirectory "
-            "is created per run."
+            "Base directory where model results will be saved. A subdirectory "
+            "named {perturbed_tf}{output_suffix} will be created inside it. "
+            "The run will fail if that subdirectory already exists."
         ),
     )
     output_group.add_argument(
