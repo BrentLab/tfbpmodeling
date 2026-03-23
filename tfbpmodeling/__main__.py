@@ -634,8 +634,8 @@ def main() -> None:
         help=(
             "Default is 42. Random seed for bootstrap sampling. Set to a "
             "different integer to run with a different seed. The top-n stage "
-            "always uses random_state + 10, and if stage3 bootstrap is selected, that"
-            " uses random_state + 20 to ensure different bootstrap indices "
+            "always uses random_state + 10, and if stage3 bootstrap is selected, "
+            "that uses random_state + 20 to ensure different bootstrap indices "
             "from the all-data stage."
         ),
     )
