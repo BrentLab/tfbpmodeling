@@ -51,7 +51,7 @@ class BootstrapModelResults:
         self.alpha_df = alpha_df
 
     def extract_significant_coefficients(
-        self, ci_level: str = "95.0", threshold: float = 1e-14
+        self, ci_level: str = "95.0", threshold: float = 0.0
     ) -> dict[str, tuple[float, float]]:
         """
         Extract coefficients that are statistically significant based on their bootstrap
