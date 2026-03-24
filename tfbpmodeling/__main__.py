@@ -304,9 +304,7 @@ def tfbpmodeling(args):
         ),
         n_bootstraps=args.n_bootstraps,
         normalize_sample_weights=args.normalize_sample_weights,
-        random_state=(
-            args.random_state + 10 if args.random_state is not None else None
-        ),
+        random_state=args.random_state + 10,
     )
 
     logger.debug(
@@ -395,7 +393,7 @@ def tfbpmodeling(args):
             ),
             n_bootstraps=args.n_bootstraps,
             normalize_sample_weights=args.normalize_sample_weights,
-            random_state=args.random_state,
+            random_state=args.random_state + 20,
         )
 
         logger.info(
@@ -632,13 +630,13 @@ def main() -> None:
     input_group.add_argument(
         "--random_state",
         type=int,
-        default=None,
+        default=42,
         help=(
-            "Set this to an integer to make the bootstrap sampling reproducible. "
-            "Default is None (no fixed seed) and each call will produce different "
-            "bootstrap indices. Note that if this is set, the "
-            "`top_n` random_state will be +10 in order to make the top_n "
-            "indices different from the `all_data` step"
+            "Default is 42. Random seed for bootstrap sampling. Set to a "
+            "different integer to run with a different seed. The top-n stage "
+            "always uses random_state + 10, and if stage3 bootstrap is selected, "
+            "that uses random_state + 20 to ensure different bootstrap indices "
+            "from the all-data stage."
         ),
     )
     input_group.add_argument(
