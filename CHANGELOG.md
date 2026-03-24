@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-03-24
+
+### Added
+
+- [#104 ]`--version` flag prints the installed package version. Version number
+  is included in the `--help` description.
+
+[1.1.1]: https://github.com/BrentLab/tfbpmodeling/compare/v1.1.0...v1.1.1
+
 ## [1.1.0] - 2025-06-01
 
 ### Fixes

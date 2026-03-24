@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import time
+from importlib.metadata import version as _pkg_version
 from typing import Literal
 
 import joblib
@@ -26,6 +27,8 @@ from tfbpmodeling.stratified_cv import stratified_cv_modeling
 from tfbpmodeling.utils.exclude_predictor_variables import exclude_predictor_variables
 
 logger = logging.getLogger("main")
+
+_VERSION = _pkg_version("tfbpmodeling")
 
 
 class CustomHelpFormatter(argparse.HelpFormatter):
@@ -550,6 +553,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         prog="tfbpmodeling",
         description=(
+            f"tfbpmodeling {_VERSION}. "
             "This executes the sequential workflow which models first "
             "`perturbation ~ binding` on all of the data (Stage 1), "
             "then extracts the significant predictors and does the same thing on "
@@ -562,6 +566,7 @@ def main() -> None:
         usage="tfbpmodeling --help",
         formatter_class=CustomHelpFormatter,
     )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {_VERSION}")
 
     # Logging options
     parser.add_argument(
