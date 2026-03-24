@@ -51,7 +51,7 @@ class BootstrapModelResults:
         self.alpha_df = alpha_df
 
     def extract_significant_coefficients(
-        self, ci_level: str = "95.0", threshold: float = 0.0
+        self, ci_level: str = "95.0", threshold: float = 1e-14
     ) -> dict[str, tuple[float, float]]:
         """
         Extract coefficients that are statistically significant based on their bootstrap
@@ -61,7 +61,8 @@ class BootstrapModelResults:
             lies above `threshold` or below `-threshold`.
 
         :param ci_level: Confidence interval level (e.g., "95.0").
-        :param threshold: Minimum effect size for significance.
+        :param threshold: Default to 1e-14 to avoid floating point instability.
+           Minimum effect size for significance.
         :return: Dictionary mapping coefficient names to their (low, high) CI bounds.
 
         """
@@ -109,14 +110,15 @@ class BootstrapModelResults:
         return significant_coefs_dict
 
     def visualize_significant_coefficients(
-        self, ci_level: str = "95.0", threshold: float = 0.0
+        self, ci_level: str = "95.0", threshold: float = 1e-14
     ) -> plt.Figure | None:
         """
         Visualize the distribution of coefficients that are significant at the specified
         confidence level.
 
         :param ci_level: Confidence interval level (e.g., "95.0").
-        :param threshold: Minimum absolute value for significance.
+        :param threshold: Default to 1e-14 to avoid floating point instability. Minimum
+            absolute value for significance.
         :return: Matplotlib figure, or None if no significant coefficients are found.
 
         """
