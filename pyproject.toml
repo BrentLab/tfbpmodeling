@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tfbpmodeling"
-version = "1.1.0"
+version = "1.1.1"
 description = "A Python package for Transcription Factor Binding and Perturbation (TFBP) modeling that analyzes relationships between transcription factor binding and gene expression perturbations using LASSO."
 authors = ["chasem <chasem@wustl.edu>"]
 license = "GPL-3.0"
